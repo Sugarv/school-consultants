@@ -1,7 +1,9 @@
 # School consultants
-Track & monitor school consult transfers & teacher evaluation process steps.
+Track & monitor school consultant transfers & teacher evaluation process steps.
 
+Coded in Python's [Django](https://www.djangoproject.com), built around [unfold](https://unfoldadmin.com)
 
+The project consists of two apps:
 ### Evaluation
 A web app to make teacher evaluation tracking easier for school consultants. Also a way for directors, supervisors to monitor the evaluation process.
 
