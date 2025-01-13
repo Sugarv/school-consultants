@@ -1,0 +1,25 @@
+services:
+  symvouloi:
+    image: symvouloi
+    build:
+      context: .
+    entrypoint: ["./docker-files/entrypoint.sh"]
+    command: gunicorn app.wsgi:application --bind 0.0.0.0:8000
+    volumes:
+      - .:/usr/src/app/
+      - static_volume:/usr/src/app/staticfiles
+    expose:
+      - 8000
+    env_file:
+      - ./.env
+  nginx:
+    build: ./docker-files
+    volumes:
+      - static_volume:/usr/src/app/staticfiles
+    ports:
+      - 8080:80
+    depends_on:
+      - symvouloi
+
+volumes:
+  static_volume:

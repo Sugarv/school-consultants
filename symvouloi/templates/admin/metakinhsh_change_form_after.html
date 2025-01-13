@@ -1,0 +1,18 @@
+{% load unfold %}
+<head>
+  <script src="/static/js/metakinhsh_add.js"></script>
+</head>
+
+
+<div class="border border-gray-400 border-dashed mb-4 p-3 rounded dark:border-gray-700 add-metak-btn">
+    {% component "unfold/components/text.html" %}
+    Πατήστε για να προστεθεί μετακίνηση γι' αυτό το βήμα αξιολόγησης
+    {% endcomponent %}
+
+    <div id="ajax-message"></div>
+    <br>
+    {% component "unfold/components/button.html" with variant='primary' class='data-ajax-submit' id='metakinhsh-ajax-submit'  %}
+    Προσθήκη μετακίνησης
+    {% endcomponent %}
+
+</div>

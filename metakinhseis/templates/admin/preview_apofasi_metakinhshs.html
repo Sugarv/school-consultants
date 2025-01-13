@@ -1,0 +1,45 @@
+{% extends 'unfold/layouts/base.html' %}
+{% load unfold %}
+
+
+{% block content %}
+  {% component "unfold/components/title.html" %}
+    Απόφαση μετακίνησης - Προεπισκόπηση εγγραφών
+  {% endcomponent %}
+
+  
+  
+  <h4>Σύμβουλος: {{ metakinhseis.0.consultant }}</h4>
+  <br><br>
+    <table class="block border-gray-200 border-spacing-none border-separate w-full lg:table">
+      <thead class="text-gray-900 dark:text-gray-100">
+        <th class="bg-gray-50 dark:bg-white/[.02]">Α/Α</th>
+        <th class="bg-gray-50 dark:bg-white/[.02]">Ημ/νία</th>
+        <th class="bg-gray-50 dark:bg-white/[.02]">Προορισμός</th>
+        <th class="bg-gray-50 dark:bg-white/[.02]">Αιτιολογία</th>
+      </thead>
+      <tbody class="block lg:table-row-group">
+        {% for met in metakinhseis %}
+        <tr class="{% cycle '' 'bg-gray-50 dark:bg-white/[.02]' %}">
+          <td class="px-3 py-2 align-middle flex border-t border-gray-200 font-normal gap-4 min-w-0 overflow-hidden text-left before:flex before:capitalize before:content-[attr(data-label)] before:items-center before:mr-auto first:border-t-0 lg:before:hidden lg:first:border-t lg:py-3 lg:table-cell dark:border-gray-800">{{ met.id  }}</td>
+          <td class="px-3 py-2 align-middle flex border-t border-gray-200 font-normal gap-4 min-w-0 overflow-hidden text-left before:flex before:capitalize before:content-[attr(data-label)] before:items-center before:mr-auto first:border-t-0 lg:before:hidden lg:first:border-t lg:py-3 lg:table-cell dark:border-gray-800">{{ met.date_from }}</td>
+          <td class="px-3 py-2 align-middle flex border-t border-gray-200 font-normal gap-4 min-w-0 overflow-hidden text-left before:flex before:capitalize before:content-[attr(data-label)] before:items-center before:mr-auto first:border-t-0 lg:before:hidden lg:first:border-t lg:py-3 lg:table-cell dark:border-gray-800">{{ met.metak_to }}</td>
+          <td class="px-3 py-2 align-middle flex border-t border-gray-200 font-normal gap-4 min-w-0 overflow-hidden text-left before:flex before:capitalize before:content-[attr(data-label)] before:items-center before:mr-auto first:border-t-0 lg:before:hidden lg:first:border-t lg:py-3 lg:table-cell dark:border-gray-800">{{ met.aitiologia }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  
+  <form method="post">
+    {% csrf_token %}
+
+    <input type="hidden" name="metakinhsh_ids" value="{{ metakinhsh_ids|join:',' }}">
+    <br><br>
+    <button type="submit" class="border font-medium px-3 py-2 rounded-md text-center whitespace-nowrap bg-white dark:border-gray-700 dark:bg-transparent dark:text-white">Έκδοση απόφασης</button>
+    <br><br>
+    
+    
+    <a href="{% url 'admin:metakinhseis_metakinhsh_changelist' %}" class="border font-medium px-3 py-2 rounded-md text-center whitespace-nowrap bg-primary-600 border-transparent text-white">Επιστροφή</a>
+
+  </form>
+{% endblock content %}

@@ -1,0 +1,43 @@
+[
+    {
+        "group": "\u03a3\u03cd\u03bc\u03b2\u03bf\u03c5\u03bb\u03bf\u03b9",
+        "permissions": [
+            "add_metakinhsh",
+            "change_metakinhsh",
+            "delete_metakinhsh",
+            "view_metakinhsh",
+            "add_evaluationstep",
+            "change_evaluationstep",
+            "delete_evaluationstep",
+            "view_evaluationstep",
+            "change_teacher",
+            "view_teacher"
+        ]
+    },
+    {
+        "group": "\u0395\u03c0\u03cc\u03c0\u03c4\u03b5\u03c2",
+        "permissions": [
+            "change_metakinhsh",
+            "view_metakinhsh",
+            "change_evaluationstep",
+            "view_evaluationstep",
+            "view_teacher"
+        ]
+    },
+    {
+        "group": "\u039f\u03b9\u03ba\u03bf\u03bd\u03bf\u03bc\u03b9\u03ba\u03cc",
+        "permissions": [
+            "change_metakinhsh",
+            "view_metakinhsh"
+        ]
+    },
+    {
+        "group": "\u0393\u03c1\u03b1\u03bc\u03bc\u03b1\u03c4\u03b5\u03af\u03b1",
+        "permissions": [
+            "add_metakinhsh",
+            "change_metakinhsh",
+            "delete_metakinhsh",
+            "view_metakinhsh"
+        ]
+    }
+]

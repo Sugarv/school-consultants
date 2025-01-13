@@ -1,0 +1,25 @@
+{% extends 'admin/base_site.html' %}
+{% load unfold %}
+
+{% block content %}
+
+  {% component "unfold/components/title.html" %}
+    Aνάθεση χρηστών σε ομάδα
+  {% endcomponent %}
+  
+
+  <form method="post">
+    {% csrf_token %}
+    
+    <label for="group_name">Όνομα ομάδας:</label>
+    <select name="group_name" id="group_name">
+      {% for group in groups %}
+        <option value="{{ group.name }}">{{ group.name }}</option>
+      {% endfor %}
+    </select><br><br>
+
+    <input type="hidden" name="user_ids" value="{{ user_ids|join:',' }}">
+
+    <button type="submit">Ανάθεση</button>
+  </form>
+{% endblock %}

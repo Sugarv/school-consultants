@@ -1,0 +1,26 @@
+{% extends "unfold/layouts/base.html" %}
+{% load unfold %}
+
+{% block content %}
+      {% component "unfold/components/container.html" %}
+        <div style="text-align: center">
+            {% component "unfold/components/title.html" %} {{ title }} {% endcomponent %}
+
+            {% component "unfold/components/separator.html"  %}{% endcomponent %}
+
+            {% component "unfold/components/chart/bar.html" with data=chart_stats %}{% endcomponent %}
+            
+            {% component "unfold/components/separator.html"  %}{% endcomponent %}
+
+            {% component "unfold/components/table.html" with table=table_data card_included=1 striped=1 %}{% endcomponent %}
+            
+        </div>
+        <p style="margin: 32px"></p>
+        <div style="text-align: center">
+            {% component "unfold/components/title.html" %}Τελική αξιολόγηση{% endcomponent %}
+            {% component "unfold/components/separator.html"  %}{% endcomponent %}
+
+            {% component "unfold/components/table.html" with table=table_data2 card_included=1 striped=1 %}{% endcomponent %}
+        </div>
+    {% endcomponent %}
+{% endblock content %}
