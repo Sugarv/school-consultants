@@ -133,7 +133,8 @@ API_ENDPOINT = os.environ["API_ENDPOINT"]
 API_KEY = os.environ["API_ENDPOINT"]
 EVALUATION_YEAR = os.environ["API_ENDPOINT"]
 
-CSRF_TRUSTED_ORIGINS = ['http://localhost:8080']
+CSRF_TRUSTED_ORIGINS = [os.environ.get('CSRF_TRUSTED_ORIGINS', None)]
+FORCE_SCRIPT_NAME = os.environ.get('SCRIPT_NAME', None)
 
 # Email settings (from .env)
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'

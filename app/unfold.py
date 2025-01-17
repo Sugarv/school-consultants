@@ -168,7 +168,7 @@ UNFOLD = {
                     {
                         "title": "Καταγραφή",
                         "icon": "frame_inspect",
-                        "link": '/admin/logentry',
+                        "link": reverse_lazy("admin:admin_logentry_changelist"),
                         "permission": lambda request: request.user.is_superuser,
                     },
                 ],
