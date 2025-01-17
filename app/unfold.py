@@ -168,7 +168,7 @@ UNFOLD = {
                     {
                         "title": "Καταγραφή",
                         "icon": "frame_inspect",
-                        "link": '/admin/admin/logentry',
+                        "link": '/admin/logentry',
                         "permission": lambda request: request.user.is_superuser,
                     },
                 ],

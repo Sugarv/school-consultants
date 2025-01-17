@@ -35,10 +35,6 @@ from django.conf import settings
 from django.http import HttpResponseNotFound
 
 
-class HomeView(RedirectView):
-    pattern_name = "admin:index"
-
-
 def dashboard_callback(request, context):
     ekp_cnt = Teacher.objects.all().count() if request.user.is_superuser else Teacher.objects.filter(consultant=request.user).count()
     step_cnt = EvaluationStep.objects.all().count() if request.user.is_superuser else EvaluationStep.objects.filter(consultant=request.user).count()

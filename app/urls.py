@@ -16,14 +16,12 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
-from symvouloi.views import HomeView, update_teacher_and_consultant, assign_users_to_group, \
+from symvouloi.views import update_teacher_and_consultant, assign_users_to_group, \
     evaluation_steps_json, add_metakinhsh, serve_document
 from metakinhseis.views import metakinhsh_json, apofasi_metakinhshs_preview, katastash_plhrwmhs
-# from symvouloi.sites import symvouloi_admin_site
+
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
-    path("", HomeView.as_view(), name="home"),
     path('update-teachers/', update_teacher_and_consultant, name='update_teachers'),
     path('assign_users_to_group/', assign_users_to_group, name='assign_users_to_group'),
     path('evaluation-steps-json/', evaluation_steps_json, name='evaluation_steps_json'),
@@ -32,5 +30,6 @@ urlpatterns = [
     path('apofasi_metakinhshs/', apofasi_metakinhshs_preview, name='apofasi_metakinhshs'),
     path('katastash_plhrwmhs/', katastash_plhrwmhs, name='katastash_plhrwmhs'),
     path('documents/<str:document_name>', serve_document, name='serve_document'),
-    path('documents/<str:year>/<str:folder>/<str:document_name>', serve_document, name='serve_document_evaluation')
+    path('documents/<str:year>/<str:folder>/<str:document_name>', serve_document, name='serve_document_evaluation'),
+    path('', admin.site.urls)
 ]

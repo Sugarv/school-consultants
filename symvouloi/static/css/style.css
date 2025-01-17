@@ -99,3 +99,8 @@ source: https://fullcalendar.io/docs/event-tooltip-demo
   margin-left: 0;
   margin-right: 0;
 }
+
+/* Fix for Unfold's action */
+#changelist-actions > div > select > option {
+  color: black;
+}
