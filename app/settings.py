@@ -130,8 +130,8 @@ STATIC_ROOT = BASE_DIR / 'staticfiles'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 API_ENDPOINT = os.environ["API_ENDPOINT"]
-API_KEY = os.environ["API_ENDPOINT"]
-EVALUATION_YEAR = os.environ["API_ENDPOINT"]
+API_KEY = os.environ["API_KEY"]
+EVALUATION_YEAR = os.environ["EVALUATION_YEAR"]
 
 CSRF_TRUSTED_ORIGINS = [os.environ.get('CSRF_TRUSTED_ORIGINS', None)]
 
