@@ -113,7 +113,7 @@ def update_teacher_and_consultant(request):
             if not consultant:
                 consultant = User.objects.create_user(
                     username=consultant_afm,
-                    password="1234",
+                    password=f"{consultant_afm}-pass",
                     first_name=assignment.consultant_first_name,
                     last_name=assignment.consultant_last_name,
                     is_staff=True
