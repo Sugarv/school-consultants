@@ -36,10 +36,10 @@ from django.http import HttpResponseNotFound
 
 
 def dashboard_callback(request, context):
-    ekp_cnt = Teacher.objects.all().count() if request.user.is_superuser else Teacher.objects.filter(consultant=request.user).count()
-    step_cnt = EvaluationStep.objects.all().count() if request.user.is_superuser else EvaluationStep.objects.filter(consultant=request.user).count()
     is_elevated = request.user.groups.filter(name='Επόπτες').exists() or request.user.is_superuser
-
+    ekp_cnt = Teacher.objects.all().count() if is_elevated else Teacher.objects.filter(consultant=request.user).count()
+    step_cnt = EvaluationStep.objects.all().count() if is_elevated else EvaluationStep.objects.filter(consultant=request.user).count()
+    
     teachers = Teacher.objects.filter(is_active=True, participates=True) if is_elevated else \
             Teacher.objects.filter(is_active=True, participates=True, consultant=request.user)
     teachers_meeting_approved = teachers.filter(participates=True, teacher_evaluation_steps__es_type_id=4,
@@ -229,7 +229,8 @@ def assign_users_to_group(request):
 def evaluation_steps_json(request):
     events = []
     is_consultant = request.user.groups.filter(name='Σύμβουλοι').exists()
-    steps = EvaluationStep.objects.all() if request.user.is_superuser else EvaluationStep.objects.filter(consultant=request.user)
+    is_elevated = request.user.groups.filter(name='Επόπτες').exists() or request.user.is_superuser
+    steps = EvaluationStep.objects.all() if is_elevated else EvaluationStep.objects.filter(consultant=request.user)
 
     for step in steps:
         if is_consultant:
