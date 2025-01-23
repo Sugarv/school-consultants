@@ -1,5 +1,5 @@
 from django.contrib import admin
-from import_export.admin import ExportMixin
+from import_export.admin import ExportActionModelAdmin
 from import_export import resources, fields
 from django.contrib.auth.models import User
 from import_export.widgets import ForeignKeyWidget
@@ -9,6 +9,7 @@ from django.http import HttpResponseRedirect
 from .views import MetakinhshCustomView, apofasi_metakinhshs_preview, katastash_plhrwmhs
 from django.contrib import messages
 from unfold.contrib.filters.admin import RelatedDropdownFilter
+from unfold.contrib.import_export.forms import ExportForm
 from app.filters import MyRangeDateFilter
 from .models import Metakinhsh, Consultant
 from app.utils import is_member, is_member_of_many
@@ -33,7 +34,7 @@ class MetakinhshResource(resources.ModelResource):
         return '%s' % full_name
 
 
-class MetakinhshAdmin(ModelAdmin):
+class MetakinhshAdmin(ModelAdmin, ExportActionModelAdmin):
     resource_class = MetakinhshResource
     list_display_links = ('get_user','date_from','id','metak_to')
     list_filter_submit = True
@@ -47,7 +48,7 @@ class MetakinhshAdmin(ModelAdmin):
     actions = ['apofasi_metakinhshs', 'apofasi_metakinhshs_oikon', 'katastash_plhrwmhs']
     ordering = ['-date_from']
     date_hierarchy = ('date_from')
-
+    export_form_class = ExportForm
 
     class Media:
         js = ('js/script_metak.js',) 

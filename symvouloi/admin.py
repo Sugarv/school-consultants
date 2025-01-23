@@ -12,7 +12,7 @@ from django.contrib.auth.admin import GroupAdmin as BaseGroupAdmin
 # from impersonate.admin import UserAdminImpersonateMixin
 # from django.urls import reverse
 # from django.utils.html import format_html
-from import_export.admin import ImportExportModelAdmin
+from import_export.admin import ImportExportModelAdmin, ExportActionModelAdmin
 # from unfold.contrib.import_export.forms import ExportForm, ImportForm, SelectableFieldsExportForm
 from unfold.admin import StackedInline #, TabularInline
 from django.urls import reverse, path
@@ -21,6 +21,7 @@ from django.contrib import messages
 from unfold.decorators import action
 from .views import assign_users_to_group, EvaluationStepCustomView
 from unfold.contrib.filters.admin import (RelatedDropdownFilter)
+from unfold.contrib.import_export.forms import ExportForm, ImportForm
 from django.utils.html import format_html
 from app.filters import MyRangeDateFilter
 from app.utils import is_member, is_member_of_many
@@ -62,6 +63,8 @@ class TeacherAdmin(ModelAdmin, ImportExportModelAdmin):
     list_filter_submit = True
     list_display_links = ('afm', 'last_name')
     inlines = [EvaluationStepInline]
+    export_form_class = ExportForm
+    import_form_class = ImportForm
 
     def formfield_for_foreignkey(self, db_field, request, **kwargs):
         if db_field.name == "consultant":
@@ -159,7 +162,7 @@ class EvaluationStepTypeAdmin(ModelAdmin):
 ######### Evaluation Step #########
 ###################################
 @admin.register(EvaluationStep)
-class EvaluationStepAdmin(ModelAdmin):
+class EvaluationStepAdmin(ModelAdmin, ExportActionModelAdmin):
     ordering = ('consultant__last_name', 'teacher', 'es_type')
     list_display_links = ('consfname', 'teacher', 'es_type')
     search_fields = (
@@ -172,6 +175,7 @@ class EvaluationStepAdmin(ModelAdmin):
         ("es_date", MyRangeDateFilter),
     ]
     change_form_after_template = "admin/metakinhsh_change_form_after.html"
+    export_form_class = ExportForm
 
     def get_queryset(self, request):
         # Get the default queryset
