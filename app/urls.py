@@ -15,7 +15,7 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
-from django.urls import path
+from django.urls import path, include
 from symvouloi.views import update_teacher_and_consultant, assign_users_to_group, \
     evaluation_steps_json, add_metakinhsh, serve_document
 from metakinhseis.views import metakinhsh_json, apofasi_metakinhshs_preview, katastash_plhrwmhs
@@ -31,5 +31,6 @@ urlpatterns = [
     path('katastash_plhrwmhs/', katastash_plhrwmhs, name='katastash_plhrwmhs'),
     path('documents/<str:document_name>', serve_document, name='serve_document'),
     path('documents/<str:year>/<str:folder>/<str:document_name>', serve_document, name='serve_document_evaluation'),
-    path('', admin.site.urls)
+    path('impersonate/', include('impersonate.urls')), 
+    path('', admin.site.urls),
 ]

@@ -26,6 +26,7 @@ from app.filters import MyRangeDateFilter
 from app.utils import is_member, is_member_of_many
 from django.contrib.auth.hashers import make_password
 from metakinhseis.admin import ConsultantInline
+from django.utils import timezone
 
 
 class EvaluationStepInline(StackedInline):
@@ -232,6 +233,11 @@ class EvaluationStepAdmin(ModelAdmin):
         """
         Set the `consultant` field to the logged-in user when saving a new EvaluationStep instance.
         """
+        # Check if ts completed and appointment date is after today
+        if obj.complete and obj.es_date >= timezone.now().date():
+            messages.error(request, "Σφάλμα: Δεν μπορείτε να ορίσετε ως ολοκληρωμένο βήμα του οποίου η ημ/νία είναι μεταγενέστερη!")
+            return
+
         if not obj.pk:  # Only set consultant for new objects
             if request.user.groups.filter(name='Σύμβουλοι').exists():
                 obj.consultant = request.user
@@ -302,7 +308,7 @@ class TeacherAssignmentAdmin(ModelAdmin, ImportExportModelAdmin):
 
 
 class NewUserAdmin(ModelAdmin):
-    list_display = ('username', 'last_name', 'first_name', 'auth_groups')
+    list_display = ('username', 'last_name', 'first_name', 'auth_groups', 'show_impersonate_link')
     actions = ['assign_to_group']
     search_fields = ('last_name',)
     fieldsets = [
@@ -349,6 +355,11 @@ class NewUserAdmin(ModelAdmin):
     
     def __str__(self):
         return f'{self.last_name} {self.first_name}'
+    
+    def show_impersonate_link(self, obj):
+        url = reverse('impersonate-start', args=[obj.pk])
+        return format_html('<a href="{}">Ενεργοποίηση</a>', url)
+    show_impersonate_link.short_description = 'Μίμηση χρήστη'
     
     auth_groups.short_description = "Ομάδες"
 

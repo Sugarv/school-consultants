@@ -42,7 +42,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'symvouloi',
     'metakinhseis',
-    'import_export'
+    'import_export',
+    'impersonate',
 ]
 
 MIDDLEWARE = [
@@ -53,6 +54,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'impersonate.middleware.ImpersonateMiddleware',
 ]
 
 ROOT_URLCONF = 'app.urls'
@@ -144,3 +146,9 @@ EMAIL_HOST_USER = os.environ['EMAIL_HOST_USER']
 EMAIL_HOST_PASSWORD = os.environ['EMAIL_HOST_PASSWORD']
 DEFAULT_FROM_EMAIL = os.environ['DEFAULT_FROM_EMAIL']
 RECIPIENT_LIST = os.environ['RECIPIENT_LIST'].split(',')
+
+# Django impersonate settings
+IMPERSONATE = {
+    'URI_EXCLUSIONS' : [],
+    'REDIRECT_URL' : '/metakinhseis/metakinhsh/'
+}

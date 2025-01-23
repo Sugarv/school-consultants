@@ -483,5 +483,5 @@ def add_metakinhsh(request):
         print(e)
         return JsonResponse({
             'success': False,
-            'message': 'Προέκυψε ένα σφάλμα'
+            'message': 'Προέκυψε ένα σφάλμα. Βεβαιωθείτε ότι έχετε αποθηκεύσει το βήμα αξιολόγησης.'
         }, status=500)

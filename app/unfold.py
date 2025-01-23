@@ -171,6 +171,12 @@ UNFOLD = {
                         "link": reverse_lazy("admin:admin_logentry_changelist"),
                         "permission": lambda request: request.user.is_superuser,
                     },
+                    {
+                        "title": "Διακοπή μίμησης",
+                        "icon": "frame_inspect",
+                        "link": reverse_lazy("impersonate-stop"),
+                        "permission": lambda request: request.user.is_impersonate,
+                    },
                 ],
             },
         ],

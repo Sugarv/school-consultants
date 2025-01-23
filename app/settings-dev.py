@@ -42,7 +42,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'symvouloi',
     'metakinhseis',
-    'import_export'
+    'import_export',
+    'impersonate',
 ]
 
 MIDDLEWARE = [
@@ -53,6 +54,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'impersonate.middleware.ImpersonateMiddleware',
 ]
 
 ROOT_URLCONF = 'app.urls'
@@ -129,8 +131,14 @@ STATIC_ROOT = BASE_DIR / 'staticfiles'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-API_ENDPOINT = "api_endpoint"
-API_KEY = "apikey"
+API_ENDPOINT = "http://10.9.251.250/dbapi/api.php/records"
+API_KEY = "Sjk72MwtJ5Zm31TOVecDy3nIHU1VS2d1QREtaVSq9izy7SeTzGMiumb0WzvTdI55tHO1SeH7bx2f9Jld5Azh3Vu8OghAr6n1XPa5htQXyNkPRIoIe5h7fwxqgpNzoumD"
 EVALUATION_YEAR = '2024-25'
 
 CSRF_TRUSTED_ORIGINS = ['http://localhost:8080']
+
+# Django impersonate settings
+IMPERSONATE = {
+    'URI_EXCLUSIONS' : [],
+    'REDIRECT_URL' : '/metakinhseis/metakinhsh/'
+}
