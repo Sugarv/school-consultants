@@ -173,7 +173,7 @@ UNFOLD = {
                     },
                     {
                         "title": "Διακοπή μίμησης",
-                        "icon": "frame_inspect",
+                        "icon": "search_off",
                         "link": reverse_lazy("impersonate-stop"),
                         "permission": lambda request: request.user.is_impersonate,
                     },
