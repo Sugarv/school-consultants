@@ -323,7 +323,7 @@ class NewUserAdmin(ModelAdmin):
 
     # Show consultant inline only for supervisor & consultants
     def get_inlines(self, request, obj=None):
-        return [ConsultantInline] if obj and is_member_of_many(obj, 'Σύμβουλοι,Επόπτες') else []
+        return [ConsultantInline] if obj and (is_member_of_many(request.user, 'Σύμβουλοι,Επόπτες') or request.user.is_superuser) else []
 
     def auth_groups(self, obj):
         # Fetch all groups for the user and join their names as a string

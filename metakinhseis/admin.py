@@ -3,7 +3,7 @@ from import_export.admin import ExportActionModelAdmin
 from import_export import resources, fields
 from django.contrib.auth.models import User
 from import_export.widgets import ForeignKeyWidget
-from unfold.admin import ModelAdmin, StackedInline
+from unfold.admin import ModelAdmin, TabularInline
 from django.urls import path, reverse
 from django.http import HttpResponseRedirect
 from .views import MetakinhshCustomView, apofasi_metakinhshs_preview, katastash_plhrwmhs
@@ -235,5 +235,6 @@ admin.site.register(Metakinhsh, MetakinhshAdmin)
 
 
 # Inline for User model
-class ConsultantInline(StackedInline):
+class ConsultantInline(TabularInline):
     model = Consultant
+    extra = 0
