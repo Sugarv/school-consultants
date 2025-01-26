@@ -11,9 +11,11 @@ from django.contrib import messages
 from unfold.contrib.filters.admin import RelatedDropdownFilter
 from unfold.contrib.import_export.forms import ExportForm
 from app.filters import MyRangeDateFilter
-from .models import Metakinhsh, Consultant
+from .models import Metakinhsh, Consultant, OfficeSchedule
 from app.utils import is_member, is_member_of_many
 from unfold.decorators import action
+from django import forms
+from django.utils.safestring import mark_safe
 
 
 # Resource for import export plugin
@@ -238,3 +240,65 @@ admin.site.register(Metakinhsh, MetakinhshAdmin)
 class ConsultantInline(TabularInline):
     model = Consultant
     extra = 0
+
+
+
+class OfficeScheduleForm(forms.ModelForm):
+    class Meta:
+        model = OfficeSchedule
+        fields = '__all__'
+        widgets = {
+            'days_in_office': forms.TextInput(attrs={'class': 'multidatepicker'}),
+        }
+
+    class Media:
+        js = (
+            'https://code.jquery.com/jquery-3.6.0.min.js',
+            'https://code.jquery.com/ui/1.12.1/jquery-ui.min.js',
+            'js/jquery-ui.multidatespicker.js',  # Ensure this path is correct
+            'js/office_schedule.js',  # Custom JS to initialize the datepicker
+        )
+        css = {
+            'all': ('https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css','css/jquery-ui.multidatespicker.css')
+        }
+
+class OfficeScheduleAdmin(ModelAdmin):
+    form = OfficeScheduleForm
+    list_display = ('consultant', 'month', 'days_total')
+
+    def days_total(self, obj):
+        return (len(obj.days_in_office))
+
+
+    def has_add_permission(self, request):
+        return request.user.groups.filter(name='Σύμβουλοι').exists() or request.user.is_superuser
+
+    def has_change_permission(self, request, obj=None):
+        return request.user.groups.filter(name='Σύμβουλοι').exists() or request.user.is_superuser
+    
+    def save_model(self, request, obj, form, change):
+        """
+        Override save_model to determine and set the Greek month name
+        based on the `days_in_office` JSON data.
+        """
+        import calendar
+        from django.utils.translation import gettext as _
+
+        if obj.days_in_office:
+            # Assume days_in_office contains dates in the format: ['YYYY-MM-DD', ...]
+            first_date = obj.days_in_office[0]  # Take the first date
+            month_number = int(first_date.split("-")[1])  # Extract the month number
+
+            # Map to Greek month name
+            greek_months = [
+                _("Ιανουάριος"), _("Φεβρουάριος"), _("Μάρτιος"),
+                _("Απρίλιος"), _("Μάιος"), _("Ιούνιος"),
+                _("Ιούλιος"), _("Αύγουστος"), _("Σεπτέμβριος"),
+                _("Οκτώβριος"), _("Νοέμβριος"), _("Δεκέμβριος")
+            ]
+            obj.month = greek_months[month_number - 1]
+
+        # Save the object
+        super().save_model(request, obj, form, change)
+
+admin.site.register(OfficeSchedule, OfficeScheduleAdmin)

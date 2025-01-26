@@ -99,3 +99,17 @@ class Consultant(models.Model):
 
   def __str__(self):
     return f'{self.user.last_name} {self.user.first_name}'
+
+
+class OfficeSchedule(models.Model):
+    consultant = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE,
+        verbose_name='Χρήστης',
+        null=True
+    )
+    month = models.CharField(max_length=20, null=True, blank=True)
+    days_in_office = models.JSONField()
+
+    def __str__(self):
+        return f"{self.consultant} - {self.month}"
