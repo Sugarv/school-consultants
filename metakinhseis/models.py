@@ -108,8 +108,12 @@ class OfficeSchedule(models.Model):
         verbose_name='Χρήστης',
         null=True
     )
-    month = models.CharField(max_length=20, null=True, blank=True)
-    days_in_office = models.JSONField()
+    month = models.CharField('Μήνας',max_length=20, null=True, blank=True)
+    days_in_office = models.JSONField('Ημέρες γραφείου',default=list)
 
     def __str__(self):
         return f"{self.consultant} - {self.month}"
+    
+    class Meta:
+      verbose_name = 'Ημέρα γραφείου'
+      verbose_name_plural = 'Ημέρες γραφείου'

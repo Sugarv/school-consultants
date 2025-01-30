@@ -16,6 +16,8 @@ from app.utils import is_member, is_member_of_many
 from unfold.decorators import action
 from django import forms
 from django.utils.safestring import mark_safe
+from django.core.exceptions import ValidationError
+import json
 
 
 # Resource for import export plugin
@@ -247,28 +249,38 @@ class OfficeScheduleForm(forms.ModelForm):
     class Meta:
         model = OfficeSchedule
         fields = '__all__'
+        exclude = ['month']
         widgets = {
             'days_in_office': forms.TextInput(attrs={'class': 'multidatepicker'}),
         }
+    
+    def clean_days_in_office(self):
+        data = self.cleaned_data['days_in_office']
+        try:
+            # Ensure the data is valid JSON
+            if isinstance(data, str):
+                data = json.loads(data)
+            if not isinstance(data, list):
+                raise ValidationError("Days in office must be a list of dates.")
 
-    class Media:
-        js = (
-            'https://code.jquery.com/jquery-3.6.0.min.js',
-            'https://code.jquery.com/ui/1.12.1/jquery-ui.min.js',
-            'js/jquery-ui.multidatespicker.js',  # Ensure this path is correct
-            'js/office_schedule.js',  # Custom JS to initialize the datepicker
-        )
-        css = {
-            'all': ('https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css','css/jquery-ui.multidatespicker.css')
-        }
+            # Trim each element in the list
+            data = [date.strip() for date in data]
+
+            return data
+        except json.JSONDecodeError:
+            raise ValidationError("Invalid JSON data.")
+        
 
 class OfficeScheduleAdmin(ModelAdmin):
     form = OfficeScheduleForm
+    change_form_template = 'admin/office_schedule_change_form.html'  # Use the custom template
     list_display = ('consultant', 'month', 'days_total')
+    list_display_links = ('consultant','month')
+    search_fields = ['consultant', 'month']
 
     def days_total(self, obj):
         return (len(obj.days_in_office))
-
+    days_total.short_description = 'Σύνολο ημερών'
 
     def has_add_permission(self, request):
         return request.user.groups.filter(name='Σύμβουλοι').exists() or request.user.is_superuser
@@ -276,27 +288,92 @@ class OfficeScheduleAdmin(ModelAdmin):
     def has_change_permission(self, request, obj=None):
         return request.user.groups.filter(name='Σύμβουλοι').exists() or request.user.is_superuser
     
+    def get_list_filter(self, request):
+        if is_member(request.user,'Σύμβουλοι'):
+            return ("month",)
+        return (
+                ("month", ('consultant', RelatedDropdownFilter) )
+        )
+    
+    def get_list_display(self, request):
+        if is_member(request.user,'Σύμβουλοι'):
+            return ('month', 'days_total')
+        else:
+            return ('consultant', 'month', 'days_total')
+        
+    def get_fieldsets(self, request, obj=None):
+        # If the user is in the 'symvouloi' group, make 'consultant' and 'es_type' fields read-only
+        if is_member(request.user, 'Σύμβουλοι'):
+            return [
+                ( None, {
+                    "fields" : [('days_in_office',) ]
+                })
+            ]
+        return [
+            ( None, {
+                 "fields" : ['consultant', 'days_in_office']
+            }) 
+        ]
+        
+    def get_queryset(self, request):
+        # Get the default queryset
+        qs = super().get_queryset(request)
+
+        is_supervisor = is_member_of_many(request.user, 'Επόπτες,Οικονομικό,Γραμματεία') or request.user.is_superuser
+        is_consultant = request.user.groups.filter(name='Σύμβουλοι').exists()
+        
+        # Check if the user is in the 'symvouloi' group
+        if is_consultant:
+            return qs.filter(consultant=request.user)
+        
+        # Check if the user is a superuser or in the 'directors' group
+        elif is_supervisor:
+            return qs
+
+        # Return an empty queryset by default
+        return qs.none()
+    
     def save_model(self, request, obj, form, change):
         """
         Override save_model to determine and set the Greek month name
-        based on the `days_in_office` JSON data.
+        based on the `days_in_office` JSON data. Ensures all dates are
+        from the same month before saving.
         """
-        import calendar
-        from django.utils.translation import gettext as _
-
+        if not obj.pk:  # Only set consultant for new objects
+            if request.user.groups.filter(name='Σύμβουλοι').exists():
+                obj.consultant = request.user
         if obj.days_in_office:
-            # Assume days_in_office contains dates in the format: ['YYYY-MM-DD', ...]
-            first_date = obj.days_in_office[0]  # Take the first date
-            month_number = int(first_date.split("-")[1])  # Extract the month number
+            try:
+                # Extract unique (month, year) tuples from selected dates
+                month_years = {(int(date.split("-")[1]), int(date.split("-")[0])) for date in obj.days_in_office}
 
-            # Map to Greek month name
-            greek_months = [
-                _("Ιανουάριος"), _("Φεβρουάριος"), _("Μάρτιος"),
-                _("Απρίλιος"), _("Μάιος"), _("Ιούνιος"),
-                _("Ιούλιος"), _("Αύγουστος"), _("Σεπτέμβριος"),
-                _("Οκτώβριος"), _("Νοέμβριος"), _("Δεκέμβριος")
-            ]
-            obj.month = greek_months[month_number - 1]
+                # If more than one unique (month, year) combination exists, show error
+                if len(month_years) > 1:
+                    messages.error(request, "Σφάλμα: Οι επιλεγμένες ημέρες δεν ανήκουν στον ίδιο μήνα!")
+                    return
+
+                # Extract the single (month, year) pair
+                month_number, year = month_years.pop()
+
+                # Map to Greek month name
+                greek_months = [
+                    "Ιανουάριος", "Φεβρουάριος", "Μάρτιος",
+                    "Απρίλιος", "Μάιος", "Ιούνιος",
+                    "Ιούλιος", "Αύγουστος", "Σεπτέμβριος",
+                    "Οκτώβριος", "Νοέμβριος", "Δεκέμβριος"
+                ]
+
+                # Store in `month` field with both month name and year
+                obj.month = f"{greek_months[month_number - 1]} {year}"
+
+            except Exception as e:
+                messages.error(request, "Σφάλμα κατά την επεξεργασία των ημερομηνιών!")
+                return
+        
+        # Check for duplicate records (same consultant & month)
+        if not obj.pk and OfficeSchedule.objects.filter(consultant=obj.consultant, month=obj.month).exclude(pk=obj.pk).exists():
+            messages.error(request, "Σφάλμα: Υπάρχει ήδη ένα μηνιαίο πρόγραμμα γι' αυτόν τον σύμβουλο & μήνα!")
+            return
 
         # Save the object
         super().save_model(request, obj, form, change)

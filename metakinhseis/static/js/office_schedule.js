@@ -1,54 +1,53 @@
 $(document).ready(function() {
-  $('.multidatepicker').each(function() {
-      var $this = $(this);
-      var existingDates = $this.val();
+    var $hiddenInput = $('#id_days_in_office'); // The hidden input field
+    var existingDates = $hiddenInput.val(); // Read initial value from the hidden input field
 
-      // Parse existing dates if available
-      if (existingDates) {
-          try {
-              existingDates = JSON.parse(existingDates);
-          } catch (e) {
-              console.error("Error parsing existing dates:", e);
-              existingDates = [];
-          }
-      } else {
-          existingDates = [];
-      }
+    // Safely parse existing dates if available, or initialize as an empty array
+    try {
+        existingDates = existingDates ? JSON.parse(existingDates) : [];
+    } catch (e) {
+        console.error("Error parsing existing dates:", e);
+        existingDates = [];
+    }
 
-      // Initialize the multiDatesPicker
-      $this.multiDatesPicker({
-          dateFormat: "yy-mm-dd",
-          addDates: existingDates,
-          onSelect: function(dateText) {
-            console.log((dateText));
-              // Get the current dates from the input field
-              var currentDates = existingDates;
-              
-              // Add the newly selected date
-              currentDates.push(dateText);
-              
-              // Remove duplicates
-              currentDates = [...new Set(currentDates)];
-              
-              // Update the input field with the new list of dates
-              $this.val(JSON.stringify(currentDates));
-          }
-      });
+    // console.log("Existing Dates:", existingDates);
+    // Disable days_in_office field
+    $('#id_days_in_office').prop('readonly', true);
+    $('#id_days_in_office').hide();
 
-      // Ensure the input field is always a valid JSON array
-      $this.on('change', function() {
-        console.log('change');
-          try {
-              var value = $this.val();
-              if (value) {
-                  JSON.parse(value); // Validate JSON
-              } else {
-                  $this.val('[]'); // Set to empty array if empty
-              }
-          } catch (e) {
-              console.error("Invalid JSON detected, resetting to empty array.");
-              $this.val('[]');
-          }
-      });
-  });
-}); 
+    // Initialize the MultiDatesPicker
+    var $picker = $('#multidatepicker-div').multiDatesPicker({
+        dateFormat: "yy-mm-dd",
+        onSelect: function (dateText) {
+            // Get the current dates from the hidden input field
+            var currentDates = JSON.parse($hiddenInput.val() || '[]');
+
+            // Check if the selected date already exists in the array
+            var index = currentDates.indexOf(dateText.trim());
+
+            if (index > -1) {
+                // If the date exists, remove it (toggle behavior)
+                currentDates.splice(index, 1);
+            } else {
+                // If not, add the date
+                currentDates.push(dateText.trim());
+            }
+
+            // Sort dates for consistency
+            currentDates.sort();
+
+            // console.log("Updated Dates:", currentDates);
+
+            // Update the hidden input field with the new list of dates
+            $hiddenInput.val(JSON.stringify(currentDates));
+        }
+    });
+
+    // Ensure dates are highlighted when loading
+    if (existingDates.length > 0) {
+        $picker.multiDatesPicker('addDates', existingDates);
+    }
+
+    // Ensure the hidden input starts with valid JSON
+    $hiddenInput.val(JSON.stringify(existingDates));
+});

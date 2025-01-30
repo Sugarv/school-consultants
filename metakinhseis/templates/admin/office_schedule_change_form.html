@@ -1,0 +1,28 @@
+<!-- your_app/templates/admin/your_app/officeschedule/change_form.html -->
+{% extends "admin/change_form.html" %}
+
+{% block extrahead %}
+{{ block.super }}
+<!-- Include jQuery and jQuery UI (if not already included) -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
+<script src="/static/js/office_schedule.js"></script>
+<!-- Include multiDatesPicker JS and CSS -->
+<script src="/static/js/jquery-ui.multidatespicker.js"></script>
+<link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+<link rel="stylesheet" href="/static/css/jquery-ui.multidatespicker.css">
+{% endblock %}
+
+{% block field_sets %}
+{{ block.super }}
+<!-- Add a custom div for the date picker -->
+<div id="multidatepicker-div" class="multidatepicker"></div>
+{% endblock %}
+
+{% block footer %}
+{{ block.super }}
+<!-- Initialize the multiDatesPicker -->
+<script>
+
+</script>
+{% endblock %}
