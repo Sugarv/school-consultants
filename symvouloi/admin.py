@@ -3,8 +3,10 @@ from .models import (
     Teacher,
     EvaluationStepType,
     EvaluationStep,
-    TeacherAssignment
+    TeacherAssignment,
+    SiteConfiguration
 )
+from solo.admin import SingletonModelAdmin
 from django.contrib.auth.models import User, Group
 from django.contrib.admin.models import LogEntry
 from unfold.admin import ModelAdmin
@@ -449,3 +451,5 @@ class LogEntryAdmin(admin.ModelAdmin):
     # # decoded_string = json.loads(unicode_string.encode('utf-8').decode('unicode_escape'))
 # Register the LogEntry admin if enabled
 admin.site.register(LogEntry, LogEntryAdmin)
+
+admin.site.register(SiteConfiguration, SingletonModelAdmin)

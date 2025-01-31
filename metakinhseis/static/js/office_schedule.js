@@ -1,3 +1,6 @@
+// Uses MultiDatesPicker for jQuery UI
+// http://luca.lauretta.info/Multiple-Dates-Picker-for-jQuery-UI/
+
 $(document).ready(function() {
     var $hiddenInput = $('#id_days_in_office'); // The hidden input field
     var existingDates = $hiddenInput.val(); // Read initial value from the hidden input field

@@ -161,6 +161,12 @@ UNFOLD = {
                 "collapsible": False,  # Collapsible group of links
                 "items": [
                     {
+                        "title": "Ρυθμίσεις",
+                        "icon": "settings",
+                        "link": reverse_lazy("admin:symvouloi_siteconfiguration_changelist"),
+                        "permission": lambda request: request.user.is_superuser,
+                    },
+                    {
                         "title": "Χρήστες",
                         "icon": "people",
                         "link": reverse_lazy("admin:auth_user_changelist"),
