@@ -277,6 +277,7 @@ class OfficeScheduleAdmin(ModelAdmin):
     list_display = ('consultant', 'month', 'days_total')
     list_display_links = ('consultant','month')
     search_fields = ['consultant', 'month']
+    list_filter_submit = True
 
     def days_total(self, obj):
         return (len(obj.days_in_office))

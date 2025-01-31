@@ -163,7 +163,7 @@ UNFOLD = {
                     {
                         "title": "Ρυθμίσεις",
                         "icon": "settings",
-                        "link": reverse_lazy("admin:symvouloi_siteconfiguration_changelist"),
+                        "link": reverse_lazy("admin:symvouloi_siteconfiguration_change"),
                         "permission": lambda request: request.user.is_superuser,
                     },
                     {

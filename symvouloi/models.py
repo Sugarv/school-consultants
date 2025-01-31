@@ -139,13 +139,13 @@ User.add_to_class("__str__", get_user_display)
 # Site configuration model
 class SiteConfiguration(SingletonModel):
     show_office_days = models.BooleanField('Εμφάνιση ημερών γραφείου', default=False)
-    email_host = models.CharField('Διακομιστής αλληλογραφίας', max_length=255, default='smtp.gmail.com')
+    email_host = models.CharField('Διακομιστής αλληλογραφίας', max_length=255, default='smtp.gmail.com',null=True, blank=True)
     email_tls = models.BooleanField('Χρήση TLS', default=True)
     email_port = models.IntegerField('Θύρα Διακομιστή αλληλογραφίας', default='587')
-    email_username = models.CharField('Όνομα χρήστη αλληλογραφίας', max_length=50, default='username')
-    email_password = models.CharField('Κωδικός χρήστη αλληλογραφίας', max_length=50, default='password')
-    email_from = models.CharField('Email αποστολέα', max_length=50, default='')
-    recipient_list = models.CharField('Email παραληπτών (χωρισμένα με κόμμα)', max_length=255, default='')
+    email_username = models.CharField('Όνομα χρήστη αλληλογραφίας', max_length=50, default='username',null=True, blank=True)
+    email_password = models.CharField('Κωδικός χρήστη αλληλογραφίας', max_length=50, default='password',null=True, blank=True)
+    email_from = models.CharField('Email αποστολέα', max_length=50, default='', null=True, blank=True)
+    recipient_list = models.CharField('Email παραληπτών (χωρισμένα με κόμμα)', max_length=255, default='',null=True, blank=True)
 
     def __str__(self):
         return "Παράμετροι εφαρμογής"

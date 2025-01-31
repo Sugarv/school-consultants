@@ -452,4 +452,8 @@ class LogEntryAdmin(admin.ModelAdmin):
 # Register the LogEntry admin if enabled
 admin.site.register(LogEntry, LogEntryAdmin)
 
-admin.site.register(SiteConfiguration, SingletonModelAdmin)
+
+# Site configuration model
+class ConfigAdmin(ModelAdmin, SingletonModelAdmin):
+    pass
+admin.site.register(SiteConfiguration, ConfigAdmin)
