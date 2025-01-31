@@ -18,9 +18,16 @@ $(document).ready(function() {
     $('#id_days_in_office').prop('readonly', true);
     $('#id_days_in_office').hide();
 
+    // Function to disable weekends (Saturday & Sunday)
+    function disableWeekends(date) {
+      var day = date.getDay();
+      return [(day !== 0 && day !== 6)]; // 0 = Sunday, 6 = Saturday
+  }
+
     // Initialize the MultiDatesPicker
     var $picker = $('#multidatepicker-div').multiDatesPicker({
         dateFormat: "yy-mm-dd",
+        beforeShowDay: disableWeekends, // Disable weekends
         onSelect: function (dateText) {
             // Get the current dates from the hidden input field
             var currentDates = JSON.parse($hiddenInput.val() || '[]');
