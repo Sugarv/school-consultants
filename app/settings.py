@@ -148,6 +148,9 @@ EMAIL_HOST_PASSWORD = os.environ['EMAIL_HOST_PASSWORD']
 DEFAULT_FROM_EMAIL = os.environ['DEFAULT_FROM_EMAIL']
 RECIPIENT_LIST = os.environ['RECIPIENT_LIST'].split(',')
 
+# Show office days or not
+SHOW_OFFICE_DAYS = os.environ['SHOW_OFFICE_DAYS']
+
 # Django impersonate settings
 IMPERSONATE = {
     'URI_EXCLUSIONS' : [],

@@ -1,6 +1,7 @@
 from django.templatetags.static import static
 from django.urls import reverse_lazy
 from .utils import is_member_of_many
+from django.conf import settings
 
 
 UNFOLD = {
@@ -150,7 +151,8 @@ UNFOLD = {
                         "icon": "meeting_room",  # Supported icon set: https://fonts.google.com/icons
                         "link": reverse_lazy("admin:metakinhseis_officeschedule_changelist"),
                         # "badge": "main.badge_callback",
-                        "permission": lambda request: is_member_of_many(request.user, 'Σύμβουλοι,Επόπτες,Γραμματεία') or request.user.is_superuser,
+                        "permission": lambda request: 
+                            settings.SHOW_OFFICE_DAYS and (is_member_of_many(request.user, 'Σύμβουλοι,Επόπτες,Γραμματεία') or request.user.is_superuser),
                     },
 
                 ],
@@ -160,12 +162,6 @@ UNFOLD = {
                 "separator": True,  # Top border
                 "collapsible": False,  # Collapsible group of links
                 "items": [
-                    {
-                        "title": "Ρυθμίσεις",
-                        "icon": "settings",
-                        "link": reverse_lazy("admin:symvouloi_siteconfiguration_change"),
-                        "permission": lambda request: request.user.is_superuser,
-                    },
                     {
                         "title": "Χρήστες",
                         "icon": "people",

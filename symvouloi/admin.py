@@ -4,7 +4,6 @@ from .models import (
     EvaluationStepType,
     EvaluationStep,
     TeacherAssignment,
-    SiteConfiguration
 )
 from solo.admin import SingletonModelAdmin
 from django.contrib.auth.models import User, Group
@@ -451,9 +450,3 @@ class LogEntryAdmin(admin.ModelAdmin):
     # # decoded_string = json.loads(unicode_string.encode('utf-8').decode('unicode_escape'))
 # Register the LogEntry admin if enabled
 admin.site.register(LogEntry, LogEntryAdmin)
-
-
-# Site configuration model
-class ConfigAdmin(ModelAdmin, SingletonModelAdmin):
-    pass
-admin.site.register(SiteConfiguration, ConfigAdmin)
