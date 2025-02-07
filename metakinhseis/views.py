@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
 from unfold.views import UnfoldModelAdminViewMixin
 from django.views.generic import TemplateView
-from .models import Metakinhsh
+from .models import Metakinhsh, OfficeSchedule
 from django.urls import reverse
 from django.http import JsonResponse, HttpResponse
 from docxtpl import DocxTemplate
@@ -13,6 +13,7 @@ from django.db.models.functions import ExtractMonth
 from io import BytesIO
 from datetime import datetime
 from app.utils import is_member
+from django.conf import settings
 
 
 # Create your views here.
@@ -59,6 +60,7 @@ class MetakinhshCustomView(UnfoldModelAdminViewMixin, TemplateView):
 
 # Get evaluation steps in JSON for the FullCalendar view
 def metakinhsh_json(request):
+    all_events = []
     events = []
     is_consultant = request.user.groups.filter(name='Σύμβουλοι').exists()
     metakinhseis = Metakinhsh.objects.all() if not is_consultant else Metakinhsh.objects.filter(consultant=request.user)
@@ -80,7 +82,48 @@ def metakinhsh_json(request):
             'egkrish': metak.egkrish,
             'pragmat': metak.pragmat
         })
-    return JsonResponse(events, safe=False)
+    all_events = events
+
+    # If SHOW_OFFICE_DAYS are enabled
+    if settings.SHOW_OFFICE_DAYS:
+        office_days_events = []
+        greek_months = [
+                    "Ιανουάριος", "Φεβρουάριος", "Μάρτιος",
+                    "Απρίλιος", "Μάιος", "Ιούνιος",
+                    "Ιούλιος", "Αύγουστος", "Σεπτέμβριος",
+                    "Οκτώβριος", "Νοέμβριος", "Δεκέμβριος"
+                ]
+        start = request.GET['start']
+        end = request.GET['end']
+
+        startdt = datetime.strptime(start[:10], '%Y-%m-%d')
+        enddt = datetime.strptime(end[:10], '%Y-%m-%d')
+        
+        # Find the middle date of the range
+        middle_date = startdt + (enddt - startdt) / 2
+        cur_month = middle_date.month
+        cur_year = middle_date.year
+        current_month = f'{greek_months[cur_month-1]} {cur_year}'
+        
+        # Return consultant's records or all
+        if is_consultant:
+            records = OfficeSchedule.objects.filter(consultant=request.user, month=current_month)
+        else:
+            records = OfficeSchedule.objects.filter(month=current_month)
+
+        # Set office days to events
+        for rec in records:
+            for day in rec.days_in_office:
+                title = 'Ημέρα γραφείου' if is_consultant else f'{rec.consultant.last_name} {rec.consultant.first_name[:1]}.'
+                office_days_events.append({
+                    'title': title,
+                    'start': day,
+                    'allDay': True,
+                    'description': 'Ημέρα γραφείου',
+                    'officeDay': True
+                })
+        all_events = events + office_days_events
+    return JsonResponse(all_events, safe=False)
 
 
 def apofasi_metakinhshs_preview(request):

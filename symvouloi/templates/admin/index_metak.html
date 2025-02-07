@@ -4,6 +4,15 @@
     <script src="https://unpkg.com/popper.js/dist/umd/popper.min.js"></script>
     <script src="https://unpkg.com/tooltip.js/dist/umd/tooltip.min.js"></script>
     <script src="/static/js/script1.js"></script>
+    <style>
+        .fc-scrollgrid-sync-table {
+	        min-height: 600px; /* Adjust the height of all-day events */
+        }
+
+        .fc-timeGridWeek-view .fc-timegrid {
+            display: none; /* Hide the hourly slots */
+        }
+    </style>
 </head>
 {% extends 'unfold/layouts/base_simple.html' %}
 
