@@ -62,5 +62,25 @@
         <div id='calendar-metak'></div>
 
         {% component "unfold/components/separator.html" %}{% endcomponent %}
+
+        {% component "unfold/components/card.html" %}
+            {% component "unfold/components/title.html" %}
+                Υπόμνημα
+            {% endcomponent %}
+            <table class="w-full">
+                <tr>
+                    <td class="p-2 bg-green-500 rounded"></td>
+                    <td class="p-2">Εγκεκριμένες</td>
+                </tr>
+                <tr>
+                    <td class="p-2 rounded" style="background-color: #3788d8;"></td>
+                    <td class="p-2">Χωρίς έγκριση</td>
+                </tr>
+                <tr>
+                    <td class="p-2 rounded" style="background-color: brown;"></td>
+                    <td class="p-2">Ημέρες γραφείου</td>
+                </tr>
+            </table>
+        {% endcomponent %}
     {% endcomponent %}
 {% endblock %}
