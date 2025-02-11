@@ -51,6 +51,14 @@
             {% endfor %}
         {% endcomponent %}
 
+        {% if SHOW_OFFICE_DAYS %}
+        {% component "unfold/components/button.html" with variant='primary' class='data-ajax-submit' name='toggleOfficeDays'  %}
+            Εμφάνιση/Απόκρυψη ημερών γραφείου
+        {% endcomponent %}
+        {% component "unfold/components/separator.html" %}{% endcomponent %}
+        
+        {% endif %}
+
         <div id='calendar-metak'></div>
 
         {% component "unfold/components/separator.html" %}{% endcomponent %}

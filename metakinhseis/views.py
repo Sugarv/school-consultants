@@ -54,6 +54,7 @@ class MetakinhshCustomView(UnfoldModelAdminViewMixin, TemplateView):
                 "metric": complete_cnt,
             },
         ]
+        context['SHOW_OFFICE_DAYS'] = getattr(settings, 'SHOW_OFFICE_DAYS', False)  # Default to False if not set
         
         return context
 

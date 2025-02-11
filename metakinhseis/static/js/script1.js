@@ -1,5 +1,6 @@
 document.addEventListener('DOMContentLoaded', function() {
   var calendarEl = document.getElementById('calendar-metak');
+  var showOfficeDays = true; // Initial state
 
   var calendar = new FullCalendar.Calendar(calendarEl, {
       initialView: 'dayGridMonth',
@@ -32,10 +33,27 @@ document.addEventListener('DOMContentLoaded', function() {
         }
         if (info.event.extendedProps.officeDay) {
           info.el.style.backgroundColor = 'brown'; // Change the event background color
-          // info.el.style.borderColor = 'green';    // Optionally change the border color
+          if (!showOfficeDays) {
+            info.el.style.display = 'none';
+          }
         }
     }
   });
 
   calendar.render();
+
+  // Add event listener for the toggle button
+  const toggleButton = document.getElementsByName('toggleOfficeDays')[0]; // Get first element
+  if (toggleButton) {
+    // Set initial button text
+    toggleButton.textContent = showOfficeDays ? 'Απόκρυψη Ημ.Γραφείου' : 'Εμφάνιση Ημ.Γραφείου';
+    
+    toggleButton.addEventListener('click', function() {
+      showOfficeDays = !showOfficeDays;
+      // Update button text
+      toggleButton.textContent = showOfficeDays ? 'Απόκρυψη Ημ.Γραφείου' : 'Εμφάνιση Ημ.Γραφείου';
+      // Refresh all events
+      calendar.refetchEvents();
+    });
+  }
 });
