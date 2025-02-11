@@ -6,6 +6,10 @@
             "change_metakinhsh",
             "delete_metakinhsh",
             "view_metakinhsh",
+            "add_officeschedule",
+            "change_officeschedule",
+            "delete_officeschedule",
+            "view_officeschedule",
             "add_evaluationstep",
             "change_evaluationstep",
             "delete_evaluationstep",
@@ -19,6 +23,7 @@
         "permissions": [
             "change_metakinhsh",
             "view_metakinhsh",
+            "view_officeschedule",
             "change_evaluationstep",
             "view_evaluationstep",
             "view_teacher"
@@ -37,7 +42,8 @@
             "add_metakinhsh",
             "change_metakinhsh",
             "delete_metakinhsh",
-            "view_metakinhsh"
+            "view_metakinhsh",
+            "view_officeschedule"
         ]
     }
 ]
