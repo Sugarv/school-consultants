@@ -49,7 +49,7 @@ class MetakinhshAdmin(ModelAdmin, ExportActionModelAdmin):
     ]
     search_fields = ['metak_to']
     list_per_page=25
-    actions = ['apofasi_metakinhshs', 'apofasi_metakinhshs_oikon', 'katastash_plhrwmhs']
+    actions = ['apofasi_metakinhshs', 'apofasi_metakinhshs_oikon', 'katastash_plhrwmhs', 'mass_confirmation']
     ordering = ['-date_from']
     date_hierarchy = ('date_from')
     export_form_class = ExportForm
@@ -168,18 +168,19 @@ class MetakinhshAdmin(ModelAdmin, ExportActionModelAdmin):
     # Hide the action from unauthorized users
     def get_actions(self, request):
         actions = super().get_actions(request)
+        
+        # Remove the action if the user is not in the required group
+        if not (is_member(request.user, "Γραμματεία") or request.user.is_superuser):
+            del actions['apofasi_metakinhshs']
 
         # Remove the action if the user is not in the required group
-        required_group_name = "Γραμματεία"  # Replace with your group's name
-        if not (request.user.groups.filter(name=required_group_name).exists() or request.user.is_superuser):
-            if 'apofasi_metakinhshs' in actions:
-                del actions['apofasi_metakinhshs']
+        if not (is_member(request.user, "Οικονομικό") or request.user.is_superuser):
+            del actions['apofasi_metakinhshs_oikon']
+            del actions['katastash_plhrwmhs']
 
-        # Remove the action if the user is not in the required group
-        required_group_name = "Οικονομικό"  # Replace with your group's name
-        if not (request.user.groups.filter(name=required_group_name).exists() or request.user.is_superuser):
-            if 'apofasi_metakinhshs_oikon' in actions:
-                del actions['apofasi_metakinhshs_oikon']
+        # Hide mass_confirmation from FinDep, Consultants, Secretariat
+        if is_member_of_many(request.user, 'Οικονομικό,Σύμβουλοι,Γραμματεία'):
+            del actions['mass_confirmation']        
 
         return actions
 
@@ -223,6 +224,15 @@ class MetakinhshAdmin(ModelAdmin, ExportActionModelAdmin):
         # Redirect to the group assignment page, passing selected user IDs as query parameters
         url = reverse('katastash_plhrwmhs') + f'?metakinhsh_ids={metakinhsh_ids_str}'
         return HttpResponseRedirect(url)
+    
+    @action(description="Μαζική έγκριση")
+    def mass_confirmation(self, request, queryset):
+        # Custom action to massively confirm transfers
+        try:
+            queryset.update(egkrish=True)
+            messages.success(request, 'Επιτυχής έγκριση μετακινήσεων!')
+        except:
+            messages.error(request, 'Αποτυχία έγκρισης μετακινήσεων')
     
 
     # Fix: Display custom messages instead of True/False

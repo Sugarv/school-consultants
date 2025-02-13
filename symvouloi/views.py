@@ -33,6 +33,7 @@ from metakinhseis.models import Metakinhsh
 from django.contrib.admin import site
 from django.conf import settings
 from django.http import HttpResponseNotFound
+from app.utils import is_member
 
 
 def dashboard_callback(request, context):
@@ -405,6 +406,11 @@ def serve_document(request, document_name, folder = None, year = None):
 @require_POST
 def add_metakinhsh(request):
     try:
+        if not is_member(request.user, 'Σύμβουλοι'):
+            return JsonResponse({
+                'success': False,
+                'message': 'Μόνο Σύμβουλοι μπορούν να προσθέσουν Μετακίνηση.'
+            }, status=400)
         # Retrieve consultant (User). If it does not exist, get request user id
         consultant_id = request.POST.get('consultant') or request.user.id
         consultant = User.objects.get(id=consultant_id)
@@ -420,6 +426,9 @@ def add_metakinhsh(request):
         # Parse date
         es_date = request.POST.get('es_date')
         converted_date = datetime.strptime(es_date, '%d/%m/%Y').date()
+
+        # Get existing EvaluationStep id
+        step_id = EvaluationStep.objects.get(consultant=consultant_id, teacher=teacher_id, es_type=es_type_id, es_date=converted_date).pk
         
         # Construct aitiologia
         aitiologia = f"{es_type.title}, {teacher.last_name} {teacher.first_name}"
@@ -449,6 +458,9 @@ def add_metakinhsh(request):
             km=0,
             is_evaluation=True
         )
+
+        # update Evaluation Step with newly created Metakinhsh
+        EvaluationStep.objects.filter(pk=step_id).update(linked_metakinhsh=metakinhsh)
 
         return JsonResponse({
             'success': True,

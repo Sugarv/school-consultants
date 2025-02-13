@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
+from metakinhseis.models import Metakinhsh
 # from users.models import CustomUser
 from slugify import slugify
 import os
@@ -74,13 +75,15 @@ class EvaluationStep(models.Model):
 
     evaluation_document = models.FileField(null=True, blank=True, upload_to=custom_documents_directory_path,
                                            verbose_name='Αρχείο Αξιολόγησης')
-    comments = models.TextField(null=True, blank=True, default='', max_length=200, verbose_name='Σχόλια')
+    comments = models.TextField(null=True, blank=True, default='', max_length=2000, verbose_name='Σχόλια')
     timestamp = models.DateTimeField(auto_now=True, verbose_name='Χρονική σήμανση')
     downloaded = models.BooleanField(default=False, verbose_name='Έγινε λήψη')
     approved = models.BooleanField(default=False, verbose_name='Εγκρίθηκε')
     to_review = models.BooleanField(default=False, verbose_name='Για αναθεώρηση')
     comments_from_director = models.TextField(null=True, blank=True, default='', max_length=200,
                                               verbose_name='Σχόλια Επόπτη Ποιότητας')
+    linked_metakinhsh = models.ForeignKey(Metakinhsh, null=True, blank=True, on_delete=models.SET_NULL,
+                                        verbose_name='Σχετική Μετακίνηση')
 
     class Meta:
         verbose_name = "Βήμα αξιολόγησης"

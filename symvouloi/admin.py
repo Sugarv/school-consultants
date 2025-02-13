@@ -177,6 +177,7 @@ class EvaluationStepAdmin(ModelAdmin, ExportActionModelAdmin):
     ]
     change_form_after_template = "admin/metakinhsh_change_form_after.html"
     export_form_class = ExportForm
+    actions = ['mass_confirmation']
 
     def get_queryset(self, request):
         # Get the default queryset
@@ -197,7 +198,7 @@ class EvaluationStepAdmin(ModelAdmin, ExportActionModelAdmin):
         # If the user is in the 'symvouloi' group
         if request.user.groups.filter(name='Σύμβουλοι').exists():
             return ['consfname', 'teacher', 'es_type', 'es_date', 'complete', 'approved', 'comments', 'comments_from_director',
-                'evaluation_document']
+                'evaluation_document', 'linked_metakinhsh']
         else:
             return ['consultant','teacher', 'es_type', 'es_date', 'complete', 'approved', 'comments', 'comments_from_director',
                 'evaluation_document']
@@ -223,7 +224,7 @@ class EvaluationStepAdmin(ModelAdmin, ExportActionModelAdmin):
     
 
     def get_readonly_fields(self, request, obj=None):
-        readonly = ['consfname', 'file_link']
+        readonly = ['consfname', 'file_link', 'linked_metakinhsh']
         if is_member(request.user, 'Σύμβουλοι'):
             readonly += ['comments_from_director', 'approved']
         return readonly
@@ -274,6 +275,24 @@ class EvaluationStepAdmin(ModelAdmin, ExportActionModelAdmin):
 
     complete_display.short_description = "Ολοκληρώθηκε"
     approved_display.short_description = "Εγκρίθηκε"
+
+    @action(description="Μαζική έγκριση")
+    def mass_confirmation(self, request, queryset):
+        # Custom action to massively confirm evaluation steps
+        try:
+            queryset.update(approved=True)
+            messages.success(request, 'Επιτυχής έγκριση βημάτων αξιολόγησης!')
+        except:
+            messages.error(request, 'Αποτυχία έγκρισης βημάτων αξιολόγησης')
+
+
+    def get_actions(self, request):
+        actions = super().get_actions(request)
+        # Remove the action if the user is not in the required group
+        if not (is_member(request.user, 'Επόπτες') or request.user.is_superuser):
+            del actions ['mass_confirmation']
+
+        return actions
     
 
 #####################################
