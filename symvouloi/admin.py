@@ -19,7 +19,7 @@ from unfold.admin import StackedInline #, TabularInline
 from django.urls import reverse, path
 from django.http import HttpResponseRedirect
 from django.contrib import messages
-from unfold.decorators import action
+from unfold.decorators import action, display
 from .views import assign_users_to_group, EvaluationStepCustomView
 from unfold.contrib.filters.admin import (RelatedDropdownFilter)
 from unfold.contrib.import_export.forms import ExportForm, ImportForm
@@ -267,11 +267,13 @@ class EvaluationStepAdmin(ModelAdmin, ExportActionModelAdmin):
         ]
     
     # Fix: Display custom messages instead of True/False
+    @display(label={ 'OXI': "danger", 'NAI': "success" },)
     def complete_display(self, obj):
-        return "Ναι" if obj.complete else "Όχι"
+        return "NAI" if obj.complete else "OXI"
 
+    @display(label={ 'OXI': "danger", 'NAI': "success" },)
     def approved_display(self, obj):
-        return "Ναι" if obj.approved else "Όχι"
+        return "NAI" if obj.approved else "OXI"
 
     complete_display.short_description = "Ολοκληρώθηκε"
     approved_display.short_description = "Εγκρίθηκε"

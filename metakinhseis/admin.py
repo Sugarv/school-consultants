@@ -13,7 +13,7 @@ from unfold.contrib.import_export.forms import ExportForm
 from app.filters import MyRangeDateFilter
 from .models import Metakinhsh, Consultant, OfficeSchedule
 from app.utils import is_member, is_member_of_many
-from unfold.decorators import action
+from unfold.decorators import action, display
 from django import forms
 from django.utils.safestring import mark_safe
 from django.core.exceptions import ValidationError
@@ -236,11 +236,13 @@ class MetakinhshAdmin(ModelAdmin, ExportActionModelAdmin):
     
 
     # Fix: Display custom messages instead of True/False
+    @display(label={ 'OXI': "danger", 'NAI': "success" },)
     def complete_display(self, obj):
-        return "Ναι" if obj.pragmat else "Όχι"
+        return "NAI" if obj.pragmat else "OXI"
 
-    def approved_display(self, obj):
-        return "Ναι" if obj.egkrish else "Όχι"
+    @display(label={ 'OXI': "danger", 'NAI': "success" },)
+    def approved_display(self, instance: Metakinhsh):
+        return "NAI" if instance.egkrish else "OXI"
 
     complete_display.short_description = "Ολοκληρώθηκε"
     approved_display.short_description = "Εγκρίθηκε"
