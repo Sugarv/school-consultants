@@ -13,7 +13,7 @@ class Command(BaseCommand):
                 'group': group.name,
                 'permissions': list(permissions),
             })
-        with open('groups_permissions.json', 'w') as file:
+        with open('fixtures/groups_permissions.json', 'w') as file:
             json.dump(data, file, indent=4)
         self.stdout.write(self.style.SUCCESS("Exported groups and permissions to groups_permissions.json"))
         

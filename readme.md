@@ -21,7 +21,8 @@ The app features 4 discreet user roles with different capabilities each:
 
 - Copy ```.env-sample``` to ```.env```, changing the desired fields
 - Run ```docker compose up -d``` (to create containers and run app - Docker should be installed)
-- Run ```docker compose exec app python manage.py createsuperuser``` (to create admin - run after a few minutes)
+- (Optional) Import Evaluation Step Types: ```docker compose exec app python manage.py loaddata fixtures/initial_step_types.json```
+- Run ```docker compose exec app python manage.py createsuperuser``` (to create admin - run after a few minutes to allow app initialization)
 
 
 ### Instructions for development setup
@@ -31,4 +32,5 @@ The app features 4 discreet user roles with different capabilities each:
 - Migrate DB: ```python manage.py migrate```
 - Create a superuser: ```python manage.py createsuperuser```
 - Import groups & their permissions: ```python manage.py import_groups --settings=app.settings-dev``` 
+- (Optional) Import Evaluation Step Types: ```python manage.py loaddata fixtures/initial_step_types.json```
 - Run the app with: ```python manage.py runserver --settings=app.settings-dev```

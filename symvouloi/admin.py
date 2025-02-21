@@ -197,11 +197,11 @@ class EvaluationStepAdmin(ModelAdmin, ExportActionModelAdmin):
     def get_fields(self, request, obj=None):
         # If the user is in the 'symvouloi' group
         if request.user.groups.filter(name='Σύμβουλοι').exists():
-            return ['consfname', 'teacher', 'es_type', 'es_date', 'complete', 'approved', 'comments', 'comments_from_director',
+            return ['consfname', 'teacher', 'es_type', 'es_date', 'complete', 'approved', 'comments',
                 'evaluation_document', 'linked_metakinhsh']
         else:
-            return ['consultant','teacher', 'es_type', 'es_date', 'complete', 'approved', 'comments', 'comments_from_director',
-                'evaluation_document']
+            return ['consultant','teacher', 'es_type', 'es_date', 'complete', 'approved', 'comments',
+                'evaluation_document', 'linked_metakinhsh']
         
     def get_list_filter(self, request):
         if request.user.groups.filter(name='Σύμβουλοι').exists():

@@ -145,4 +145,4 @@ IMPERSONATE = {
     'REDIRECT_URL' : '/metakinhseis/metakinhsh/'
 }
 
-SHOW_OFFICE_DAYS = True
+SHOW_OFFICE_DAYS = False

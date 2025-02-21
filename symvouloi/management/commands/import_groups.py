@@ -6,7 +6,7 @@ class Command(BaseCommand):
     help = "Import groups and permissions from a JSON file"
 
     def handle(self, *args, **kwargs):
-        with open('groups_permissions.json', 'r') as file:
+        with open('fixtures/groups_permissions.json', 'r') as file:
             data = json.load(file)
             for entry in data:
                 group, created = Group.objects.get_or_create(name=entry['group'])

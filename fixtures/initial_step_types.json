@@ -1,0 +1,30 @@
+[
+{
+    "model": "symvouloi.evaluationsteptype",
+    "pk": 1,
+    "fields": {
+        "title": "1η συνάντηση - Προαξιολογική"
+    }
+},
+{
+    "model": "symvouloi.evaluationsteptype",
+    "pk": 2,
+    "fields": {
+        "title": "2η συνάντηση - 1η Διδασκαλία"
+    }
+},
+{
+    "model": "symvouloi.evaluationsteptype",
+    "pk": 3,
+    "fields": {
+        "title": "3η συνάντηση - 2η Διδασκαλία"
+    }
+},
+{
+    "model": "symvouloi.evaluationsteptype",
+    "pk": 4,
+    "fields": {
+        "title": "Αξιολόγηση - Αναστοχασμός"
+    }
+}
+]
