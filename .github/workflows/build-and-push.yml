@@ -19,7 +19,7 @@ jobs:
 
       - name: Build and push Docker image (replace with your details)
         run: |
-          docker build -t itdipeira/school_consultants:latest app/ 
+          docker build -t itdipeira/school_consultants:latest .
 
       - name: Push Docker image to registry (optional)
         run: docker push itdipeira/school_consultants:latest
