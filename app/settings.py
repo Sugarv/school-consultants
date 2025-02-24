@@ -44,7 +44,6 @@ INSTALLED_APPS = [
     'metakinhseis',
     'import_export',
     'impersonate',
-    'solo.apps.SoloAppConfig',
 ]
 
 MIDDLEWARE = [

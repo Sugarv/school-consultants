@@ -5,7 +5,6 @@ from .models import (
     EvaluationStep,
     TeacherAssignment,
 )
-from solo.admin import SingletonModelAdmin
 from django.contrib.auth.models import User, Group
 from django.contrib.admin.models import LogEntry
 from unfold.admin import ModelAdmin
