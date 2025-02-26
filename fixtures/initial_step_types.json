@@ -10,21 +10,21 @@
     "model": "symvouloi.evaluationsteptype",
     "pk": 2,
     "fields": {
-        "title": "2η συνάντηση - 1η Διδασκαλία"
+        "title": "2η συνάντηση - Παρακολούθηση 1ης Διδασκαλίας"
     }
 },
 {
     "model": "symvouloi.evaluationsteptype",
     "pk": 3,
     "fields": {
-        "title": "3η συνάντηση - 2η Διδασκαλία"
+        "title": "3η συνάντηση - Παρακολούθηση 2ης Διδασκαλίας"
     }
 },
 {
     "model": "symvouloi.evaluationsteptype",
     "pk": 4,
     "fields": {
-        "title": "Αξιολόγηση - Αναστοχασμός"
+        "title": "Τελική έκθεση"
     }
 }
 ]

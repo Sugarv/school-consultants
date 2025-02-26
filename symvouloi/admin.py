@@ -135,12 +135,14 @@ class TeacherAdmin(ModelAdmin, ImportExportModelAdmin):
         if request.user.groups.filter(name='Σύμβουλοι').exists():
             return [
                 ( None, {
-                    "fields" : ['afm',('last_name', 'first_name'), ('father_name', 'specialty'), 'school', ('fek', 'appointment_date'), ('mobile', 'mail'),'comments']
+                    "fields" : ['afm',('last_name', 'first_name'), ('father_name', 'specialty'), 'school', ('fek', 'appointment_date'), ('mobile', 'mail'),
+                                ('participates', 'is_active'), 'category', 'comments']
                 })
             ]
         return [
             ( None, {
-                "fields": ['consultant','afm',('last_name', 'first_name'), ('father_name', 'specialty'), 'school', ('fek', 'appointment_date'), ('mobile', 'mail'),'comments']
+                "fields": ['consultant','afm',('last_name', 'first_name'), ('father_name', 'specialty'), 'school', ('fek', 'appointment_date'), 
+                           ('mobile', 'mail'), ('participates', 'is_active'), 'category', 'comments']
             }) 
         ]
     
@@ -194,13 +196,16 @@ class EvaluationStepAdmin(ModelAdmin, ExportActionModelAdmin):
         return qs.none()
     
     def get_fields(self, request, obj=None):
+        fields = []
         # If the user is in the 'symvouloi' group
         if request.user.groups.filter(name='Σύμβουλοι').exists():
-            return ['consfname', 'teacher', 'es_type', 'es_date', 'complete', 'approved', 'comments',
-                'evaluation_document', 'linked_metakinhsh']
+            fields += ['consfname', 'teacher', 'es_type', 'es_date', 'complete', 'comments', 'linked_metakinhsh']
         else:
-            return ['consultant','teacher', 'es_type', 'es_date', 'complete', 'approved', 'comments',
-                'evaluation_document', 'linked_metakinhsh']
+            fields += ['consultant','teacher', 'es_type', 'es_date', 'complete', 'comments', 'linked_metakinhsh']
+        # if final step, add document & approved
+        if obj and obj.es_type.pk == 4:
+            fields += ['approved', 'evaluation_document']
+        return fields
         
     def get_list_filter(self, request):
         if request.user.groups.filter(name='Σύμβουλοι').exists():
@@ -210,9 +215,9 @@ class EvaluationStepAdmin(ModelAdmin, ExportActionModelAdmin):
     def get_list_display(self, request):
         # If user is in 'symvouloi' group, show specific fields
         if request.user.groups.filter(name='Σύμβουλοι').exists():
-            return ('teacher', 'es_type', 'es_date', 'complete_display', 'approved_display')
+            return ('teacher', 'es_type', 'es_date', 'complete_display')
         # For other users, show all fields including 'consultant'
-        return ('consfname', 'teacher', 'es_type', 'es_date', 'complete_display', 'approved_display')
+        return ('consfname', 'teacher', 'es_type', 'es_date', 'complete_display')
     
     # choose only from teachers with the current user as consultant
     def formfield_for_foreignkey(self, db_field, request, **kwargs):

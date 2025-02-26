@@ -155,3 +155,5 @@ IMPERSONATE = {
     'URI_EXCLUSIONS' : [],
     'REDIRECT_URL' : '/metakinhseis/metakinhsh/'
 }
+
+SUPERVISOR_EMAIL = os.environ['SUPERVISOR_EMAIL']

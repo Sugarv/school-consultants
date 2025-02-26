@@ -134,6 +134,7 @@ def update_teacher_and_consultant(request):
                 if teacher_data:
                     teacher_info = teacher_data[0]
                     try:
+                        is_active = True if teacher_info.get("status", "") == 1 else False
                         teacher = Teacher.objects.create(
                             afm=teacher_info.get("afm", "").zfill(9),
                             evaluation_year=settings.EVALUATION_YEAR,
@@ -148,7 +149,7 @@ def update_teacher_and_consultant(request):
                             mail=teacher_info.get("email", ""),
                             participates=True,
                             comments="",
-                            is_active=True,
+                            is_active=is_active,
                             consultant=consultant
                         )
                         added_teachers += 1
@@ -334,13 +335,13 @@ class EvaluationStepCustomView(UnfoldModelAdminViewMixin, TemplateView):
                 ],
                 "rows": [
                     ["1", "Εκπαιδευτικοί για Αξιολόγηση", total_educators, "---", "---", "---"],
-                    ["2", "Εκπαιδευτικοί χωρίς προγραμματισμένη 1η συνάντηση",  educators_without_steps, educators_without_steps, "---", "---"],
-                    ["3", "Εκπαιδευτικοί χωρίς προγραμματισμένη 2η συνάντηση",  educators_missing_2nd_meeting, educators_missing_2nd_meeting, "---", "---"],
-                    ["4", "Εκπαιδευτικοί χωρίς προγραμματισμένη 3η συνάντηση",  educators_missing_3rd_meeting, educators_missing_3rd_meeting, "---", "---"],
+                    ["2", "Εκπαιδευτικοί χωρίς προγραμματισμένη Προαξιολογική",  educators_without_steps, educators_without_steps, "---", "---"],
+                    ["3", "Εκπαιδευτικοί χωρίς προγραμματισμένη 1η διδασκαλία",  educators_missing_2nd_meeting, educators_missing_2nd_meeting, "---", "---"],
+                    ["4", "Εκπαιδευτικοί χωρίς προγραμματισμένη 2η διδασκαλία",  educators_missing_3rd_meeting, educators_missing_3rd_meeting, "---", "---"],
                     ["5", "Εκπαιδευτικοί χωρίς Τελική Αξιολόγηση",  educators_missing_final_eval, educators_missing_final_eval, "---", "---"],
-                    ["6", "Εκπαιδευτικοί με προγραμματισμένη 1η συνάντηση", *first_meeting_stats],
-                    ["7", "Εκπαιδευτικοί με προγραμματισμένη 2η συνάντηση", *second_meeting_stats],
-                    ["8", "Εκπαιδευτικοί με προγραμματισμένη 3η συνάντηση", *third_meeting_stats]
+                    ["6", "Εκπαιδευτικοί με προγραμματισμένη Προαξιολογική", *first_meeting_stats],
+                    ["7", "Εκπαιδευτικοί με προγραμματισμένη 1η διδασκαλία", *second_meeting_stats],
+                    ["8", "Εκπαιδευτικοί με προγραμματισμένη 2η διδασκαλία", *third_meeting_stats]
                 ]
             }
         
@@ -363,7 +364,7 @@ class EvaluationStepCustomView(UnfoldModelAdminViewMixin, TemplateView):
 
         chart_stats = json.dumps(
             {
-                "labels": ['Σύνολο', 'Με 1η Συν.', 'Με 2η Συν.', 'Με 3η Συν.', 'Με Τελ.Αξιολ.'],
+                "labels": ['Σύνολο', 'Με Προαξιολογ.', 'Με 1η Διδασκ.', 'Με 2η Διδασκ.', 'Με Τελ.Αξιολ.'],
                 "datasets": [
                     {
                         "data": [total_educators, first_meeting_stats[0], second_meeting_stats[0], third_meeting_stats[0]], 

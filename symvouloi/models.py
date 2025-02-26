@@ -1,10 +1,17 @@
 from django.db import models
 from django.contrib.auth.models import User
+from django.db.models.signals import post_save
+from django.dispatch import receiver
+from django.core.mail import send_mail
 from metakinhseis.models import Metakinhsh
-# from users.models import CustomUser
 from slugify import slugify
+from django.conf import settings
 import os
 
+
+CATEGORY_CHOICES = [
+    ('A','A'), ('A1','A1'), ('A2','A2'), ('B','B')
+]
 
 # Create your models here.
 class Teacher(models.Model):
@@ -21,6 +28,7 @@ class Teacher(models.Model):
     mobile = models.CharField(null=True, blank=True, max_length=25, verbose_name='Κινητό')
     mail = models.CharField(null=True, blank=True, max_length=100, verbose_name='E-mail')
     participates = models.BooleanField(default=True, verbose_name='Συμμετέχει στην αξιολόγηση')
+    category = models.CharField(null=True, blank=True, max_length=5, choices=CATEGORY_CHOICES, verbose_name='Κατηγορία αξιολόγησης')
     comments = models.TextField(null=True, blank=True, default='', max_length=200, verbose_name='Σχόλια')
     is_active = models.BooleanField(default=True, verbose_name='Ενεργός εκπαιδευτικός')
 
@@ -136,3 +144,24 @@ def get_user_display(self):
     return f"{self.last_name} {self.first_name}"
 
 User.add_to_class("__str__", get_user_display)
+
+
+# Use signals to send_mail when a new object is created in Metakinhsh
+@receiver(post_save, sender=EvaluationStep)
+def send_email(sender, instance, created, **kwargs):
+    if created and instance.es_type.pk == 4:
+        fname = instance.consultant.first_name + ' ' + instance.consultant.last_name
+        teacher_fname = instance.teacher.first_name + ' ' + instance.teacher.last_name
+        
+        subject = 'Ολοκλήρωση τελικής αξιολόγησης'
+        message = f'<h3>Ολοκλήρωση τελικής αξιολόγησης</h3><br>Σας ενημερώνουμε πως o/η Σύμβουλος Εκπαίδευσης {fname} ολοκλήρωσε την ' \
+              f'Τελική Αξιολόγηση του/της εκπαιδευτικού με ον/μο {teacher_fname}.'
+
+        # check if debug. If yes, print message, else send the email
+        if settings.DEBUG == True:
+          print("Email text:")
+          print(message)
+        else:
+          from_email = settings.DEFAULT_FROM_EMAIL
+          recipient_list = settings.SUPERVISOR_EMAIL
+          send_mail(subject, message, from_email, recipient_list, html_message=message)
