@@ -17,12 +17,13 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 from symvouloi.views import update_teacher_and_consultant, assign_users_to_group, \
-    evaluation_steps_json, add_metakinhsh, serve_document
+    evaluation_steps_json, add_metakinhsh, serve_document, update_teachers
 from metakinhseis.views import metakinhsh_json, apofasi_metakinhshs_preview, katastash_plhrwmhs
 
 
 urlpatterns = [
     path('update-teachers/', update_teacher_and_consultant, name='update_teachers'),
+    path('update-all-teachers/', update_teachers, name='update_all_teachers'),
     path('assign_users_to_group/', assign_users_to_group, name='assign_users_to_group'),
     path('evaluation-steps-json/', evaluation_steps_json, name='evaluation_steps_json'),
     path('metakinhsh-json/', metakinhsh_json, name='metakinhsh_json'),

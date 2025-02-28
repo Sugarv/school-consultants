@@ -65,6 +65,8 @@ class TeacherAdmin(ModelAdmin, ImportExportModelAdmin):
     inlines = [EvaluationStepInline]
     export_form_class = ExportForm
     import_form_class = ImportForm
+    actions = ['update_teachers']
+    list_per_page = 50
 
     def formfield_for_foreignkey(self, db_field, request, **kwargs):
         if db_field.name == "consultant":
@@ -150,7 +152,37 @@ class TeacherAdmin(ModelAdmin, ImportExportModelAdmin):
         if request.user.groups.filter(name='Σύμβουλοι').exists():
             return ('afm','last_name', 'first_name', 'father_name', 'specialty', 'school', 'fek', 'appointment_date', 'mobile', 'mail')
         return ()
+    
+    def get_actions(self, request):
+        actions = super().get_actions(request)
+        # Remove the action if the user is not in the required group
+        if not (request.user.is_superuser):
+            del actions ['update_teachers']
+        return actions
+    
+    def update_teachers(self, request, queryset):
+        """
+        Custom action to call the `update_teachers` view.
+        This action works without requiring selected objects.
+        """
+        try:
+            # Directly call the view that processes the update (you can also import the view)
+            from .views import update_teachers  # Adjust this import as needed
+            # Call the view function directly (simulate a request)
+            response = update_teachers(request)  # Pass request to view
 
+            # Get the message from the response (if returned as part of the JsonResponse or response content)
+            if hasattr(response, 'content'):
+                message = response.content.decode('utf-8')  # Assuming the message is returned in response
+                self.message_user(request, message, level=messages.SUCCESS)
+            else:
+                self.message_user(request, "Επιτυχής ενημέρωση εκπ/κών!", level=messages.SUCCESS)
+
+        except Exception as e:
+            self.message_user(request, f"Απέτυχε ο συγχρονισμός: {str(e)}", level=messages.ERROR)
+
+    update_teachers.short_description = "Ενημέρωση εκπαιδευτικών (γενική ενέργεια)"
+    update_teachers.acts_on_all = True
 
 @admin.register(EvaluationStepType)
 class EvaluationStepTypeAdmin(ModelAdmin):
@@ -179,6 +211,7 @@ class EvaluationStepAdmin(ModelAdmin, ExportActionModelAdmin):
     change_form_after_template = "admin/metakinhsh_change_form_after.html"
     export_form_class = ExportForm
     actions = ['mass_confirmation']
+    list_per_page = 30
 
     def get_queryset(self, request):
         # Get the default queryset

@@ -191,6 +191,64 @@ def update_teacher_and_consultant(request):
     return HttpResponse(f"Ο συγχρονισμός εκπ/κών ολοκληρώθηκε. Προστέθηκαν {added_consultants} σύμβουλοι & {added_teachers} εκπ/κοί.")
 
 
+# Update teachers from API
+@staff_member_required
+def update_teachers(request):
+    api_endpoint = settings.API_ENDPOINT
+    api_key = settings.API_KEY
+    updated_teachers = 0
+    errors = []
+
+    # Get all teachers from the database
+    teachers = Teacher.objects.all()
+
+    # Fetch latest teacher data from API
+    try:
+        full_endpoint = f"{api_endpoint}/employee"
+        response = requests.get(full_endpoint, headers={"X-API-Key": api_key})
+        response.raise_for_status()
+        api_teachers = {t["afm"].zfill(9): t for t in response.json().get("records", [])}  # Normalize AFM
+    except requests.RequestException as e:
+        return JsonResponse({"status": "Error", "message": f"Σφάλμα ενημέρωσης εκπ/κών από το API: {e}"}, status=500)
+
+    # Fetch school dictionary for `sx_yphrethshs` mapping
+    school_dict = {}
+    try:
+        full_endpoint = f"{api_endpoint}/school"
+        response = requests.get(full_endpoint, headers={"X-API-Key": api_key})
+        response.raise_for_status()
+        school_dict = {record["id"]: record["name"] for record in response.json().get("records", [])}
+    except requests.RequestException as e:
+        return JsonResponse({"status": "Error", "message": f"Σφάλμα ενημέρωσης σχολείων από το API: {e}"}, status=500)
+
+    # Loop through teachers and compare with API data
+    for teacher in teachers:
+        afm = teacher.afm.zfill(9)  # Normalize AFM
+
+        if afm in api_teachers:
+            api_teacher = api_teachers[afm]
+            new_school = school_dict.get(api_teacher.get("sx_yphrethshs", ""), "Άγνωστο")
+            new_status = True if api_teacher.get("status", "") == 1 else False
+
+            # Check if any field has changed
+            if teacher.school != new_school or teacher.is_active != new_status:
+                try:
+                    teacher.school = new_school
+                    teacher.is_active = new_status
+                    teacher.save()
+                    updated_teachers += 1
+                    print(f"Ενημέρωση εκπ/κού {teacher.last_name} ({afm})")
+                except Exception as e:
+                    errors.append(f"Σφάλμα ενημέρωσης εκπ/κού {teacher.last_name} ({afm}): {e}")
+        else:
+            print(f"Ο/Η εκπ/κός {teacher.last_name} ({afm}) δε βρέθηκε στο API.")
+
+    result_message = f"Έγινε ενημέρωση {updated_teachers} εκπ/κών."
+    if errors:
+        result_message += f" Σφάλματα: {len(errors)}. Ελέγξτε το αρχείο καταγραφής."
+
+    return HttpResponse(result_message)
+
 
 # Assign multiple users to the selected group
 def assign_users_to_group(request):
