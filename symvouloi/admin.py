@@ -4,22 +4,19 @@ from .models import (
     EvaluationStepType,
     EvaluationStep,
     TeacherAssignment,
+    EvaluationData,
 )
 from django.contrib.auth.models import User, Group
 from django.contrib.admin.models import LogEntry
 from unfold.admin import ModelAdmin
 from django.contrib.auth.admin import GroupAdmin as BaseGroupAdmin
-# from impersonate.admin import UserAdminImpersonateMixin
-# from django.urls import reverse
-# from django.utils.html import format_html
 from import_export.admin import ImportExportModelAdmin, ExportActionModelAdmin
-# from unfold.contrib.import_export.forms import ExportForm, ImportForm, SelectableFieldsExportForm
-from unfold.admin import StackedInline #, TabularInline
+from unfold.admin import StackedInline
 from django.urls import reverse, path
 from django.http import HttpResponseRedirect
 from django.contrib import messages
 from unfold.decorators import action, display
-from .views import assign_users_to_group, EvaluationStepCustomView
+from .views import assign_users_to_group, EvaluationStepCustomView, import_evaluation_data
 from unfold.contrib.filters.admin import (RelatedDropdownFilter)
 from unfold.contrib.import_export.forms import ExportForm, ImportForm
 from django.utils.html import format_html
@@ -28,7 +25,6 @@ from app.utils import is_member, is_member_of_many
 from django.contrib.auth.hashers import make_password
 from metakinhseis.admin import ConsultantInline
 from django.utils import timezone
-
 
 class EvaluationStepInline(StackedInline):
     model = EvaluationStep
@@ -508,3 +504,34 @@ class LogEntryAdmin(admin.ModelAdmin):
     # # decoded_string = json.loads(unicode_string.encode('utf-8').decode('unicode_escape'))
 # Register the LogEntry admin if enabled
 admin.site.register(LogEntry, LogEntryAdmin)
+
+
+@admin.register(EvaluationData)
+class EvaluationDataAdmin(ModelAdmin):
+    list_display = ('teacher', 'consultant_a1', 'a1_evaluation_date', 'consultant_a2', 'a2_evaluation_date', 'consultant_b', 'b_evaluation_date', 'permanent')
+    list_filter = ('permanent', ('teacher', RelatedDropdownFilter))
+    search_fields = ('teacher__afm', 'teacher__last_name', 'teacher__first_name')
+    readonly_fields = ('teacher', 'consultant_a1', 'a1_result', 'a1_evaluation_date', 
+                      'consultant_a2', 'a2_result', 'a2_evaluation_date',
+                      'consultant_b', 'b_result', 'b_evaluation_date', 'permanent')
+    
+    def get_urls(self):
+        urls = super().get_urls()
+        custom_urls = [
+            path('import-csv/', import_evaluation_data, name='import_evaluation_data'),
+        ]
+        return custom_urls + urls
+
+    def has_add_permission(self, request):
+        return False  # Disable manual creation - data should only be imported
+
+    def has_delete_permission(self, request, obj=None):
+        return request.user.is_superuser  # Only superusers can delete records
+
+    def has_change_permission(self, request, obj=None):
+        return False  # Data should be read-only once imported
+
+    def changelist_view(self, request, extra_context=None):
+        extra_context = extra_context or {}
+        extra_context['show_import_button'] = True
+        return super().changelist_view(request, extra_context=extra_context)

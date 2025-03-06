@@ -4,6 +4,8 @@ import mimetypes
 import requests
 from datetime import datetime
 from django.utils import timezone
+import csv
+from io import TextIOWrapper
 
 from django.http import HttpResponse, Http404
 from django.contrib.auth.decorators import login_required, user_passes_test
@@ -18,7 +20,7 @@ from django.views.generic import RedirectView, TemplateView
 from django.conf import settings
 from django.contrib.auth.models import User
 from django.http import JsonResponse
-from .models import TeacherAssignment, Teacher, EvaluationStep, EvaluationStepType
+from .models import TeacherAssignment, Teacher, EvaluationStep, EvaluationStepType, EvaluationData
 
 from django.contrib import messages
 from django.contrib.auth.models import Group
@@ -557,3 +559,112 @@ def add_metakinhsh(request):
             'success': False,
             'message': 'Προέκυψε ένα σφάλμα. Βεβαιωθείτε ότι έχετε αποθηκεύσει το βήμα αξιολόγησης.'
         }, status=500)
+
+@staff_member_required
+def import_evaluation_data(request):
+    if request.method == 'POST' and request.FILES.get('csv_file'):
+        csv_file = request.FILES['csv_file']
+        
+        # Ensure it's a CSV file
+        if not csv_file.name.endswith('.csv'):
+            messages.error(request, 'Παρακαλώ ανεβάστε ένα αρχείο CSV.')
+            return redirect('admin:symvouloi_evaluationdata_changelist')
+
+        # Process the CSV file
+        try:
+            # Use TextIOWrapper to handle the file as text
+            csv_text = TextIOWrapper(csv_file.file, encoding='utf-8')
+            reader = csv.DictReader(csv_text)
+            
+            created_count = 0
+            errors = []
+
+            for row in reader:
+                # Check if any evaluation fields are filled
+                has_evaluation_data = any([
+                    row.get('ΑΝΑΓΝΩΡΙΣΤΙΚΟ ΕΚΚΡΕΜΟΤΗΤΑΣ Α1/Α'),
+                    row.get('ΠΕΔΙΟ Α1/Α'),
+                    row.get('ΗΜΕΡΟΜΗΝΙΑ ΑΞΙΟΛΟΓΗΣΗΣ Α1/Α'),
+                    row.get('ΑΝΑΓΝΩΡΙΣΤΙΚΟ ΕΚΚΡΕΜΟΤΗΤΑΣ Α2'),
+                    row.get('ΠΕΔΙΟ Α2'),
+                    row.get('ΗΜΕΡΟΜΗΝΙΑ ΑΞΙΟΛΟΓΗΣΗΣ Α2'),
+                    row.get('ΑΝΑΓΝΩΡΙΣΤΙΚΟ ΕΚΚΡΕΜΟΤΗΤΑΣ Β'),
+                    row.get('ΠΕΔΙΟ B'),
+                    row.get('ΗΜΕΡΟΜΗΝΙΑ ΑΞΙΟΛΟΓΗΣΗΣ B')
+                ])
+
+                if not has_evaluation_data:
+                    continue
+
+                try:
+                    # Get teacher
+                    teacher = Teacher.objects.get(afm=row['ΑΦΜ'])
+
+                    # Process consultant AFMs and get User objects
+                    consultant_a1 = None
+                    consultant_a2 = None
+                    consultant_b = None
+
+                    if row.get('ΑΝΑΓΝΩΡΙΣΤΙΚΟ ΕΚΚΡΕΜΟΤΗΤΑΣ Α1/Α'):
+                        consultant_afm = row['ΑΝΑΓΝΩΡΙΣΤΙΚΟ ΕΚΚΡΕΜΟΤΗΤΑΣ Α1/Α'].split(':')[0]
+                        consultant_a1_obj = User.objects.get(username=consultant_afm)
+                        consultant_a1 = f'{consultant_a1_obj.last_name} {consultant_a1_obj.first_name}'
+
+                    if row.get('ΑΝΑΓΝΩΡΙΣΤΙΚΟ ΕΚΚΡΕΜΟΤΗΤΑΣ Α2'):
+                        consultant_afm = row['ΑΝΑΓΝΩΡΙΣΤΙΚΟ ΕΚΚΡΕΜΟΤΗΤΑΣ Α2'].split(':')[0]
+                        consultant_a2_obj = User.objects.get(username=consultant_afm)
+                        consultant_a2 = f'{consultant_a2_obj.last_name} {consultant_a2_obj.first_name}'
+
+                    if row.get('ΑΝΑΓΝΩΡΙΣΤΙΚΟ ΕΚΚΡΕΜΟΤΗΤΑΣ B'):
+                        consultant_afm = row['ΑΝΑΓΝΩΡΙΣΤΙΚΟ ΕΚΚΡΕΜΟΤΗΤΑΣ B'].split(':')[0]
+                        consultant_b = consultant_afm
+
+                    # Parse dates
+                    a1_date = None
+                    a2_date = None
+                    b_date = None
+
+                    if row.get('ΗΜΕΡΟΜΗΝΙΑ ΑΞΙΟΛΟΓΗΣΗΣ Α1/Α'):
+                        a1_date = datetime.strptime(row['ΗΜΕΡΟΜΗΝΙΑ ΑΞΙΟΛΟΓΗΣΗΣ Α1/Α'], '%d/%m/%Y %H:%M')
+                    if row.get('ΗΜΕΡΟΜΗΝΙΑ ΑΞΙΟΛΟΓΗΣΗΣ Α2'):
+                        a2_date = datetime.strptime(row['ΗΜΕΡΟΜΗΝΙΑ ΑΞΙΟΛΟΓΗΣΗΣ Α2'], '%d/%m/%Y %H:%M')
+                    if row.get('ΗΜΕΡΟΜΗΝΙΑ ΑΞΙΟΛΟΓΗΣΗΣ B'):
+                        b_date = datetime.strptime(row['ΗΜΕΡΟΜΗΝΙΑ ΑΞΙΟΛΟΓΗΣΗΣ B'], '%d-%m-%Y %H:%M')
+
+                    # Create EvaluationData object
+                    evaluation_data = EvaluationData.objects.create(
+                        teacher=teacher,
+                        consultant_a1=consultant_a1,
+                        a1_result=row.get('ΠΕΔΙΟ Α1/Α'),
+                        a1_evaluation_date=a1_date,
+                        consultant_a2=consultant_a2,
+                        a2_result=row.get('ΠΕΔΙΟ Α2'),
+                        a2_evaluation_date=a2_date,
+                        consultant_b=consultant_b,
+                        b_result=row.get('ΠΕΔΙΟ B'),
+                        b_evaluation_date=b_date,
+                        permanent=True if row.get('ΜΟΝΙΜΟΠΟΙΗΣΗ') == 'ΝΑΙ' else False
+                    )
+                    created_count += 1
+
+                except Teacher.DoesNotExist:
+                    errors.append(f"Δε βρέθηκε εκπαιδευτικός με ΑΦΜ {row['ΑΦΜ']}")
+                except User.DoesNotExist as e:
+                    errors.append(f"Δε βρέθηκε σύμβουλος για τον εκπαιδευτικό με ΑΦΜ {row['ΑΦΜ']}")
+                except Exception as e:
+                    errors.append(f"Σφάλμα για εκπαιδευτικό με ΑΦΜ {row['ΑΦΜ']}: {str(e)}")
+
+            if created_count > 0:
+                messages.success(request, f'Επιτυχής εισαγωγή {created_count} αξιολογήσεων.')
+            if errors:
+                messages.warning(request, f'Προέκυψαν {len(errors)} σφάλματα κατά την εισαγωγή.')
+                for error in errors:
+                    messages.error(request, error)
+
+        except Exception as e:
+            messages.error(request, f'Σφάλμα κατά την επεξεργασία του αρχείου: {str(e)}')
+
+        return redirect('admin:symvouloi_evaluationdata_changelist')
+
+    # If GET request or no file uploaded, redirect to list view
+    return redirect('admin:symvouloi_evaluationdata_changelist')

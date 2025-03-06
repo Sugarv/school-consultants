@@ -48,6 +48,28 @@ class Teacher(models.Model):
     def __str__(self):
         return f"{self.last_name} {self.first_name} {self.specialty}"
 
+# Existing evaluation data from gov.gr aksiologhsh system
+class EvaluationData(models.Model):
+    teacher = models.ForeignKey(Teacher, null=False, on_delete=models.CASCADE, verbose_name='Εκπαιδευτικός')
+    
+    consultant_a1 = models.TextField(null=True, blank=True, max_length=100, verbose_name='Αξιολογητής A1')
+    a1_result = models.TextField(null=True, blank=True, max_length=100, verbose_name='Αποτέλεσμα Α1')
+    a1_evaluation_date = models.DateTimeField(null=True, blank=True, verbose_name='Ημ/νία - ώρα Αξιολόγησης A1')
+    
+    consultant_a2 = models.TextField(null=True, blank=True, max_length=100, verbose_name='Αξιολογητής A2')
+    a2_result = models.TextField(null=True, blank=True, max_length=100, verbose_name='Αποτέλεσμα Α2')
+    a2_evaluation_date = models.DateTimeField(null=True, blank=True, verbose_name='Ημ/νία - ώρα Αξιολόγησης A2')
+
+    consultant_b = models.TextField(null=True, blank=True, max_length=100, verbose_name='Αξιολογητής B')
+    b_result = models.TextField(null=True, blank=True, max_length=100, verbose_name='Αποτέλεσμα B')
+    b_evaluation_date = models.DateTimeField(null=True, blank=True, verbose_name='Ημ/νία - ώρα Αξιολόγησης Β')
+
+    permanent = models.BooleanField(default=False, verbose_name='Μονιμοποίηση')
+
+    class Meta:
+        verbose_name = "Αξιολογήση"
+        verbose_name_plural = "Αξιολογήσεις"
+
 
 class EvaluationStepType(models.Model):
     title = models.CharField(max_length=100, verbose_name='Βήμα Αξιολόγησης')
