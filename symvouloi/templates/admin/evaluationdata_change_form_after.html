@@ -1,0 +1,28 @@
+{% load unfold %}
+
+{% if show_import_button %}
+    <div class="module">
+        {% component "unfold/components/title.html" %}
+          Εισαγωγή δεδομένων αξιολόγησης
+        {% endcomponent %}
+        <div class="form-row">
+            <form action="import-csv/" method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+                
+                <input type="file" name="csv_file" accept=".csv" required>
+                
+                {% component "unfold/components/button.html" with variant='primary' class='data-ajax-submit' submit=True %}
+                Εισαγωγή από CSV
+                {% endcomponent %}
+                {% component "unfold/components/separator.html" %}{% endcomponent %}
+                {% component "unfold/components/text.html" %}
+                  Επιλέξτε ένα αρχείο CSV με τις ακόλουθες στήλες:<br>
+                  "Όνομα","Επώνυμο","ΑΦΜ","ΑΝΑΓΝΩΡΙΣΤΙΚΟ ΕΚΚΡΕΜΟΤΗΤΑΣ Α1/Α","ΠΕΔΙΟ Α1/Α","ΗΜΕΡΟΜΗΝΙΑ ΑΞΙΟΛΟΓΗΣΗΣ Α1/Α",<br>
+                  "ΑΝΑΓΝΩΡΙΣΤΙΚΟ ΕΚΚΡΕΜΟΤΗΤΑΣ Α2","ΠΕΔΙΟ Α2","ΗΜΕΡΟΜΗΝΙΑ ΑΞΙΟΛΟΓΗΣΗΣ Α2","ΑΝΑΓΝΩΡΙΣΤΙΚΟ ΕΚΚΡΕΜΟΤΗΤΑΣ Β",<br>
+                  "ΠΕΔΙΟ B","ΗΜΕΡΟΜΗΝΙΑ ΑΞΙΟΛΟΓΗΣΗΣ B","ΜΟΝΙΜΟΠΟΙΗΣΗ"<br>
+                  ΣΗΜ: Το αρχείο που εξάγεται από το axiologisi-minedu.gov.gr έχει ακριβώς αυτή τη μορφή.
+                {% endcomponent %}
+            </form>
+        </div>
+    </div>
+{% endif %}

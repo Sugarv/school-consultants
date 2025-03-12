@@ -33,7 +33,7 @@ class EvaluationStepInline(StackedInline):
     tab = True
     extra = 0
     show_change_link = True
-    fields = [ 'es_type', 'es_date', 'category']
+    fields = ['es_type', 'es_date', 'category']
 
     def get_queryset(self, request):
         # Get the default queryset
@@ -49,7 +49,8 @@ class EvaluationStepInline(StackedInline):
 
         # Return an empty queryset by default
         return qs.none()
-    
+
+
 # Inline for Evaluation Data (History) in TeacherAdmin
 class EvaluationDataInline(StackedInline):
     model = EvaluationData
@@ -117,7 +118,7 @@ class TeacherAdmin(ModelAdmin, ImportExportModelAdmin):
     def get_list_filter(self, request):
         if request.user.groups.filter(name='Σύμβουλοι').exists():
             return ('specialty', 'participates')
-        return ['specialty', 'participates',('consultant',RelatedDropdownFilter)]
+        return ['specialty', 'participates', ('consultant',RelatedDropdownFilter)]
     
     def get_list_display(self, request):
         # If user is in 'symvouloi' group, show specific fields
@@ -210,17 +211,16 @@ class TeacherAdmin(ModelAdmin, ImportExportModelAdmin):
     update_teachers.short_description = "Ενημέρωση εκπαιδευτικών (γενική ενέργεια)"
     update_teachers.acts_on_all = True
 
+
+###################################
+######### Evaluation Step #########
+###################################
 @admin.register(EvaluationStepType)
 class EvaluationStepTypeAdmin(ModelAdmin):
     list_display = ('id', 'title')
     list_display_links = ('id', 'title')
     ordering = ('id',)
 
-
-
-###################################
-######### Evaluation Step #########
-###################################
 @admin.register(EvaluationStep)
 class EvaluationStepAdmin(ModelAdmin, ExportActionModelAdmin):
     ordering = ('consultant__last_name', 'teacher', 'es_type')
@@ -285,7 +285,6 @@ class EvaluationStepAdmin(ModelAdmin, ExportActionModelAdmin):
             kwargs["queryset"] = Teacher.objects.filter(consultant=request.user)
         return super().formfield_for_foreignkey(db_field, request, **kwargs)
     
-
     def get_readonly_fields(self, request, obj=None):
         readonly = ['consfname', 'file_link', 'linked_metakinhsh']
         if is_member(request.user, 'Σύμβουλοι'):
@@ -350,7 +349,6 @@ class EvaluationStepAdmin(ModelAdmin, ExportActionModelAdmin):
         except:
             messages.error(request, 'Αποτυχία έγκρισης βημάτων αξιολόγησης')
 
-
     def get_actions(self, request):
         actions = super().get_actions(request)
         # Remove the action if the user is not in the required group
@@ -358,7 +356,7 @@ class EvaluationStepAdmin(ModelAdmin, ExportActionModelAdmin):
             del actions ['mass_confirmation']
 
         return actions
-    
+
 
 #####################################
 ######### TeacherAssignment #########
@@ -393,7 +391,6 @@ class TeacherAssignmentAdmin(ModelAdmin, ImportExportModelAdmin):
 
     sync_teachers_and_consultants.short_description = "Συγχρονισμός Εκπαιδευτικών και Συμβούλων (γενική ενέργεια)"
     sync_teachers_and_consultants.acts_on_all = True
-
 
 
 class NewUserAdmin(ModelAdmin):
@@ -553,6 +550,10 @@ class EvaluationDataAdmin(ModelAdmin):
                         ]
         })
     ]
+    date_hierarchy = ('a1_evaluation_date')
+    list_filter_submit = True
+    list_after_template = "admin/evaluationdata_change_form_after.html"
+    list_per_page = 30
     
     def get_urls(self):
         urls = super().get_urls()
@@ -560,16 +561,16 @@ class EvaluationDataAdmin(ModelAdmin):
             path('import-csv/', import_evaluation_data, name='import_evaluation_data'),
         ]
         return custom_urls + urls
-
+    
     def has_add_permission(self, request):
         return False  # Disable manual creation - data should only be imported
-
+    
     def has_delete_permission(self, request, obj=None):
         return request.user.is_superuser  # Only superusers can delete records
-
+    
     def has_change_permission(self, request, obj=None):
         return False  # Data should be read-only once imported
-
+    
     def changelist_view(self, request, extra_context=None):
         extra_context = extra_context or {}
         extra_context['show_import_button'] = True
