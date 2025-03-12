@@ -26,12 +26,14 @@ from django.contrib.auth.hashers import make_password
 from metakinhseis.admin import ConsultantInline
 from django.utils import timezone
 
+
+# Inline for Evaluation Steps in TeacherAdmin
 class EvaluationStepInline(StackedInline):
     model = EvaluationStep
     tab = True
     extra = 0
     show_change_link = True
-    fields = [ 'es_type', 'es_date']
+    fields = [ 'es_type', 'es_date', 'category']
 
     def get_queryset(self, request):
         # Get the default queryset
@@ -48,6 +50,34 @@ class EvaluationStepInline(StackedInline):
         # Return an empty queryset by default
         return qs.none()
     
+# Inline for Evaluation Data (History) in TeacherAdmin
+class EvaluationDataInline(StackedInline):
+    model = EvaluationData
+    tab = True
+    extra = 0
+    fieldsets = [
+        ( None, {
+            "fields" : [('consultant_a1', 'a1_result','a1_evaluation_date'), 
+                        ('consultant_a2', 'a2_result','a2_evaluation_date'),
+                        ('consultant_b', 'b_result','b_evaluation_date'),
+                        'permanent'
+                        ]
+        })
+    ]
+    can_delete = False
+
+    def get_queryset(self, request):
+        # Get the default queryset
+        qs = super().get_queryset(request)
+        
+        # Get the parent id
+        parent_object_id = request.resolver_match.kwargs.get('object_id')
+        
+        return qs.filter(teacher__pk=parent_object_id)
+        
+    def get_readonly_fields(self, request, obj=None):
+        return [field.name for field in self.model._meta.fields]
+
 
 ###########################
 ######### Teacher #########
@@ -58,7 +88,7 @@ class TeacherAdmin(ModelAdmin, ImportExportModelAdmin):
     search_fields = ('afm', 'last_name', 'first_name')
     list_filter_submit = True
     list_display_links = ('afm', 'last_name')
-    inlines = [EvaluationStepInline]
+    inlines = [EvaluationStepInline, EvaluationDataInline]
     export_form_class = ExportForm
     import_form_class = ImportForm
     actions = ['update_teachers']
@@ -134,13 +164,13 @@ class TeacherAdmin(ModelAdmin, ImportExportModelAdmin):
             return [
                 ( None, {
                     "fields" : ['afm',('last_name', 'first_name'), ('father_name', 'specialty'), 'school', ('fek', 'appointment_date'), ('mobile', 'mail'),
-                                ('participates', 'is_active'), 'category', 'comments']
+                                ('participates', 'is_active'), 'comments']
                 })
             ]
         return [
             ( None, {
                 "fields": ['consultant','afm',('last_name', 'first_name'), ('father_name', 'specialty'), 'school', ('fek', 'appointment_date'), 
-                           ('mobile', 'mail'), ('participates', 'is_active'), 'category', 'comments']
+                           ('mobile', 'mail'), ('participates', 'is_active'), 'comments']
             }) 
         ]
     
@@ -228,9 +258,9 @@ class EvaluationStepAdmin(ModelAdmin, ExportActionModelAdmin):
         fields = []
         # If the user is in the 'symvouloi' group
         if request.user.groups.filter(name='Σύμβουλοι').exists():
-            fields += ['consfname', 'teacher', 'es_type', 'es_date', 'complete', 'comments', 'linked_metakinhsh']
+            fields += ['consfname', 'teacher', 'es_type', 'es_date', 'complete', 'category', 'comments', 'linked_metakinhsh']
         else:
-            fields += ['consultant','teacher', 'es_type', 'es_date', 'complete', 'comments', 'linked_metakinhsh']
+            fields += ['consultant','teacher', 'es_type', 'es_date', 'complete', 'category', 'comments', 'linked_metakinhsh']
         # if final step, add document & approved
         if obj and obj.es_type.pk == 4:
             fields += ['approved', 'evaluation_document']
@@ -514,6 +544,15 @@ class EvaluationDataAdmin(ModelAdmin):
     readonly_fields = ('teacher', 'consultant_a1', 'a1_result', 'a1_evaluation_date', 
                       'consultant_a2', 'a2_result', 'a2_evaluation_date',
                       'consultant_b', 'b_result', 'b_evaluation_date', 'permanent')
+    fieldsets = [
+        ( None, {
+            "fields" : [('consultant_a1', 'a1_result','a1_evaluation_date'), 
+                        ('consultant_a2', 'a2_result','a2_evaluation_date'),
+                        ('consultant_b', 'b_result','b_evaluation_date'),
+                        'permanent'
+                        ]
+        })
+    ]
     
     def get_urls(self):
         urls = super().get_urls()

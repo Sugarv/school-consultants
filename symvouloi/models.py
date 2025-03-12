@@ -9,9 +9,7 @@ from django.conf import settings
 import os
 
 
-CATEGORY_CHOICES = [
-    ('A','A'), ('A1','A1'), ('A2','A2'), ('B','B')
-]
+
 
 # Create your models here.
 class Teacher(models.Model):
@@ -28,7 +26,6 @@ class Teacher(models.Model):
     mobile = models.CharField(null=True, blank=True, max_length=25, verbose_name='Κινητό')
     mail = models.CharField(null=True, blank=True, max_length=100, verbose_name='E-mail')
     participates = models.BooleanField(default=True, verbose_name='Συμμετέχει στην αξιολόγηση')
-    category = models.CharField(null=True, blank=True, max_length=5, choices=CATEGORY_CHOICES, verbose_name='Κατηγορία αξιολόγησης')
     comments = models.TextField(null=True, blank=True, default='', max_length=200, verbose_name='Σχόλια')
     is_active = models.BooleanField(default=True, verbose_name='Ενεργός εκπαιδευτικός')
 
@@ -67,8 +64,11 @@ class EvaluationData(models.Model):
     permanent = models.BooleanField(default=False, verbose_name='Μονιμοποίηση')
 
     class Meta:
-        verbose_name = "Αξιολογήση"
-        verbose_name_plural = "Αξιολογήσεις"
+        verbose_name = "History"
+        verbose_name_plural = "History"
+
+    def __str__(self):
+        return f'{self.teacher.last_name} {self.teacher.first_name} @ axiologisi-minedu.gov.gr'    
 
 
 class EvaluationStepType(models.Model):
@@ -91,6 +91,9 @@ def custom_documents_directory_path(instance, filename):
     file_extension = os.path.splitext(filename)[1][1:].lower()
     return f'documents/{instance.teacher.evaluation_year}/{slugify(str(instance.teacher))}/{slugify(str(instance.es_type))}.{file_extension}'
 
+CATEGORY_CHOICES = [
+    ('A','A'), ('A1','A1'), ('A2','A2'), ('B','B')
+]
 
 class EvaluationStep(models.Model):
     consultant = models.ForeignKey(User, null=False, on_delete=models.CASCADE,
@@ -102,7 +105,7 @@ class EvaluationStep(models.Model):
                                 verbose_name='Βήμα Αξιολόγησης')
     es_date = models.DateField(null=False, blank=False, verbose_name='Ημερομηνία')
     complete = models.BooleanField(default=False, verbose_name='Ολοκληρώθηκε')
-
+    category = models.CharField(null=True, blank=True, max_length=5, choices=CATEGORY_CHOICES, verbose_name='Κατηγορία αξιολόγησης')
     evaluation_document = models.FileField(null=True, blank=True, upload_to=custom_documents_directory_path,
                                            verbose_name='Αρχείο Αξιολόγησης')
     comments = models.TextField(null=True, blank=True, default='', max_length=2000, verbose_name='Σχόλια')

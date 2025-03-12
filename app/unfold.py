@@ -115,7 +115,7 @@ UNFOLD = {
                     },
                     {
                         "title": "Ιστορικό αξιολογήσεων",
-                        "icon": "assignment",  # Supported icon set: https://fonts.google.com/icons
+                        "icon": "history",  # Supported icon set: https://fonts.google.com/icons
                         "link": reverse_lazy("admin:symvouloi_evaluationdata_changelist"),
                         "permission": lambda request: request.user.is_superuser,
                     },
