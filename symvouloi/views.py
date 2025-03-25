@@ -663,6 +663,12 @@ def import_evaluation_data(request):
                         }
                     )
 
+                    # update Teacher if permanent
+                    if row.get('ΜΟΝΙΜΟΠΟΙΗΣΗ') == 'ΝΑΙ':
+                        teacher.is_permanent = True
+                        teacher.save()
+                        print(f'Ο εκπ/κός με {teacher.afm} ορίστηκε ως μόνιμος.')
+
                     if created:
                         created_count += 1
                     else:

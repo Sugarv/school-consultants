@@ -78,6 +78,11 @@ class EvaluationDataInline(StackedInline):
         
     def get_readonly_fields(self, request, obj=None):
         return [field.name for field in self.model._meta.fields]
+    
+    def has_add_permission(self, request, obj=None):
+        return False  # Disable "Add" button
+    def has_delete_permission(self, request, obj=None):
+        return False  # Disable "Delete" 
 
 
 ###########################
@@ -117,15 +122,15 @@ class TeacherAdmin(ModelAdmin, ImportExportModelAdmin):
     
     def get_list_filter(self, request):
         if request.user.groups.filter(name='Σύμβουλοι').exists():
-            return ('specialty', 'participates')
-        return ['specialty', 'participates', ('consultant',RelatedDropdownFilter)]
+            return ('participates', 'is_permanent', 'specialty')
+        return [('consultant',RelatedDropdownFilter), 'participates', 'is_permanent', 'specialty' ]
     
     def get_list_display(self, request):
         # If user is in 'symvouloi' group, show specific fields
         if request.user.groups.filter(name='Σύμβουλοι').exists():
-            return ('afm', 'last_name', 'first_name', 'specialty', 'participates_display', 'is_active_display')
+            return ('afm', 'last_name', 'first_name', 'specialty', 'participates_display', 'is_active_display', 'is_permanent_display')
         # For other users, show all fields including 'consultant'
-        return ('afm', 'last_name', 'first_name', 'consultant_last_name', 'specialty', 'participates_display', 'is_active_display')
+        return ('afm', 'last_name', 'first_name', 'consultant_last_name', 'specialty', 'participates_display', 'is_active_display', 'is_permanent_display')
     
     # Fix: Display custom messages instead of True/False
     def participates_display(self, obj):
@@ -133,9 +138,13 @@ class TeacherAdmin(ModelAdmin, ImportExportModelAdmin):
 
     def is_active_display(self, obj):
         return "Ναι" if obj.is_active else "Όχι"
+    
+    def is_permanent_display(self, obj):
+        return "Ναι" if obj.is_permanent else "Όχι"
 
     participates_display.short_description = "Συμμετέχει"
     is_active_display.short_description = "Ενεργός"
+    is_permanent_display.short_description = "Μονιμοποίηση"
 
     # Correctly display consultant last name
     def consultant_last_name(self, obj):
@@ -165,19 +174,19 @@ class TeacherAdmin(ModelAdmin, ImportExportModelAdmin):
             return [
                 ( None, {
                     "fields" : ['afm',('last_name', 'first_name'), ('father_name', 'specialty'), 'school', ('fek', 'appointment_date'), ('mobile', 'mail'),
-                                ('participates', 'is_active'), 'comments']
+                                ('participates', 'is_active', 'is_permanent'), 'comments']
                 })
             ]
         return [
             ( None, {
                 "fields": ['consultant','afm',('last_name', 'first_name'), ('father_name', 'specialty'), 'school', ('fek', 'appointment_date'), 
-                           ('mobile', 'mail'), ('participates', 'is_active'), 'comments']
+                           ('mobile', 'mail'), ('participates', 'is_active', 'is_permanent'), 'comments']
             }) 
         ]
     
     def get_readonly_fields(self, request, obj = ...):
         if request.user.groups.filter(name='Σύμβουλοι').exists():
-            return ('afm','last_name', 'first_name', 'father_name', 'specialty', 'school', 'fek', 'appointment_date', 'mobile', 'mail')
+            return ('afm','last_name', 'first_name', 'father_name', 'specialty', 'school', 'fek', 'appointment_date', 'mobile', 'mail', 'is_permanent')
         return ()
     
     def get_actions(self, request):

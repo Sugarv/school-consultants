@@ -28,6 +28,7 @@ class Teacher(models.Model):
     participates = models.BooleanField(default=True, verbose_name='Συμμετέχει στην αξιολόγηση')
     comments = models.TextField(null=True, blank=True, default='', max_length=200, verbose_name='Σχόλια')
     is_active = models.BooleanField(default=True, verbose_name='Ενεργός εκπαιδευτικός')
+    is_permanent = models.BooleanField(default=False, verbose_name='Μονιμοποίηση')
 
     def save(self, *args, **kwargs):
         # Ensure afm is 9 characters long
@@ -64,8 +65,8 @@ class EvaluationData(models.Model):
     permanent = models.BooleanField(default=False, verbose_name='Μονιμοποίηση')
 
     class Meta:
-        verbose_name = "History"
-        verbose_name_plural = "History"
+        verbose_name = "Iστορικό Αξιολόγησης"
+        verbose_name_plural = "Iστορικό Αξιολόγησης"
 
     def __str__(self):
         return f'{self.teacher.last_name} {self.teacher.first_name} @ axiologisi-minedu.gov.gr'    
