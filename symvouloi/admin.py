@@ -135,15 +135,15 @@ class TeacherAdmin(ModelAdmin, ImportExportModelAdmin):
     # Display custom messages instead of True/False
     @display(label={ 'OXI': "danger", 'NAI': "success" },)
     def participates_display(self, obj):
-        return "Ναι" if obj.participates else "Όχι"
+        return "NAI" if obj.participates else "OXI"
     
     @display(label={ 'OXI': "danger", 'NAI': "success" },)
     def is_active_display(self, obj):
-        return "Ναι" if obj.is_active else "Όχι"
+        return "NAI" if obj.is_active else "OXI"
     
     @display(label={ 'OXI': "danger", 'NAI': "success" },)
     def is_permanent_display(self, obj):
-        return "Ναι" if obj.is_permanent else "Όχι"
+        return "NAI" if obj.is_permanent else "OXI"
 
     participates_display.short_description = "Συμμετέχει"
     is_active_display.short_description = "Ενεργός"
