@@ -132,13 +132,16 @@ class TeacherAdmin(ModelAdmin, ImportExportModelAdmin):
         # For other users, show all fields including 'consultant'
         return ('afm', 'last_name', 'first_name', 'consultant_last_name', 'specialty', 'participates_display', 'is_active_display', 'is_permanent_display')
     
-    # Fix: Display custom messages instead of True/False
+    # Display custom messages instead of True/False
+    @display(label={ 'OXI': "danger", 'NAI': "success" },)
     def participates_display(self, obj):
         return "Ναι" if obj.participates else "Όχι"
-
+    
+    @display(label={ 'OXI': "danger", 'NAI': "success" },)
     def is_active_display(self, obj):
         return "Ναι" if obj.is_active else "Όχι"
     
+    @display(label={ 'OXI': "danger", 'NAI': "success" },)
     def is_permanent_display(self, obj):
         return "Ναι" if obj.is_permanent else "Όχι"
 

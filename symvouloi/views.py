@@ -577,6 +577,7 @@ def import_evaluation_data(request):
             created_count = 0
             updated_count = 0
             errors = []
+            missing_afms = []
 
             for row in reader:
                 has_evaluation_data = any([
@@ -628,7 +629,6 @@ def import_evaluation_data(request):
                         except User.DoesNotExist:
                             consultant_b = consultant_afm
 
-                    print(f'b: {consultant_b}')
                     # Parse dates
                     a1_date = None
                     a2_date = None
@@ -675,7 +675,7 @@ def import_evaluation_data(request):
                         updated_count += 1
 
                 except Teacher.DoesNotExist:
-                    errors.append(f"Δε βρέθηκε εκπαιδευτικός με ΑΦΜ {row['ΑΦΜ']}")
+                    missing_afms.append(row['ΑΦΜ'])
                 except Exception as e:
                     errors.append(f"Σφάλμα για εκπαιδευτικό με ΑΦΜ {row['ΑΦΜ']}: {str(e)}")
 
@@ -685,6 +685,10 @@ def import_evaluation_data(request):
                 messages.warning(request, f'Προέκυψαν {len(errors)} σφάλματα κατά την εισαγωγή.')
                 for error in errors:
                     messages.error(request, error)
+            if missing_afms:
+                afm_list = ", ".join(missing_afms)
+                messages.error(request, f"Οι παρακάτω εκπ/κοί δε βρέθηκαν: {afm_list}")
+
 
         except Exception as e:
             messages.error(request, f'Σφάλμα κατά την επεξεργασία του αρχείου: {str(e)}')
