@@ -4,7 +4,7 @@ services:
     build:
       context: .
     entrypoint: ["./docker-files/entrypoint.sh"]
-    command: gunicorn app.wsgi:application --bind 0.0.0.0:8000
+    command: gunicorn app.wsgi:application --bind 0.0.0.0:8000 --workers 3 --timeout 180
     volumes:
       - .:/usr/src/app/
       - static_volume:/usr/src/app/staticfiles
