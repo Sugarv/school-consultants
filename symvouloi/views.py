@@ -561,6 +561,7 @@ def add_metakinhsh(request):
         }, status=500)
 
 
+# Input evaluation data from axiologisi.minedu.gov.gr (file teacher-evaluation-grades.csv)
 @staff_member_required
 def import_evaluation_data(request):
     if request.method == 'POST' and request.FILES.get('csv_file'):

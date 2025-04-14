@@ -7,6 +7,7 @@ from .models import (
     EvaluationData,
 )
 from django.contrib.auth.models import User, Group
+from django.contrib.auth import views as auth_views
 from django.contrib.admin.models import LogEntry
 from unfold.admin import ModelAdmin
 from django.contrib.auth.admin import GroupAdmin as BaseGroupAdmin
@@ -587,3 +588,16 @@ class EvaluationDataAdmin(ModelAdmin):
         extra_context = extra_context or {}
         extra_context['show_import_button'] = True
         return super().changelist_view(request, extra_context=extra_context)
+
+
+class UnfoldPasswordResetView(auth_views.PasswordResetView):
+    template_name = 'admin/password_reset_form.html'
+
+class UnfoldPasswordResetDoneView(auth_views.PasswordResetDoneView):
+    template_name = 'admin/password_reset_done.html'
+
+class UnfoldPasswordResetConfirmView(auth_views.PasswordResetConfirmView):
+    template_name = 'admin/password_reset_confirm.html'
+
+class UnfoldPasswordResetCompleteView(auth_views.PasswordResetCompleteView):
+    template_name = 'admin/password_reset_complete.html'

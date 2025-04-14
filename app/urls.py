@@ -19,6 +19,7 @@ from django.urls import path, include
 from symvouloi.views import update_teacher_and_consultant, assign_users_to_group, \
     evaluation_steps_json, add_metakinhsh, serve_document, update_teachers
 from metakinhseis.views import metakinhsh_json, apofasi_metakinhshs_preview, katastash_plhrwmhs
+from symvouloi.admin import UnfoldPasswordResetView, UnfoldPasswordResetDoneView, UnfoldPasswordResetConfirmView, UnfoldPasswordResetCompleteView
 
 
 urlpatterns = [
@@ -33,5 +34,9 @@ urlpatterns = [
     path('documents/<str:document_name>', serve_document, name='serve_document'),
     path('documents/<str:year>/<str:folder>/<str:document_name>', serve_document, name='serve_document_evaluation'),
     path('impersonate/', include('impersonate.urls')), 
+    path('admin/password_reset/', UnfoldPasswordResetView.as_view(), name='admin_password_reset'),
+    path('admin/password_reset/done/', UnfoldPasswordResetDoneView.as_view(), name='password_reset_done'),
+    path('reset/<uidb64>/<token>/', UnfoldPasswordResetConfirmView.as_view(), name='password_reset_confirm'),
+    path('reset/done/', UnfoldPasswordResetCompleteView.as_view(), name='password_reset_complete'),
     path('', admin.site.urls),
 ]

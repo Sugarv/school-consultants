@@ -147,3 +147,5 @@ IMPERSONATE = {
 SHOW_OFFICE_DAYS = False
 
 SUPERVISOR_EMAIL = 'supervisor@example.com'
+
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
