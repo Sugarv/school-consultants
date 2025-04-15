@@ -1,4 +1,5 @@
 import json
+from django.contrib.auth.models import Group
 import os
 import mimetypes
 import requests
@@ -21,6 +22,7 @@ from django.conf import settings
 from django.contrib.auth.models import User
 from django.http import JsonResponse
 from .models import TeacherAssignment, Teacher, EvaluationStep, EvaluationStepType, EvaluationData
+from metakinhseis.models import Consultant
 
 from django.contrib import messages
 from django.contrib.auth.models import Group
@@ -114,14 +116,37 @@ def update_teacher_and_consultant(request):
             # Check if user with consultant_afm exists
             consultant = User.objects.filter(username=consultant_afm).first()
             if not consultant:
+                # Fetch data from the API for the consultant. If not found, create without extra data
+                try:
+                    consultant_full_endpoint = f"{api_endpoint}/employee?filter=afm,eq,{consultant_afm}"
+                    response = requests.get(consultant_full_endpoint, headers={"X-API-Key": api_key})
+                    response.raise_for_status()
+                    consultant_data = response.json().get("records", [])
+                    consultant_info = consultant_data[0]
+                except:
+                    print(f'Consultant with afm {consultant_afm} not found in API. Creating without extra data...')
+                    consultant_info = {
+                        'email': '',
+                        'klados': '',
+                        'am': ''
+                    }
+                # create consultant
                 consultant = User.objects.create_user(
                     username=consultant_afm,
                     password=f"{consultant_afm}-pass",
                     first_name=assignment.consultant_first_name,
                     last_name=assignment.consultant_last_name,
+                    email=consultant_info.get('email',''),
                     is_staff=True
                 )
                 added_consultants += 1
+                consultant_group = Group.objects.get(name='Σύμβουλοι')
+                consultant.groups.add(consultant_group)
+                consultant_extra = Consultant.objects.create(
+                    user = consultant,
+                    klados = klados_dict.get(consultant_info.get("klados", ""), "Unknown"),
+                    am = consultant_info.get("am", "")
+                )
                 print(f'Added consultant {assignment.consultant_last_name}!')
                 
             

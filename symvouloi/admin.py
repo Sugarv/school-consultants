@@ -376,8 +376,9 @@ class EvaluationStepAdmin(ModelAdmin, ExportActionModelAdmin):
 #####################################
 @admin.register(TeacherAssignment)
 class TeacherAssignmentAdmin(ModelAdmin, ImportExportModelAdmin):
-    list_display = ('teacher_afm', 'teacher_last_name', 'consultant_afm', 'consultant_last_name')
+    list_display = ('teacher_afm', 'teacher_last_name', 'consultant_afm', 'consultant_last_name', 'loaded')
     actions = ['sync_teachers_and_consultants']
+    list_filter = ['loaded']
 
     def sync_teachers_and_consultants(self, request, queryset):
         """
