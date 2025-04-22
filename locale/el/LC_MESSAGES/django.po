@@ -1,0 +1,905 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: \n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2025-04-21 17:03-0500\n"
+"PO-Revision-Date: 2025-04-22 12:45+0300\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"Language: el\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Generator: Poedit 3.2.2\n"
+
+#: p2/templates/admin/_base.html:22 unfold/templates/admin/app_index.html:5
+#: unfold/templates/admin/base_site.html:3 unfold/templates/admin/index.html:7
+#: unfold/templates/admin/login.html:32 unfold/templates/unfold/layouts/base.html:7
+msgid "Django site admin"
+msgstr "Διαχειριστής ιστότοπου Django"
+
+#: p2/templates/admin/_base.html:27 unfold/templates/unfold/helpers/site_branding.html:3
+#: unfold/templates/unfold/helpers/site_branding.html:6
+msgid "Django administration"
+msgstr "Διαχείριση του Django"
+
+#: p2/templates/admin/_base.html:28
+msgid "Admin"
+msgstr "Διαχειριστής"
+
+#: p2/templates/admin/_base.html:68
+msgid "Documentation"
+msgstr ""
+
+#: p2/templates/admin/change_form_object_tools.html:5 p2/templates/admin/p2/anaplirotis/change_form.html:9
+#: p2/templates/admin/p2/employee/_change_form.html:9
+#: unfold/contrib/simple_history/templates/simple_history/object_history_form.html:22
+#: unfold/templates/admin/change_form_object_tools.html:6 unfold/templates/admin/object_history.html:21
+msgid "History"
+msgstr "Ιστορικό"
+
+#: p2/templates/admin/employee_change_form.html:19 p2/templates/admin/includes/sch_employees.html:9
+#: p2/templates/admin/includes/sch_general.html:9 p2/templates/admin/includes/sch_organikes.html:9
+#: p2/templates/admin/school_page_change_form.html:19
+#: unfold/contrib/guardian/templates/admin/guardian/model/obj_perms_manage.html:10
+#: unfold/contrib/guardian/templates/admin/guardian/model/obj_perms_manage_group.html:13
+#: unfold/contrib/guardian/templates/admin/guardian/model/obj_perms_manage_user.html:14
+#: unfold/contrib/import_export/templates/admin/import_export/export.html:17
+#: unfold/contrib/import_export/templates/admin/import_export/import.html:28
+#: unfold/contrib/simple_history/templates/simple_history/object_history_form.html:11
+#: unfold/templates/admin/app_index.html:15 unfold/templates/admin/auth/user/change_password.html:13
+#: unfold/templates/admin/base.html:23 unfold/templates/admin/change_form.html:18
+#: unfold/templates/admin/change_list.html:31 unfold/templates/admin/delete_confirmation.html:17
+#: unfold/templates/admin/delete_selected_confirmation.html:17 unfold/templates/admin/object_history.html:9
+#: unfold/templates/registration/password_change_done.html:12
+#: unfold/templates/registration/password_change_form.html:12 unfold/templates/unfold/helpers/site_icon.html:7
+#: unfold/templates/unfold/helpers/site_icon.html:9 unfold/templates/unfold/helpers/site_icon.html:11
+#: unfold/templates/unfold/helpers/site_logo.html:5 unfold/templates/unfold/helpers/site_logo.html:7
+#: unfold/templates/unfold/helpers/site_logo.html:9
+msgid "Home"
+msgstr "Αρχική σελίδα"
+
+#: p2/templates/admin/employee_change_form.html:22 p2/templates/admin/school_page_change_form.html:22
+#: unfold/templates/admin/change_form.html:32 unfold/templates/admin/change_list_results.html:90
+#: unfold/templates/unfold/helpers/add_link.html:5 unfold/templates/unfold/helpers/add_link.html:8
+#, python-format
+msgid "Add %(name)s"
+msgstr ""
+
+#: p2/templates/admin/employee_change_form.html:45 p2/templates/admin/school_page_change_form.html:45
+#: unfold/templates/unfold/helpers/messages/errornote.html:6
+msgid "Please correct the error below."
+msgstr ""
+
+#: p2/templates/admin/employee_change_form.html:45 p2/templates/admin/school_page_change_form.html:45
+#: unfold/templates/unfold/helpers/messages/errornote.html:8
+msgid "Please correct the errors below."
+msgstr ""
+
+#: p2/templates/admin/p2/anaplirotis/_change_list_results.html:17
+#: p2/templates/admin/p2/employee/_change_list_results.html:17
+#: p2/templates/admin/p2/idiwtikoi/change_list_results.html:17
+#: unfold/templates/admin/change_list_results.html:50
+msgid "Remove from sorting"
+msgstr ""
+
+#: p2/templates/admin/p2/anaplirotis/_change_list_results.html:18
+#: p2/templates/admin/p2/employee/_change_list_results.html:18
+#: p2/templates/admin/p2/idiwtikoi/change_list_results.html:18
+#: unfold/templates/admin/change_list_results.html:56
+#, python-format
+msgid "Sorting priority: %(priority_number)s"
+msgstr ""
+
+#: p2/templates/admin/p2/anaplirotis/_change_list_results.html:19
+#: p2/templates/admin/p2/employee/_change_list_results.html:19
+#: p2/templates/admin/p2/idiwtikoi/change_list_results.html:19
+#: unfold/templates/admin/change_list_results.html:42
+msgid "Toggle sorting"
+msgstr "Εναλλαγή ταξινόμησης"
+
+#: p2/templates/admin/p2/anaplirotis/change_form.html:13 p2/templates/admin/p2/employee/_change_form.html:13
+#: unfold/templates/admin/change_form_object_tools.html:12 unfold/templates/admin/edit_inline/stacked.html:71
+#: unfold/templates/unfold/helpers/edit_inline/tabular_title.html:33
+msgid "View on site"
+msgstr "Εμφάνιση στη σελίδα"
+
+#: unfold/templates/admin/pagination.html:31 unfold/templates/unfold/helpers/welcomemsg.html:28
+msgid "Show all"
+msgstr "Εμφάνιση όλων"
+
+#: p2/views/views_school.py:419 unfold/templates/admin/change_list.html:72
+msgid "Filters"
+msgstr "Φίλτρα"
+
+#: unfold/admin.py:28 unfold/templatetags/unfold_list.py:329
+msgid "Select record"
+msgstr "Επιλογή εγγραφής"
+
+#: unfold/admin.py:150
+msgid "Select action"
+msgstr "Επιλογή ενέργειας"
+
+#: unfold/contrib/filters/admin.py:59 unfold/contrib/filters/admin.py:117
+#: unfold/contrib/filters/admin/dropdown_filters.py:22 unfold/contrib/filters/admin/mixins.py:43
+msgid "All"
+msgstr "Όλα"
+
+#: unfold/contrib/filters/admin.py:83 unfold/contrib/filters/admin.py:106 unfold/contrib/filters/admin.py:123
+#: unfold/contrib/filters/admin.py:150 unfold/contrib/filters/admin.py:167
+#: unfold/contrib/filters/admin/dropdown_filters.py:28 unfold/contrib/filters/admin/dropdown_filters.py:61
+#: unfold/contrib/filters/admin/dropdown_filters.py:90 unfold/contrib/filters/admin/mixins.py:138
+#: unfold/contrib/filters/admin/text_filters.py:29 unfold/contrib/filters/admin/text_filters.py:60
+#: unfold/contrib/filters/templates/unfold/filters/filters_date_range.html:5
+#: unfold/contrib/filters/templates/unfold/filters/filters_datetime_range.html:5
+#: unfold/contrib/filters/templates/unfold/filters/filters_numeric_range.html:5
+#: unfold/contrib/filters/templates/unfold/filters/filters_numeric_single.html:5
+#: unfold/contrib/filters/templates/unfold/filters/filters_numeric_slider.html:7
+#, python-format
+msgid "By %(filter_title)s"
+msgstr "Ανά %(filter_title)s"
+
+#: unfold/contrib/filters/forms.py:134
+msgid "Value"
+msgstr "Τιμή"
+
+#: unfold/contrib/filters/forms.py:148 unfold/contrib/filters/forms.py:186
+msgid "From"
+msgstr "Από"
+
+#: unfold/contrib/filters/forms.py:155 unfold/contrib/filters/forms.py:196
+msgid "To"
+msgstr "Έως"
+
+#: unfold/contrib/filters/forms.py:220
+msgid "Date from"
+msgstr "Ημ/νία από"
+
+#: unfold/contrib/filters/forms.py:225 unfold/contrib/filters/forms.py:241 unfold/widgets.py:539
+msgid "Time"
+msgstr "Ώρα"
+
+#: unfold/contrib/filters/forms.py:236
+msgid "Date to"
+msgstr "Ημ/νία έως"
+
+#: unfold/contrib/filters/templates/unfold/filters/filters_numeric_slider.html:30
+msgid "Not enough data."
+msgstr "Δεν υπάρχουν αρκετά δεδομένα."
+
+#: unfold/contrib/forms/templates/unfold/forms/array.html:30
+msgid "Add new item"
+msgstr "Προσθήκη νέου"
+
+#: unfold/contrib/forms/templates/unfold/forms/helpers/toolbar.html:7
+msgid "Paragraph"
+msgstr "Παράγραφος"
+
+#: unfold/contrib/forms/templates/unfold/forms/helpers/toolbar.html:11
+msgid "Underlined"
+msgstr "Υπογραμμισμένα"
+
+#: unfold/contrib/forms/templates/unfold/forms/helpers/toolbar.html:15
+msgid "Bold"
+msgstr "Έντονα"
+
+#: unfold/contrib/forms/templates/unfold/forms/helpers/toolbar.html:19
+msgid "Italic"
+msgstr "Πλάγια"
+
+#: unfold/contrib/forms/templates/unfold/forms/helpers/toolbar.html:23
+msgid "Strike"
+msgstr "Διαγραφή"
+
+#: unfold/contrib/forms/templates/unfold/forms/helpers/toolbar.html:27
+#: unfold/contrib/forms/templates/unfold/forms/helpers/toolbar.html:98
+msgid "Link"
+msgstr "Σύνδεσμος"
+
+#: unfold/contrib/forms/templates/unfold/forms/helpers/toolbar.html:35
+#: unfold/contrib/forms/templates/unfold/forms/helpers/toolbar.html:39
+#: unfold/contrib/forms/templates/unfold/forms/helpers/toolbar.html:43
+#: unfold/contrib/forms/templates/unfold/forms/helpers/toolbar.html:47
+msgid "Heading"
+msgstr "Κεφαλίδα"
+
+#: unfold/contrib/forms/templates/unfold/forms/helpers/toolbar.html:55
+msgid "Quote"
+msgstr "Παράθεση"
+
+#: unfold/contrib/forms/templates/unfold/forms/helpers/toolbar.html:59
+msgid "Code"
+msgstr "Κώδικας"
+
+#: unfold/contrib/forms/templates/unfold/forms/helpers/toolbar.html:63
+msgid "Unordered list"
+msgstr "Μη ταξινομημένη λίστα"
+
+#: unfold/contrib/forms/templates/unfold/forms/helpers/toolbar.html:67
+msgid "Ordered list"
+msgstr "Ταξινομημένη λίστα"
+
+#: unfold/contrib/forms/templates/unfold/forms/helpers/toolbar.html:71
+msgid "Indent increase"
+msgstr "Αύξηση περιθωρίου"
+
+#: unfold/contrib/forms/templates/unfold/forms/helpers/toolbar.html:75
+msgid "Indent decrease"
+msgstr "Μείωση περιθωρίου"
+
+#: unfold/contrib/forms/templates/unfold/forms/helpers/toolbar.html:83
+msgid "Undo"
+msgstr "Αναίρεση"
+
+#: unfold/contrib/forms/templates/unfold/forms/helpers/toolbar.html:87
+msgid "Redo"
+msgstr "Επαναφορά"
+
+#: unfold/contrib/forms/templates/unfold/forms/helpers/toolbar.html:95
+msgid "Enter an URL"
+msgstr "Εισάγετε σύνδεσμο"
+
+#: unfold/contrib/forms/templates/unfold/forms/helpers/toolbar.html:102
+msgid "Unlink"
+msgstr "Αποσύνδεση"
+
+#: unfold/contrib/guardian/templates/admin/guardian/model/change_form.html:8
+#: unfold/contrib/guardian/templates/admin/guardian/model/obj_perms_manage.html:22
+#: unfold/contrib/guardian/templates/admin/guardian/model/obj_perms_manage_group.html:25
+#: unfold/contrib/guardian/templates/admin/guardian/model/obj_perms_manage_user.html:26
+msgid "Object permissions"
+msgstr "Δικαιώματα αντικειμένου"
+
+#: unfold/contrib/guardian/templates/admin/guardian/model/obj_perms_manage_group.html:39
+#: unfold/contrib/guardian/templates/admin/guardian/model/obj_perms_manage_user.html:40
+#: unfold/contrib/simple_history/templates/simple_history/object_history_list.html:10
+#: unfold/contrib/simple_history/templates/simple_history/object_history_list.html:44
+msgid "Object"
+msgstr "Αντικείμενο"
+
+#: unfold/contrib/guardian/templates/admin/guardian/model/obj_perms_manage_group.html:42
+#: unfold/contrib/guardian/templates/unfold/guardian/group_form.html:15
+msgid "Group"
+msgstr "Ομάδα"
+
+#: unfold/contrib/guardian/templates/admin/guardian/model/obj_perms_manage_group.html:49
+#: unfold/contrib/guardian/templates/admin/guardian/model/obj_perms_manage_user.html:50
+#: unfold/templates/admin/pagination.html:38 unfold/templates/admin/submit_line.html:10
+msgid "Save"
+msgstr "Αποθήκευση"
+
+#: unfold/contrib/guardian/templates/admin/guardian/model/obj_perms_manage_user.html:43
+#: unfold/contrib/guardian/templates/unfold/guardian/group_form.html:33
+#: unfold/contrib/guardian/templates/unfold/guardian/user_form.html:15
+#: unfold/contrib/guardian/templates/unfold/guardian/user_form.html:33
+#: unfold/templates/admin/object_history.html:38 unfold/templates/admin/object_history.html:54
+msgid "User"
+msgstr "Χρήστης"
+
+#: unfold/contrib/guardian/templates/unfold/guardian/group_form.html:7
+msgid "Group permissions"
+msgstr "Δικαιώματα ομάδας"
+
+#: unfold/contrib/guardian/templates/unfold/guardian/group_form.html:25
+#: unfold/contrib/guardian/templates/unfold/guardian/group_form.html:49
+#: unfold/contrib/guardian/templates/unfold/guardian/user_form.html:25
+#: unfold/contrib/guardian/templates/unfold/guardian/user_form.html:49
+#: unfold/templates/admin/object_history.html:42 unfold/templates/admin/object_history.html:58
+msgid "Action"
+msgstr "Ενέργεια"
+
+#: unfold/contrib/guardian/templates/unfold/guardian/group_form.html:51
+#: unfold/contrib/guardian/templates/unfold/guardian/user_form.html:51
+msgid "Edit"
+msgstr "Επεξεργασία"
+
+#: unfold/contrib/guardian/templates/unfold/guardian/group_form.html:67
+msgid "Manage group"
+msgstr "Διαχείριση ομάδας"
+
+#: unfold/contrib/guardian/templates/unfold/guardian/user_form.html:7
+msgid "User permissions"
+msgstr "Δικαιώματα χρηστών"
+
+#: unfold/contrib/guardian/templates/unfold/guardian/user_form.html:67
+msgid "Manage user"
+msgstr "Επεξεργασία χρήστη"
+
+#: unfold/contrib/import_export/templates/admin/import_export/change_form.html:8
+#: unfold/contrib/import_export/templates/admin/import_export/change_list_export_item.html:4
+#: unfold/contrib/import_export/templates/admin/import_export/export.html:28
+msgid "Export"
+msgstr "Εξαγωγή"
+
+#: unfold/contrib/import_export/templates/admin/import_export/change_list_import_item.html:4
+#: unfold/contrib/import_export/templates/admin/import_export/import.html:39
+msgid "Import"
+msgstr "Εισαγωγή"
+
+#: unfold/contrib/import_export/templates/admin/import_export/export.html:41
+#, python-format
+msgid ""
+"\n"
+"                    Export %(len)s selected item.\n"
+"                "
+msgid_plural ""
+"\n"
+"                    Export %(len)s selected items.\n"
+"                "
+msgstr[0] ""
+"\n"
+"                    Εξαγωγή %(len)s επιλεγμένου στοιχείου.\n"
+"                "
+msgstr[1] ""
+"\n"
+"                    Εξαγωγή %(len)s επιλεγμένων στοιχείων.\n"
+"                "
+
+#: unfold/contrib/import_export/templates/admin/import_export/export.html:60
+msgid "This exporter will export the following fields"
+msgstr "Αυτός ο εξαγωγέας θα εξάγει τα ακόλουθα πεδία"
+
+#: unfold/contrib/import_export/templates/admin/import_export/export.html:79
+#: unfold/contrib/import_export/templates/admin/import_export/import_form.html:21
+msgid "Submit"
+msgstr "Υποβολή"
+
+#: unfold/contrib/import_export/templates/admin/import_export/import_confirm.html:10
+msgid ""
+"Below is a preview of data to be imported. If you are satisfied with the results, click 'Confirm import'"
+msgstr ""
+"Ακολουθεί μια προεπισκόπηση των δεδομένων που πρόκειται να εισαχθούν. Εάν είστε ικανοποιημένοι με τα "
+"αποτελέσματα, κάντε κλικ στο \"Επιβεβαίωση εισαγωγής\""
+
+#: unfold/contrib/import_export/templates/admin/import_export/import_confirm.html:15
+msgid "Confirm import"
+msgstr "Επιβεβαίωση εισαγωγής"
+
+#: unfold/contrib/import_export/templates/admin/import_export/import_errors.html:19
+msgid "Line number"
+msgstr "Αριθμός γραμμής"
+
+#: unfold/contrib/import_export/templates/admin/import_export/import_preview.html:22
+msgid "New"
+msgstr "Νέο"
+
+#: unfold/contrib/import_export/templates/admin/import_export/import_preview.html:24
+msgid "Skipped"
+msgstr "Παραλείφθηκε"
+
+#: unfold/contrib/import_export/templates/admin/import_export/import_preview.html:26
+#: unfold/templates/admin/submit_line.html:62
+msgid "Delete"
+msgstr "Διαγραφή"
+
+#: unfold/contrib/import_export/templates/admin/import_export/import_preview.html:28
+msgid "Update"
+msgstr "Ενημέρωση"
+
+#: unfold/contrib/import_export/templates/admin/import_export/import_validation.html:6
+msgid "Some rows failed to validate"
+msgstr "Μερικές εγγραφές δεν ήταν έγκυρες"
+
+#: unfold/contrib/import_export/templates/admin/import_export/import_validation.html:10
+msgid "Please correct these errors in your data where possible, then reupload it using the form above."
+msgstr "Παρακαλώ διορθώστε αυτά τα σφάλματα στα δεδομένα και προσπαθήστε να τα εισάγετε στην παραπάνω φόρμα."
+
+#: unfold/contrib/import_export/templates/admin/import_export/import_validation.html:22
+#: unfold/contrib/import_export/templates/admin/import_export/import_validation.html:40
+msgid "Row"
+msgstr "Γραμμή"
+
+#: unfold/contrib/import_export/templates/admin/import_export/import_validation.html:26
+#: unfold/contrib/import_export/templates/admin/import_export/import_validation.html:44
+msgid "Errors"
+msgstr "Σφάλματα"
+
+#: unfold/contrib/import_export/templates/admin/import_export/import_validation.html:70
+msgid "Non field specific"
+msgstr "Μή συγκεκριμένο πεδίο"
+
+#: unfold/contrib/import_export/templates/admin/import_export/resource_fields_list.html:6
+msgid "This exporter will export the following fields: "
+msgstr "Ο εξαγωγέας θα εξάγει τα παρακάτω πεδία: "
+
+#: unfold/contrib/import_export/templates/admin/import_export/resource_fields_list.html:8
+msgid "This importer will import the following fields: "
+msgstr "Ο εισαγωγέας θα εισάγει τα παρακάτω πεδία: "
+
+#. Translators: Model verbose name and instance representation,
+#. suitable to be an item in a list.
+#: unfold/contrib/inlines/admin.py:94
+#, python-format
+msgid "%(class_name)s %(instance)s"
+msgstr "%(class_name)s %(instance)s"
+
+#: unfold/contrib/inlines/admin.py:103
+msgid "and"
+msgstr "και"
+
+#: unfold/contrib/inlines/admin.py:106
+#, python-format
+msgid ""
+"Deleting %(class_name)s %(instance)s would require deleting the following protected related objects: "
+"%(related_objects)s"
+msgstr ""
+"Η διαγραφή του %(class_name)s %(instance)s θα απαιτούσε τη διαγραφή των ακόλουθων προστατευόμενων σχετικών "
+"αντικειμένων: %(related_objects)s"
+
+#: unfold/contrib/simple_history/templates/simple_history/object_history.html:8
+msgid "Choose a date from the list below to revert to a previous version of this object."
+msgstr ""
+"Επιλέξτε μια ημερομηνία από την παρακάτω λίστα για να επιστρέψετε σε μια προηγούμενη έκδοση αυτού του "
+"αντικειμένου."
+
+#: unfold/contrib/simple_history/templates/simple_history/object_history.html:28
+#: unfold/templates/admin/object_history.html:81
+msgid "entry"
+msgid_plural "entries"
+msgstr[0] "καταχώρηση"
+msgstr[1] "καταχωρήσεις"
+
+#: unfold/contrib/simple_history/templates/simple_history/object_history.html:32
+msgid "This object doesn't have a change history."
+msgstr ""
+
+#: unfold/contrib/simple_history/templates/simple_history/object_history_form.html:26
+#: unfold/templates/admin/edit_inline/stacked.html:59 unfold/templates/unfold/helpers/app_list_default.html:38
+#: unfold/templates/unfold/helpers/edit_inline/tabular_title.html:25
+msgid "View"
+msgstr "Προβολή"
+
+#: unfold/contrib/simple_history/templates/simple_history/object_history_form.html:29
+#: unfold/contrib/simple_history/templates/simple_history/submit_line.html:9
+msgid "Revert"
+msgstr "Επαναφορά"
+
+#: unfold/contrib/simple_history/templates/simple_history/object_history_form.html:48
+msgid "Press the 'Revert' button below to revert to this version of the object."
+msgstr ""
+
+#: unfold/contrib/simple_history/templates/simple_history/object_history_form.html:52
+msgid "Press the 'Change History' button below to edit the history."
+msgstr ""
+
+#: unfold/contrib/simple_history/templates/simple_history/object_history_list.html:20
+#: unfold/contrib/simple_history/templates/simple_history/object_history_list.html:56
+#: unfold/templates/admin/object_history.html:34 unfold/templates/admin/object_history.html:50
+msgid "Date/time"
+msgstr "Ημ/νία/Ώρα"
+
+#: unfold/contrib/simple_history/templates/simple_history/object_history_list.html:24
+#: unfold/contrib/simple_history/templates/simple_history/object_history_list.html:60
+msgid "Comment"
+msgstr "Σχόλιο"
+
+#: unfold/contrib/simple_history/templates/simple_history/object_history_list.html:28
+#: unfold/contrib/simple_history/templates/simple_history/object_history_list.html:64
+msgid "Changed by"
+msgstr ""
+
+#: unfold/contrib/simple_history/templates/simple_history/object_history_list.html:32
+#: unfold/contrib/simple_history/templates/simple_history/object_history_list.html:78
+msgid "Change reason"
+msgstr ""
+
+#: unfold/contrib/simple_history/templates/simple_history/object_history_list.html:36
+#: unfold/contrib/simple_history/templates/simple_history/object_history_list.html:82
+msgid "Changes"
+msgstr ""
+
+#: unfold/contrib/simple_history/templates/simple_history/object_history_list.html:74
+msgid "None"
+msgstr ""
+
+#: unfold/contrib/simple_history/templates/simple_history/submit_line.html:15
+msgid "Change History"
+msgstr ""
+
+#: unfold/contrib/simple_history/templates/simple_history/submit_line.html:20
+#: unfold/templates/admin/submit_line.html:53
+msgid "Close"
+msgstr ""
+
+#: unfold/forms.py:57
+msgid "Select action to run"
+msgstr "Επίλεξτε ενέργεια προς εκτέλεση"
+
+#: unfold/forms.py:115
+msgid ""
+"Raw passwords are not stored, so there is no way to see this user’s password, but you can change the "
+"password using <a href=\"{}\" class=\"text-primary-600 dark:text-primary-500\">this form</a>."
+msgstr ""
+"Οι αρχικοί κωδικοί δεν αποθηκεύονται, συνεπώς δεν υπάρχει τρόπος να δείτε τον κωδικό του χρήστη.Μπορείτε "
+"όμως να αλλάξετε κωδικό χρησιμοποιώντας <a href=\"{}\" class=\"text-primary-600 dark:text-"
+"primary-500\">αυτή τη φόρμα</a>."
+
+#: unfold/mixins/base_model_admin.py:43 unfold/mixins/base_model_admin.py:64
+msgid "Select value"
+msgstr "Επιλογή τιμής"
+
+#: unfold/templates/admin/actions.html:22
+msgid "Run the selected action"
+msgstr "Εκτέλεση επιλεγμένης ενέργειας"
+
+#: unfold/templates/admin/actions.html:23
+msgid "Run"
+msgstr "Εκτέλεση"
+
+#: unfold/templates/admin/actions.html:43
+msgid "Click here to select the objects across all pages"
+msgstr "Κάντε κλικ εδώ για να επιλέξετε τα αντικείμενα σε όλες τις σελίδες"
+
+#: unfold/templates/admin/actions.html:44
+#, python-format
+msgid "Select all %(total_count)s %(module_name)s"
+msgstr "Επιλέξτε όλα %(total_count)s %(module_name)s"
+
+#: unfold/templates/admin/actions.html:50
+msgid "Clear selection"
+msgstr "Καθαρισμός επιλογής"
+
+#: unfold/templates/admin/app_list.html:12 unfold/templates/unfold/helpers/app_list_default.html:9
+#, python-format
+msgid "Models in the %(name)s application"
+msgstr "Μοντέλα στην εφαρμογή %(name)s"
+
+#: unfold/templates/admin/app_list.html:47 unfold/templates/unfold/helpers/app_list.html:98
+#: unfold/templates/unfold/helpers/app_list_default.html:59
+msgid "You don’t have permission to view or edit anything."
+msgstr "Δεν έχετε δικαίωμα να δείτε ή να επεξεργαστείτε τίποτα."
+
+#: unfold/templates/admin/auth/user/add_form.html:7
+msgid "First, enter a username and password. Then, you’ll be able to edit more user options."
+msgstr ""
+"Αρχικά, εισάγετε ένα όνομα χρήστη και έναν κωδικό πρόσβασης. Στη συνέχεια, θα μπορέσετε να επεξεργαστείτε "
+"περισσότερες επιλογές χρήστη."
+
+#: unfold/templates/admin/auth/user/add_form.html:9
+msgid "Enter a username and password."
+msgstr "Εισάγετε ένα όνομα χρήστη και έναν κωδικό πρόσβασης."
+
+#: unfold/templates/admin/auth/user/change_password.html:25
+#: unfold/templates/admin/auth/user/change_password.html:55
+#: unfold/templates/registration/password_change_done.html:15
+#: unfold/templates/registration/password_change_form.html:15
+#: unfold/templates/registration/password_change_form.html:46
+#: unfold/templates/unfold/helpers/account_links.html:23
+msgid "Change password"
+msgstr "Αλλαγή συνθηματικού"
+
+#: unfold/templates/admin/auth/user/change_password.html:44
+#, python-format
+msgid "Enter a new password for the user <strong>%(username)s</strong>."
+msgstr "Εισάγετε έναν νέο κωδικό πρόσβασης για τον χρήστη <strong>%(username)s</strong>."
+
+#: unfold/templates/admin/change_list_results.html:28
+msgid "Select all rows"
+msgstr "Επιλέξτε όλες τις γραμμές"
+
+#: unfold/templates/admin/change_list_results.html:98
+msgid "No results found"
+msgstr "Δεν βρέθηκαν αποτελέσματα"
+
+#: unfold/templates/admin/change_list_results.html:102
+msgid "This page yielded into no results. Create a new item or reset your filters."
+msgstr "Αυτή η σελίδα δεν έδωσε κανένα αποτέλεσμα. Δημιουργήστε ένα νέο στοιχείο ή επαναφέρετε τα φίλτρα σας."
+
+#: unfold/templates/admin/change_list_results.html:116
+msgid "Reset filters"
+msgstr "Επαναφορά φίλτρων"
+
+#: unfold/templates/admin/delete_confirmation.html:37
+#, python-format
+msgid ""
+"Deleting the %(object_name)s '%(escaped_object)s' would result in deleting related objects, but your "
+"account doesn't have permission to delete the following types of objects:"
+msgstr ""
+"Η διαγραφή του %(object_name)s '%(escaped_object)s' θα είχε ως αποτέλεσμα τη διαγραφή σχετικών "
+"αντικειμένων, αλλά ο λογαριασμός σας δεν έχει δικαίωμα διαγραφής των ακόλουθων τύπων αντικειμένων:"
+
+#: unfold/templates/admin/delete_confirmation.html:53
+#, python-format
+msgid ""
+"Deleting the %(object_name)s '%(escaped_object)s' would require deleting the following protected related "
+"objects:"
+msgstr ""
+"Η διαγραφή του %(object_name)s '%(escaped_object)s' θα απαιτούσε τη διαγραφή των ακόλουθων προστατευόμενων "
+"συναφών αντικειμένων:"
+
+#: unfold/templates/admin/delete_confirmation.html:69
+#, python-format
+msgid ""
+"Are you sure you want to delete the %(object_name)s \"%(escaped_object)s\"? All of the following related "
+"items will be deleted:"
+msgstr ""
+"Σίγουρα θέλετε να διαγράψετε το %(object_name)s \"%(escaped_object)s\" Όλα τα ακόλουθα σχετικά στοιχεία θα "
+"διαγραφούν:"
+
+#: unfold/templates/admin/delete_confirmation.html:76
+#: unfold/templates/admin/delete_selected_confirmation.html:71
+msgid "Objects"
+msgstr "Αντικείμενα"
+
+#: unfold/templates/admin/delete_selected_confirmation.html:27
+msgid "Delete multiple objects"
+msgstr "Διαγραφή πολλαπλών αντικειμένων"
+
+#: unfold/templates/admin/delete_selected_confirmation.html:37
+#, python-format
+msgid ""
+"Deleting the selected %(objects_name)s would result in deleting related objects, but your account doesn't "
+"have permission to delete the following types of objects:"
+msgstr ""
+"Η διαγραφή του επιλεγμένου %(objects_name)s θα είχε ως αποτέλεσμα τη διαγραφή σχετικών αντικειμένων, αλλά ο "
+"λογαριασμός σας δεν έχει δικαίωμα διαγραφής των ακόλουθων τύπων αντικειμένων:"
+
+#: unfold/templates/admin/delete_selected_confirmation.html:50
+#, python-format
+msgid "Deleting the selected %(objects_name)s would require deleting the following protected related objects:"
+msgstr ""
+"Η διαγραφή του επιλεγμένου %(objects_name)s θα απαιτούσε τη διαγραφή των ακόλουθων προστατευόμενων σχετικών "
+"αντικειμένων:"
+
+#: unfold/templates/admin/delete_selected_confirmation.html:64
+#, python-format
+msgid ""
+"Are you sure you want to delete the selected %(objects_name)s? All of the following objects and their "
+"related items will be deleted:"
+msgstr ""
+"Είστε σίγουροι ότι θέλετε να διαγράψετε το επιλεγμένο %(objects_name)s Θα διαγραφούν όλα τα ακόλουθα "
+"αντικείμενα και τα σχετικά στοιχεία τους:"
+
+#: unfold/templates/admin/edit_inline/stacked.html:57 unfold/templates/unfold/helpers/app_list_default.html:42
+#: unfold/templates/unfold/helpers/edit_inline/tabular_title.html:23
+msgid "Change"
+msgstr "Αλλαγή"
+
+#: unfold/templates/admin/filter.html:5
+#, python-format
+msgid " By %(filter_title)s "
+msgstr " Με %(filter_title)s "
+
+#: unfold/templates/admin/includes/object_delete_summary.html:5
+msgid "Summary"
+msgstr "Περίληψη"
+
+#: unfold/templates/admin/login.html:31
+msgid "Welcome back to"
+msgstr "Καλώς ήρθατε πίσω στο"
+
+#: unfold/templates/admin/login.html:44
+#, python-format
+msgid ""
+"You are authenticated as %(username)s, but are not authorized to access this page. Would you like to login "
+"to a different account?"
+msgstr ""
+"Έχετε πιστοποιηθεί ως %(username)s, αλλά δεν είστε εξουσιοδοτημένοι να αποκτήσετε πρόσβαση σε αυτή τη "
+"σελίδα. Θα θέλατε να συνδεθείτε με διαφορετικό λογαριασμό;"
+
+#: unfold/templates/admin/login.html:67
+msgid "Log in"
+msgstr "Είσοδος"
+
+#: unfold/templates/admin/login.html:76
+msgid "Forgotten your password or username?"
+msgstr "Ξεχάσατε τον κωδικό ή το όνομα χρήστη σας;"
+
+#: unfold/templates/admin/login.html:88
+msgid "Return to site"
+msgstr "Επιστροφή στον ιστότοπο"
+
+#: unfold/templates/admin/object_history.html:84
+msgid "This object doesn’t have a change history. It probably wasn’t added via this admin site."
+msgstr ""
+
+#: unfold/templates/admin/search_form.html:7
+msgid "Type to search"
+msgstr "Πληκτρολογήστε για αναζήτηση"
+
+#: unfold/templates/admin/submit_line.html:29
+msgid "Save and continue editing"
+msgstr "Αποθήκευση και συνέχιση της επεξεργασίας"
+
+#: unfold/templates/admin/submit_line.html:31
+msgid "Save and view"
+msgstr "Αποθήκευση και προβολή"
+
+#: unfold/templates/admin/submit_line.html:38
+msgid "Save and add another"
+msgstr "Αποθήκευση και προσθήκη νέου"
+
+#: unfold/templates/admin/submit_line.html:44
+msgid "Save as new"
+msgstr "Αποθήκευση ως νέα"
+
+#: unfold/templates/registration/logged_out.html:11
+msgid "You have been successfully logged out from the administration"
+msgstr "Έχετε αποσυνδεθεί επιτυχώς από τη διαχείριση"
+
+#: unfold/templates/registration/logged_out.html:16
+msgid "Thanks for spending some quality time with the web site today."
+msgstr "Σας ευχαριστούμε που αφιερώσατε λίγο ποιοτικό χρόνο στον ιστότοπο σήμερα."
+
+#: unfold/templates/registration/logged_out.html:20
+msgid "Log in again"
+msgstr "Συνδεθείτε ξανά"
+
+#: unfold/templates/registration/password_change_done.html:26
+msgid "Your password was changed."
+msgstr "Ο κωδικός σας άλλαξε."
+
+#: unfold/templates/registration/password_change_form.html:35
+msgid ""
+"Please enter your old password, for security’s sake, and then enter your new password twice so we can "
+"verify you typed it in correctly."
+msgstr ""
+"Για λόγους ασφαλείας, πληκτρολογήστε τον παλιό σας κωδικό πρόσβασης και, στη συνέχεια, πληκτρολογήστε τον "
+"νέο σας κωδικό πρόσβασης δύο φορές, ώστε να επιβεβαιώσουμε ότι τον πληκτρολογήσατε σωστά."
+
+#: unfold/templates/unfold/helpers/account_links.html:17
+msgid "View site"
+msgstr "Προβολή σελίδας"
+
+#: unfold/templates/unfold/helpers/account_links.html:32
+msgid "Log out"
+msgstr "Έξοδος"
+
+#: unfold/templates/unfold/helpers/actions_row.html:4
+msgid "More actions"
+msgstr "Περισσότερες ενέργειες"
+
+#: unfold/templates/unfold/helpers/app_list.html:68
+msgid "All applications"
+msgstr "Όλες οι εφαρμογές"
+
+#: unfold/templates/unfold/helpers/app_list_default.html:31
+msgid "Add"
+msgstr "Προσθήκη"
+
+#: unfold/templates/unfold/helpers/boolean.html:8
+msgid "Unknown"
+msgstr "Άγνωστο"
+
+#: unfold/templates/unfold/helpers/boolean.html:10
+msgid "True"
+msgstr "Ναι"
+
+#: unfold/templates/unfold/helpers/boolean.html:12
+msgid "False"
+msgstr "Όχι"
+
+#: unfold/templates/unfold/helpers/change_list_filter_actions.html:6
+msgid "Apply Filters"
+msgstr "Εφαρμογή φίλτρων"
+
+#: unfold/templates/unfold/helpers/change_list_filter_actions.html:15
+msgid "Hide counts"
+msgstr "Απόκρυψη πλήθους"
+
+#: unfold/templates/unfold/helpers/change_list_filter_actions.html:19
+msgid "Show counts"
+msgstr "Εμφάνιση πλήθους"
+
+#: unfold/templates/unfold/helpers/change_list_filter_actions.html:26
+msgid "Clear all filters"
+msgstr "Εκκαθάριση φίλτρων"
+
+#: unfold/templates/unfold/helpers/delete_submit_line.html:5
+msgid "No, take me back"
+msgstr "Όχι, γύρισε πίσω"
+
+#: unfold/templates/unfold/helpers/delete_submit_line.html:9
+msgid "Yes, I’m sure"
+msgstr "Ναι, είμαι σίγουρος"
+
+#: unfold/templates/unfold/helpers/display_header.html:10
+msgid "Record picture"
+msgstr ""
+
+#: unfold/templates/unfold/helpers/edit_inline/tabular_delete.html:4
+msgid "Remove"
+msgstr "Αφαίρεση"
+
+#: unfold/templates/unfold/helpers/edit_inline/tabular_heading.html:21
+msgid "Delete?"
+msgstr "Διαγραφή;"
+
+#: unfold/templates/unfold/helpers/header_back_button.html:7
+msgid "Go back"
+msgstr "Επιστροφή"
+
+#: unfold/templates/unfold/helpers/history.html:9
+msgid "Recent actions"
+msgstr "Πρόσφατες ενέργειες"
+
+#: unfold/templates/unfold/helpers/history.html:28
+msgid "Unknown content"
+msgstr "Άγνωστο περιεχόμενο"
+
+#: unfold/templates/unfold/helpers/search.html:18
+msgid "Search apps and models..."
+msgstr "Αναζήτησή εφαρμογών και πινάκων…"
+
+#: unfold/templates/unfold/helpers/search.html:18
+msgid "Filter navigation items"
+msgstr "Φιλτράρισμα επιλογών πλοήγησης"
+
+#: unfold/templates/unfold/helpers/tab_list.html:30
+msgid "General"
+msgstr "Γενικά"
+
+#: unfold/templates/unfold/helpers/theme_switch.html:15
+msgid "Dark"
+msgstr "Σκοτεινό"
+
+#: unfold/templates/unfold/helpers/theme_switch.html:22
+msgid "Light"
+msgstr "Φωτεινό"
+
+#: unfold/templates/unfold/helpers/theme_switch.html:29
+msgid "System"
+msgstr "Συστήματος"
+
+#: unfold/templates/unfold/helpers/welcomemsg.html:28
+#, python-format
+msgid "%(counter)s result"
+msgid_plural "%(counter)s results"
+msgstr[0] "%(counter)s αποτέλεσμα"
+msgstr[1] "%(counter)s αποτελέσματα"
+
+#: unfold/templates/unfold/helpers/welcomemsg.html:28
+#, python-format
+msgid "%(full_result_count)s total"
+msgstr "%(full_result_count)s συνολικά"
+
+#: unfold/templates/unfold/helpers/welcomemsg.html:36
+msgid "Welcome,"
+msgstr "Καλωσήλθατε,"
+
+#: unfold/templates/unfold/widgets/clearable_file_input.html:6
+msgid "Image preview"
+msgstr ""
+
+#: unfold/templates/unfold/widgets/clearable_file_input.html:24
+#: unfold/templates/unfold/widgets/clearable_file_input_small.html:17
+msgid "Choose file to upload"
+msgstr "Επιλέξτε αρχείο για να το ανεβάσετε"
+
+#: unfold/templates/unfold/widgets/related_widget_wrapper.html:16
+#, python-format
+msgid "Change selected %(model)s"
+msgstr "Αλλαγή επιλεγμένου %(model)s"
+
+#: unfold/templates/unfold/widgets/related_widget_wrapper.html:26
+#, python-format
+msgid "Add another %(model)s"
+msgstr "Προσθέστε άλλο ένα %(model)s"
+
+#: unfold/templates/unfold/widgets/related_widget_wrapper.html:35
+#, python-format
+msgid "View selected %(model)s"
+msgstr "Προβολή επιλεγμένη %(model)s"
+
+#: unfold/templates/unfold/widgets/related_widget_wrapper.html:45
+#, python-format
+msgid "Delete selected %(model)s"
+msgstr "Διαγραφή επιλεγμένου %(model)s"
+
+#: unfold/templatetags/unfold_list.py:113
+msgid "Select all objects on this page for an action"
+msgstr "Επιλογή όλων των αντικειμένων σε αυτή τη σελίδα για μια ενέργεια"
+
+#: unfold/widgets.py:534
+msgid "Date"
+msgstr "Ημερομηνία"
+
+#: unfold/widgets.py:657
+msgid "Select currency"
+msgstr "Επιλέξτε νόμισμα"

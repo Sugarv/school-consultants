@@ -509,7 +509,7 @@ class LogEntryAdmin(admin.ModelAdmin):
             return format_html('<a href="{}">{}</a>', admin_url, obj.object_repr)
         else:
             return obj.object_repr
-    object_link.short_description = "object"
+    object_link.short_description = "Αντικείμενο"
     def action_message(self, obj):
         """
         Returns the action message.
@@ -520,7 +520,7 @@ class LogEntryAdmin(admin.ModelAdmin):
         if not change_message:
             change_message = f"{obj.get_action_flag_display()}."
         return change_message
-    action_message.short_description = "action"
+    action_message.short_description = "Ενέργεια"
     def get_queryset(self, request):
         return super().get_queryset(request).prefetch_related("content_type")
     def has_add_permission(self, request):
