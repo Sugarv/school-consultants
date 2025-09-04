@@ -1,3 +1,5 @@
+from datetime import datetime, date
+
 def is_member(user, group):
     """
     Check if the user is a member of a specific group.
@@ -22,3 +24,30 @@ def environment_callback(request):
         return ['admin', "danger"]
 
     return [f'{display_name} - {role}', "info"]
+
+# Decide school year based on date
+def get_school_year(d, fmt="%d-%m-%Y"):
+    # If d is a string → parse it
+    if isinstance(d, str):
+        d = datetime.strptime(d, fmt).date()
+    elif isinstance(d, datetime):
+        d = d.date()
+    elif not isinstance(d, date):
+        raise TypeError("Input must be str, datetime, or date")
+
+    cutoff = date(d.year, 9, 1)  # 1st September of same year
+
+    if d >= cutoff:
+        return f"{d.year}-{d.year+1}"
+    else:
+        return f"{d.year-1}-{d.year}"
+    
+
+def get_current_school_year(today=None):
+        if today is None:
+            today = date.today()
+        cutoff = date(today.year, 9, 1)
+        if today >= cutoff:
+            return f"{today.year}-{today.year+1}"
+        else:
+            return f"{today.year-1}-{today.year}"

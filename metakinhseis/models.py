@@ -47,6 +47,7 @@ class Metakinhsh(models.Model):
   uploaded_at = models.DateTimeField(null=True, blank=True, verbose_name='ΧΣΜ')
   special = models.BooleanField(default=False, verbose_name='Ειδική περίπτωση')
   is_evaluation = models.BooleanField(default=False, verbose_name='Μετακ.αξιολόγησης')
+  school_year = models.CharField('Σχολικό έτος', max_length=20, null=True, blank=True)
   
   class Meta:
     verbose_name = 'Μετακίνηση'

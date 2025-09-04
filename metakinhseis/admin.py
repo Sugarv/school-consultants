@@ -12,7 +12,7 @@ from unfold.contrib.filters.admin import RelatedDropdownFilter
 from unfold.contrib.import_export.forms import ExportForm
 from app.filters import MyRangeDateFilter
 from .models import Metakinhsh, Consultant, OfficeSchedule
-from app.utils import is_member, is_member_of_many
+from app.utils import is_member, is_member_of_many, get_school_year, get_current_school_year
 from unfold.decorators import action, display
 from django import forms
 from django.utils.safestring import mark_safe
@@ -46,6 +46,7 @@ class MetakinhshAdmin(ModelAdmin, ExportActionModelAdmin):
         ("date_from", MyRangeDateFilter),
         # ("km", RangeNumericFilter),
         # ("person__last_name", DropdownFilter)
+        'school_year',
     ]
     search_fields = ['metak_to']
     list_per_page=25
@@ -65,17 +66,17 @@ class MetakinhshAdmin(ModelAdmin, ExportActionModelAdmin):
 
     def get_list_filter(self, request):
         if is_member(request.user,'Σύμβουλοι'):
-            return (("date_from", MyRangeDateFilter),'pragmat', 'egkrish')
+            return (("date_from", MyRangeDateFilter),'pragmat', 'egkrish', 'school_year')
         return (
                 ("date_from", MyRangeDateFilter),#("km", RangeNumericFilter),
-                ('consultant', RelatedDropdownFilter), 'pragmat', 'egkrish', 'handler'
+                ('consultant', RelatedDropdownFilter), 'pragmat', 'egkrish', 'handler', 'school_year'
             )
 
     def get_list_display(self, request):
         if is_member(request.user,'Σύμβουλοι'):
-            return ('id', 'metak_to', 'date_from', 'approved_display','complete_display','km','handler','is_evaluation')
+            return ('id', 'metak_to', 'date_from', 'approved_display','complete_display','km','handler','is_evaluation', 'school_year')
         else:
-            return ('id', 'get_user', 'metak_to', 'date_from', 'approved_display','complete_display','km','handler','is_evaluation')
+            return ('id', 'get_user', 'metak_to', 'date_from', 'approved_display','complete_display','km','handler','is_evaluation', 'school_year')
 
     def get_readonly_fields(self, request, obj=None):
         is_supervisor = is_member_of_many(request.user, 'Επόπτες,Γραμματεία') or request.user.is_superuser
@@ -108,21 +109,18 @@ class MetakinhshAdmin(ModelAdmin, ExportActionModelAdmin):
         ]
     
     def get_queryset(self, request):
-        # Get the default queryset
         qs = super().get_queryset(request)
 
-        is_supervisor = is_member_of_many(request.user, 'Επόπτες,Οικονομικό,Γραμματεία') or request.user.is_superuser
+        is_supervisor = (
+            is_member_of_many(request.user, 'Επόπτες,Οικονομικό,Γραμματεία')
+            or request.user.is_superuser
+        )
         is_consultant = request.user.groups.filter(name='Σύμβουλοι').exists()
         
-        # Check if the user is in the 'symvouloi' group
         if is_consultant:
             return qs.filter(consultant=request.user)
-        
-        # Check if the user is a superuser or in the 'directors' group
         elif is_supervisor:
             return qs
-
-        # Return an empty queryset by default
         return qs.none()
     
     def get_fieldsets(self, request, obj=None):
@@ -150,6 +148,9 @@ class MetakinhshAdmin(ModelAdmin, ExportActionModelAdmin):
     
     
     def save_model(self, request, obj, form, change):
+        # Set the school_year
+        if obj and obj.date_from:
+            obj.school_year = get_school_year(obj.date_from)
         """
         Set the `consultant` field to the logged-in user when saving a new EvaluationStep instance.
         """
@@ -246,6 +247,24 @@ class MetakinhshAdmin(ModelAdmin, ExportActionModelAdmin):
 
     complete_display.short_description = "Ολοκληρώθηκε"
     approved_display.short_description = "Εγκρίθηκε"
+
+    def changelist_view(self, request, extra_context=None):
+        # If a year is selected, filter the queryset by that year
+        if request.GET.get('school_year__exact') and request.GET.get('school_year'):
+            q = request.GET.copy()
+            q['school_year__exact'] = request.GET.get('school_year')
+            request.GET = q
+            request.META['QUERY_STRING'] = request.GET.urlencode()
+            current_school_year = request.GET.get('school_year')
+            
+        # If nothing is selected, get the current school year queryset
+        if not request.GET.get('school_year__exact') and not request.GET.get('q') and not request.GET.get('school_year'):
+            current_school_year = get_current_school_year()
+            q = request.GET.copy()
+            q['school_year__exact'] = current_school_year
+            request.GET = q
+            request.META['QUERY_STRING'] = request.GET.urlencode()
+        return super().changelist_view(request, extra_context=extra_context)
 
 admin.site.register(Metakinhsh, MetakinhshAdmin)
 
