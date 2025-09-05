@@ -35,7 +35,7 @@ msgstr "Διαχειριστής"
 
 #: p2/templates/admin/_base.html:68
 msgid "Documentation"
-msgstr ""
+msgstr "Τεκμηρίωση"
 
 #: p2/templates/admin/change_form_object_tools.html:5 p2/templates/admin/p2/anaplirotis/change_form.html:9
 #: p2/templates/admin/p2/employee/_change_form.html:9
@@ -70,24 +70,24 @@ msgstr "Αρχική σελίδα"
 #: unfold/templates/unfold/helpers/add_link.html:5 unfold/templates/unfold/helpers/add_link.html:8
 #, python-format
 msgid "Add %(name)s"
-msgstr ""
+msgstr "Προσθήκη %(name)s"
 
 #: p2/templates/admin/employee_change_form.html:45 p2/templates/admin/school_page_change_form.html:45
 #: unfold/templates/unfold/helpers/messages/errornote.html:6
 msgid "Please correct the error below."
-msgstr ""
+msgstr "Παρακαλώ διορθώστε το παρακάτω σφάλμα."
 
 #: p2/templates/admin/employee_change_form.html:45 p2/templates/admin/school_page_change_form.html:45
 #: unfold/templates/unfold/helpers/messages/errornote.html:8
 msgid "Please correct the errors below."
-msgstr ""
+msgstr "Παρακαλώ διορθώστε τα παρακάτω σφάλματα."
 
 #: p2/templates/admin/p2/anaplirotis/_change_list_results.html:17
 #: p2/templates/admin/p2/employee/_change_list_results.html:17
 #: p2/templates/admin/p2/idiwtikoi/change_list_results.html:17
 #: unfold/templates/admin/change_list_results.html:50
 msgid "Remove from sorting"
-msgstr ""
+msgstr "Αφαίρεση από ταξινόμηση"
 
 #: p2/templates/admin/p2/anaplirotis/_change_list_results.html:18
 #: p2/templates/admin/p2/employee/_change_list_results.html:18
@@ -95,7 +95,7 @@ msgstr ""
 #: unfold/templates/admin/change_list_results.html:56
 #, python-format
 msgid "Sorting priority: %(priority_number)s"
-msgstr ""
+msgstr "Προτεραιότητα ταξινόμησης: %(priority_number)s"
 
 #: p2/templates/admin/p2/anaplirotis/_change_list_results.html:19
 #: p2/templates/admin/p2/employee/_change_list_results.html:19

@@ -68,9 +68,10 @@ class Metakinhsh(models.Model):
     super().save(*args, **kwargs)
 
 # Use signals to send_mail when a new object is created in Metakinhsh
+# when _skip_email is set, no email is sent
 @receiver(post_save, sender=Metakinhsh)
 def send_email(sender, instance, created, **kwargs):
-    if created:
+    if created and not getattr(instance, "_skip_email", False):
         fname = instance.consultant.first_name + ' ' + instance.consultant.last_name
         formatted_date = instance.date_from.strftime("%d/%m/%Y")
         subject = 'Νέα Μετακίνηση'

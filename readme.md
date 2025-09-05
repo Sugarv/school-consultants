@@ -33,4 +33,5 @@ The app features 4 discreet user roles with different capabilities each:
 - Create a superuser: ```python manage.py createsuperuser```
 - Import groups & their permissions: ```python manage.py import_groups --settings=app.settings-dev``` 
 - (Optional) Import Evaluation Step Types: ```python manage.py loaddata fixtures/initial_step_types.json```
+- (Optional) Import Metakinhseis from csv: ```python manage.py import_metakinhseis {csv_file_path} --settings=app.settings-dev``` (see metakinhsh_import_sample.csv)
 - Run the app with: ```python manage.py runserver --settings=app.settings-dev```
