@@ -48,7 +48,7 @@ class MetakinhshAdmin(ModelAdmin, ExportActionModelAdmin):
         # ("person__last_name", DropdownFilter)
         'school_year',
     ]
-    search_fields = ['metak_to']
+    search_fields = ['metak_to','consultant__last_name']
     list_per_page=25
     actions = ['apofasi_metakinhshs', 'apofasi_metakinhshs_oikon', 'katastash_plhrwmhs', 'mass_confirmation']
     ordering = ['-date_from']
