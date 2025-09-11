@@ -447,10 +447,11 @@ class NewUserAdmin(ModelAdmin):
 
     def save_model(self, request, obj, form, change):
         """
-        Override save_model to encode the password if it's being set or updated.
+        Override save_model to correctly handle password changes.
         """
-        if 'password' in form.changed_data:
-            obj.password = make_password(obj.password)  # Ensure the password is hashed
+        # If the password field was changed, set the new password
+        if form.cleaned_data.get('password'):
+            obj.set_password(form.cleaned_data['password'])
         super().save_model(request, obj, form, change)
     
     def __str__(self):
