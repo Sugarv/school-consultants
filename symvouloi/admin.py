@@ -475,7 +475,7 @@ admin.site.unregister(Group)
 admin.site.register(Group, NewGroupAdmin)
 
 # Add LogEntry to admin to monitor history log
-class LogEntryAdmin(admin.ModelAdmin):
+class LogEntryAdmin(ModelAdmin):
     """Log Entry admin interface."""
     date_hierarchy = "action_time"
     fields = (
@@ -485,7 +485,7 @@ class LogEntryAdmin(admin.ModelAdmin):
         "object_id",
         "object_repr",
         "action_flag",
-        "change_message",
+        "decoded_change_message", # Use the decoded message field
     )
     list_display = (
         "action_time",
@@ -494,6 +494,24 @@ class LogEntryAdmin(admin.ModelAdmin):
         "content_type",
         "object_link",
     )
+    readonly_fields = (
+        "action_time",
+        "user",
+        "content_type",
+        "object_id",
+        "object_repr",
+        "action_flag",
+        "decoded_change_message", # Add decoded message to readonly fields
+    )
+
+    def decoded_change_message(self, obj):
+        """
+        Returns the decoded and formatted change message for the change view.
+        """
+        return self.action_message(obj) # Reuse the existing action_message logic
+
+    decoded_change_message.short_description = "Μεταβολή"
+
     list_filter = (
         "action_flag",
         ("content_type", admin.RelatedOnlyFieldListFilter),
@@ -513,14 +531,32 @@ class LogEntryAdmin(admin.ModelAdmin):
     object_link.short_description = "Αντικείμενο"
     def action_message(self, obj):
         """
-        Returns the action message.
-        Note: this handles deletions which don't return a change message.
+        Returns the action message, attempting to decode JSON if present.
         """
         change_message = obj.get_change_message()
-        # If there is no change message then use the action flag label
         if not change_message:
-            change_message = f"{obj.get_action_flag_display()}."
-        return change_message
+            return f"{obj.get_action_flag_display()}."
+
+        try:
+            import json
+            # Replace double backslashes for Unicode escapes if they exist
+            corrected_change_message = change_message.replace('\\\\u', '\\u')
+            message = json.loads(corrected_change_message)
+            formatted_messages = []
+            for msg_part in message:
+                if 'added' in msg_part:
+                    formatted_messages.append(f"Added: {msg_part['added']['name']} ({msg_part['added']['object']})")
+                elif 'changed' in msg_part:
+                    fields = ", ".join(msg_part['changed']['fields'])
+                    formatted_messages.append(f"Changed: {fields}")
+                elif 'deleted' in msg_part:
+                    formatted_messages.append(f"Deleted: {msg_part['deleted']['name']} ({msg_part['deleted']['object']})")
+            return format_html(", ".join(formatted_messages)) if formatted_messages else change_message
+        except json.JSONDecodeError:
+            return change_message
+        except Exception:
+            return change_message
+
     action_message.short_description = "Ενέργεια"
     def get_queryset(self, request):
         return super().get_queryset(request).prefetch_related("content_type")

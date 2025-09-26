@@ -17,6 +17,7 @@ from unfold.decorators import action, display
 from django import forms
 from django.utils.safestring import mark_safe
 from django.core.exceptions import ValidationError
+from django.conf import settings
 import json
 
 
@@ -310,6 +311,11 @@ class OfficeScheduleAdmin(ModelAdmin):
     search_fields = ['consultant', 'month']
     list_filter_submit = True
     ordering = ['-month']
+
+    def has_module_permission(self, request):
+        if not settings.SHOW_OFFICE_DAYS:
+            return False
+        return super().has_module_permission(request)
 
     def days_total(self, obj):
         return (len(obj.days_in_office))
