@@ -63,9 +63,25 @@ class MetakinhshCustomView(UnfoldModelAdminViewMixin, TemplateView):
 def metakinhsh_json(request):
     all_events = []
     events = []
-    is_consultant = request.user.groups.filter(name='Σύμβουλοι').exists()
-    metakinhseis = Metakinhsh.objects.all() if not is_consultant else Metakinhsh.objects.filter(consultant=request.user)
+    start_str = request.GET['start']
+    end_str = request.GET['end']
 
+    # Parse ISO datetime and convert to date (e.g. 2025-09-01)
+    start = datetime.fromisoformat(start_str).date()
+    end = datetime.fromisoformat(end_str).date()
+
+    is_consultant = request.user.groups.filter(name='Σύμβουλοι').exists()
+    
+    # Find metakinhseis for the given period
+    metakinhseis = Metakinhsh.objects.filter(
+        date_from__gte=start,
+        date_to__lte=end
+    )
+
+    # If consultant, show only their records
+    if is_consultant:
+        metakinhseis = metakinhseis.filter(consultant=request.user)
+    
     for metak in metakinhseis:
         if is_consultant:
             description = f'{metak.metak_to}. Λόγος: {metak.aitiologia}'
