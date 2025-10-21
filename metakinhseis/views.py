@@ -330,9 +330,9 @@ def katastash_plhrwmhs(request):
                 'total_amount_km': round(total_amount_km, 2),
                 'total_km': total_km,
                 'total_days': total_days,
-                'total_amount': total_amount,
-                'total_mtpy': total_mtpy,
-                'general_total': general_total
+                'total_amount': round(total_amount, 2),
+                'total_mtpy': round(total_mtpy, 2),
+                'general_total': round(general_total, 2)
             }
         except Exception as e:
             print(e)
