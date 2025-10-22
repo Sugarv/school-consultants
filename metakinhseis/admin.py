@@ -6,7 +6,7 @@ from import_export.widgets import ForeignKeyWidget
 from unfold.admin import ModelAdmin, TabularInline
 from django.urls import path, reverse
 from django.http import HttpResponseRedirect
-from .views import MetakinhshCustomView, apofasi_metakinhshs_preview, katastash_plhrwmhs
+from .views import MetakinhshCustomView, apofasi_metakinhshs_preview, katastash_plhrwmhs, MetakinhshImportView
 from django.contrib import messages
 from unfold.contrib.filters.admin import RelatedDropdownFilter
 from unfold.contrib.import_export.forms import ExportForm
@@ -104,6 +104,11 @@ class MetakinhshAdmin(ModelAdmin, ExportActionModelAdmin):
                 "metakinhsh-calendar",
                 MetakinhshCustomView.as_view(model_admin=self),
                 name="metakinhsh_calendar"
+            ),
+            path(
+                "metakinhsh-import",
+                MetakinhshImportView.as_view(model_admin=self),
+                name="metakinhsh_import"
             ),
             path('apofasi_metakinhshs/', apofasi_metakinhshs_preview, name='apofasi_metakinhshs_preview'),
             path('katastash_plhrwmhs/', katastash_plhrwmhs, name='katastash_plhrwmhs'),

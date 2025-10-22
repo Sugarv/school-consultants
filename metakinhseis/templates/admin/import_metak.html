@@ -1,0 +1,29 @@
+{% extends 'unfold/layouts/base_simple.html' %}
+
+{% load unfold %}
+
+{% block breadcrumbs %}{% endblock %}
+
+{% block content %}
+    <div class="module">
+        {% component "unfold/components/title.html" %}
+          Εισαγωγή μετακινήσεων
+        {% endcomponent %}
+        <div class="form-row">
+            <form action="/import-metakinhseis/" method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+                
+                <input type="file" name="csv_file" accept=".csv" required>
+                
+                {% component "unfold/components/button.html" with variant='primary' class='data-ajax-submit' submit=True %}
+                Εισαγωγή από CSV
+                {% endcomponent %}
+                {% component "unfold/components/separator.html" %}{% endcomponent %}
+                {% component "unfold/components/text.html" %}
+                  Επιλέξτε ένα αρχείο CSV με τις ακόλουθες στήλες:<br>
+                  Επώνυμο, Ημ/νία από, Από, Προς, Χλμ., Έγκριση (True/False), Πραγματοπ. (True/False), Χειριστής, Αιτιολογία
+                {% endcomponent %}
+            </form>
+        </div>
+    </div>
+{% endblock %}

@@ -12,8 +12,12 @@ from django.contrib.admin import site
 from django.db.models.functions import ExtractMonth
 from io import BytesIO
 from datetime import datetime
-from app.utils import is_member
+from app.utils import is_member, get_school_year
 from django.conf import settings
+from django.contrib.admin.views.decorators import staff_member_required
+import csv
+from symvouloi.models import User
+from io import TextIOWrapper
 
 
 # Create your views here.
@@ -455,3 +459,86 @@ def katastash_plhrwmhs(request):
     context.update(site.each_context(request))
 
     return render(request, 'admin/preview_apofasi_metakinhshs.html', context)
+
+
+class MetakinhshImportView(UnfoldModelAdminViewMixin, TemplateView):
+    title = "Εισαγωγή μετακινήσεων"
+    template_name = "admin/import_metak.html"
+    permission_required = "metakinhseis.view_metakinhsh"
+
+
+@staff_member_required
+def import_metakinhseis(request):
+    csv_file = request.FILES['csv_file']
+
+    if not csv_file.name.endswith('.csv'):
+        messages.error(request, 'Παρακαλώ ανεβάστε ένα αρχείο CSV.')
+        return redirect('admin:metakinhseis_metakinhsh_changelist')
+
+    try:
+        csv_text = TextIOWrapper(csv_file.file, encoding='utf-8')
+        reader = csv.DictReader(csv_text)
+
+        saves = 0
+        fails = 0
+        skipped = 0
+
+        for row in reader:
+            try:
+                # Επώνυμο,Όνομα,Ημ/νία από,Από,Προς,Χλμ.,Δημιουργ.,Έγκριση,Πραγματοπ.,Χειριστής,Αιτιολογία,Ενέργεια
+                date_from = datetime.strptime(row['Ημ/νία από'], '%d/%m/%Y').date()
+                date_to = datetime.strptime(row['Ημ/νία από'], '%d/%m/%Y').date()
+                from_location = row['Από']
+                to_location = row['Προς']
+                km = float(row['Χλμ.'])
+                egkrish = row['Έγκριση'].capitalize()
+                pragmat = row['Πραγματοπ.'].capitalize()
+                xeirisths = row['Χειριστής']
+                aitiologia = row['Αιτιολογία']
+                surname = row['Επώνυμο']
+
+                # Find consultant by surname
+                consultant = User.objects.filter(last_name__iexact=surname).first()
+                if not consultant:
+                    messages.error(request, f'Ο/Η σύμβουλος με επώνυμο "{surname}" δε βρέθηκε. Η γραμμή αγνοήθηκε.')
+                    skipped += 1
+                    continue
+                
+                sch_year = get_school_year(date_from)
+
+                metakinhsh = Metakinhsh(
+                    date_from=date_from,
+                    date_to=date_to,
+                    metak_from=from_location,
+                    metak_to=to_location,
+                    km=km,
+                    egkrish=egkrish,
+                    pragmat=pragmat,
+                    handler=xeirisths,
+                    aitiologia=aitiologia,
+                    consultant=consultant,
+                    school_year=sch_year
+                )
+
+                # check if metakinhsh exists:
+                if Metakinhsh.objects.filter(date_from=date_from, date_to=date_to, consultant=consultant, aitiologia=aitiologia).exists():
+                    messages.error(request, f'Η μετακίνηση για τον/ην {consultant.last_name} στις {date_from} με αιτιολογία "{aitiologia[:50]}..." υπάρχει ήδη. Η γραμμή αγνοήθηκε.')
+                    skipped += 1
+                    continue
+
+                metakinhsh._skip_email = True
+                metakinhsh.save()
+                saves += 1
+
+                print(f'Επιτυχής εισαγωγή μετακίνησης για τον/ην {consultant.last_name} στις {date_from}')
+
+            except Exception as e:
+                messages.error(request, f'Σφάλμα εισαγωγής γραμμής: {e}')
+                fails += 1
+    except Exception as e:
+            messages.error(request, f'Σφάλμα κατά την επεξεργασία του αρχείου: {str(e)}')
+
+    messages.success(request,f'{saves} καταχωρήθηκαν, {fails} απέτυχαν, {skipped} αγνοήθηκαν')
+    messages.success(request, 'Η εισαγωγή ολοκληρώθηκε')
+
+    return redirect('admin:metakinhseis_metakinhsh_changelist')

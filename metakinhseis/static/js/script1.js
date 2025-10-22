@@ -22,7 +22,7 @@ document.addEventListener('DOMContentLoaded', function() {
         // source: https://fullcalendar.io/docs/event-tooltip-demo
         var tooltip = new Tooltip(info.el, {
           title: info.event.extendedProps.description,
-          placement: 'bottom',
+          placement: 'right',
           trigger: 'hover',
           // container: 'body'
         });

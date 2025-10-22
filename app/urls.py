@@ -18,7 +18,7 @@ from django.contrib import admin
 from django.urls import path, include
 from symvouloi.views import update_teacher_and_consultant, assign_users_to_group, \
     evaluation_steps_json, add_metakinhsh, serve_document, update_teachers
-from metakinhseis.views import metakinhsh_json, apofasi_metakinhshs_preview, katastash_plhrwmhs
+from metakinhseis.views import metakinhsh_json, apofasi_metakinhshs_preview, katastash_plhrwmhs, import_metakinhseis
 from symvouloi.admin import UnfoldPasswordResetView, UnfoldPasswordResetDoneView, UnfoldPasswordResetConfirmView, UnfoldPasswordResetCompleteView
 
 
@@ -30,6 +30,7 @@ urlpatterns = [
     path('metakinhsh-json/', metakinhsh_json, name='metakinhsh_json'),
     path('add_metakinhsh', add_metakinhsh, name='add_metakinhsh'),
     path('apofasi_metakinhshs/', apofasi_metakinhshs_preview, name='apofasi_metakinhshs'),
+    path('import-metakinhseis/', import_metakinhseis, name='import_metakinhseis'),
     path('katastash_plhrwmhs/', katastash_plhrwmhs, name='katastash_plhrwmhs'),
     path('documents/<str:document_name>', serve_document, name='serve_document'),
     path('documents/<str:year>/<str:folder>/<str:document_name>', serve_document, name='serve_document_evaluation'),

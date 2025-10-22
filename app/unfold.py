@@ -153,6 +153,13 @@ UNFOLD = {
                         "permission": lambda request: is_member_of_many(request.user, 'Σύμβουλοι,Επόπτες,Γραμματεία') or request.user.is_superuser,
                     },
                     {
+                        "title": "Εισαγωγή",
+                        "icon": "database_upload",  # Supported icon set: https://fonts.google.com/icons
+                        "link": reverse_lazy("admin:metakinhsh_import"),
+                        # "badge": "main.badge_callback",
+                        "permission": lambda request: request.user.is_superuser,
+                    },
+                    {
                         "title": "Ημέρες Γραφείου",
                         "icon": "meeting_room",  # Supported icon set: https://fonts.google.com/icons
                         "link": reverse_lazy("admin:metakinhseis_officeschedule_changelist"),
