@@ -522,7 +522,7 @@ def import_metakinhseis(request):
 
                 # check if metakinhsh exists:
                 if Metakinhsh.objects.filter(date_from=date_from, date_to=date_to, consultant=consultant, aitiologia=aitiologia).exists():
-                    messages.error(request, f'Η μετακίνηση για τον/ην {consultant.last_name} στις {date_from} με αιτιολογία "{aitiologia[:50]}..." υπάρχει ήδη. Η γραμμή αγνοήθηκε.')
+                    print(f'Η μετακίνηση για τον/ην {consultant.last_name} στις {date_from} με αιτιολογία "{aitiologia[:50]}..." υπάρχει ήδη. Η γραμμή αγνοήθηκε.')
                     skipped += 1
                     continue
 

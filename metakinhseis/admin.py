@@ -185,8 +185,8 @@ class MetakinhshAdmin(ModelAdmin, ExportActionModelAdmin):
             del actions['apofasi_metakinhshs_oikon']
             del actions['katastash_plhrwmhs']
 
-        # Hide mass_confirmation from FinDep, Consultants, Secretariat
-        if is_member_of_many(request.user, 'Οικονομικό,Σύμβουλοι,Γραμματεία'):
+        # Hide mass_confirmation from FinDep, Consultants
+        if is_member_of_many(request.user, 'Οικονομικό,Σύμβουλοι'):
             del actions['mass_confirmation']        
 
         return actions

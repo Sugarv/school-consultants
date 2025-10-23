@@ -604,8 +604,10 @@ def import_evaluation_data(request):
             updated_count = 0
             errors = []
             missing_afms = []
+            row_nr = 1
 
             for row in reader:
+                row_nr += 1
                 has_evaluation_data = any([
                     row.get('ΑΝΑΓΝΩΡΙΣΤΙΚΟ ΕΚΚΡΕΜΟΤΗΤΑΣ Α1/Α'),
                     row.get('ΠΕΔΙΟ Α1/Α'),
@@ -619,6 +621,7 @@ def import_evaluation_data(request):
                 ])
 
                 if not has_evaluation_data:
+                    print(f"Μη επαρκή δεδομένα στη γραμμή {row_nr}.")
                     continue
 
                 try:
@@ -714,11 +717,12 @@ def import_evaluation_data(request):
             if missing_afms:
                 afm_list = ", ".join(missing_afms)
                 messages.error(request, f"Οι παρακάτω εκπ/κοί δε βρέθηκαν: {afm_list}")
+            if created_count == 0 or updated_count == 0:
+                messages.error(request, f'Δεν έγινε καμία εισαγωγή.')
 
 
         except Exception as e:
             messages.error(request, f'Σφάλμα κατά την επεξεργασία του αρχείου: {str(e)}')
-
-        return redirect('admin:symvouloi_evaluationdata_changelist')
+            return redirect('admin:symvouloi_evaluationdata_changelist')
 
     return redirect('admin:symvouloi_evaluationdata_changelist')
