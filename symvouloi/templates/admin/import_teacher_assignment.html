@@ -1,0 +1,52 @@
+{% extends 'unfold/layouts/base.html' %}
+
+{% load unfold %}
+
+{% block breadcrumbs %}{% endblock %}
+
+{% block content %}
+    <div class="module">
+        {% component "unfold/components/title.html" %}
+          Εισαγωγή αναθέσεων εκπαιδευτικών
+        {% endcomponent %}
+        <div class="form-row">
+            <form action="/import-from-csv/" method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+                
+                <div style="margin-bottom: 1rem;">
+                    <label for="category" style="display: block; margin-bottom: 0.5rem; font-weight: bold;">
+                        Κατηγορία:
+                    </label>
+                    <select name="category" id="category" required style="width: 100%; padding: 0.5rem;">
+                        <option value="">---------</option>
+                        <option value="A1">A1</option>
+                        <option value="A2">A2</option>
+                        <option value="B">B</option>
+                    </select>
+                    <small style="display: block; margin-top: 0.25rem; color: #666;">
+                        Επιλέξτε την κατηγορία του αρχείου που εισάγετε
+                    </small>
+                </div>
+                
+                <div style="margin-bottom: 1rem;">
+                    <label for="csv_file" style="display: block; margin-bottom: 0.5rem; font-weight: bold;">
+                        Αρχείο CSV:
+                    </label>
+                    <input type="file" name="csv_file" id="csv_file" accept=".csv" required style="width: 100%; padding: 0.5rem;">
+                </div>
+                
+                {% component "unfold/components/button.html" with variant='primary' class='data-ajax-submit' submit=True %}
+                Εισαγωγή από CSV
+                {% endcomponent %}
+                {% component "unfold/components/separator.html" %}{% endcomponent %}
+                {% component "unfold/components/text.html" %}
+                  <strong>Μορφές αρχείων:</strong><br>
+                  <strong>A1/A2:</strong> Αναγνωριστικό-Εκκρεμότητας;Αξιολογούμενος-Όνομα;Αξιολογούμενος-Επίθετο;Αξιολογούμενος-ΑΦΜ;Αξιολογητής-Όνομα;Αξιολογητής-Επίθετο;Αξιολογητής-ΑΦΜ<br>
+                  <strong>B:</strong> Αναγνωριστικό-Εκκρεμότητας;Αξιολογούμενος-Όνομα;Αξιολογούμενος-Επίθετο;Αξιολογούμενος-ΑΦΜ;Αξιολογητής-1-Όνομα;Αξιολογητής-1-Επίθετο;Αξιολογητής-1-ΑΦΜ;Αξιολογητής-2-Όνομα;Αξιολογητής-2-Επίθετο;Αξιολογητής-2-ΑΦΜ<br>
+                  <em>Σημείωση: Τα αρχεία πρέπει να είναι CSV με διαχωριστικό το semicolon (;)</em>
+                {% endcomponent %}
+            </form>
+        </div>
+    </div>
+{% endblock %}
+

@@ -17,7 +17,7 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 from symvouloi.views import update_teacher_and_consultant, assign_users_to_group, \
-    evaluation_steps_json, add_metakinhsh, serve_document, update_teachers
+    evaluation_steps_json, add_metakinhsh, serve_document, update_teachers, import_teacher_assignment_csv
 from metakinhseis.views import metakinhsh_json, apofasi_metakinhshs_preview, katastash_plhrwmhs, import_metakinhseis
 from symvouloi.admin import UnfoldPasswordResetView, UnfoldPasswordResetDoneView, UnfoldPasswordResetConfirmView, UnfoldPasswordResetCompleteView
 
@@ -31,6 +31,7 @@ urlpatterns = [
     path('add_metakinhsh', add_metakinhsh, name='add_metakinhsh'),
     path('apofasi_metakinhshs/', apofasi_metakinhshs_preview, name='apofasi_metakinhshs'),
     path('import-metakinhseis/', import_metakinhseis, name='import_metakinhseis'),
+    path('import-from-csv/', import_teacher_assignment_csv, name='import_teacher_assignment_csv'),
     path('katastash_plhrwmhs/', katastash_plhrwmhs, name='katastash_plhrwmhs'),
     path('documents/<str:document_name>', serve_document, name='serve_document'),
     path('documents/<str:year>/<str:folder>/<str:document_name>', serve_document, name='serve_document_evaluation'),

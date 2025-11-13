@@ -26,6 +26,7 @@ from app.utils import is_member, is_member_of_many
 from django.contrib.auth.hashers import make_password
 from metakinhseis.admin import ConsultantInline
 from django.utils import timezone
+from .views import AssignmentsImportView
 
 
 # Inline for Evaluation Steps in TeacherAdmin
@@ -129,9 +130,9 @@ class TeacherAdmin(ModelAdmin, ImportExportModelAdmin):
     def get_list_display(self, request):
         # If user is in 'symvouloi' group, show specific fields
         if request.user.groups.filter(name='Σύμβουλοι').exists():
-            return ('afm', 'last_name', 'first_name', 'specialty', 'participates_display', 'is_active_display', 'is_permanent_display')
+            return ('afm', 'last_name', 'first_name', 'specialty', 'categories', 'participates_display', 'is_active_display', 'is_permanent_display')
         # For other users, show all fields including 'consultant'
-        return ('afm', 'last_name', 'first_name', 'consultant_last_name', 'specialty', 'participates_display', 'is_active_display', 'is_permanent_display')
+        return ('afm', 'last_name', 'first_name', 'consultant_last_name', 'specialty', 'categories', 'participates_display', 'is_active_display', 'is_permanent_display')
     
     # Display custom messages instead of True/False
     @display(label={ 'OXI': "danger", 'NAI': "success" },)
@@ -178,13 +179,13 @@ class TeacherAdmin(ModelAdmin, ImportExportModelAdmin):
             return [
                 ( None, {
                     "fields" : ['afm',('last_name', 'first_name'), ('father_name', 'specialty'), 'school', ('fek', 'appointment_date'), ('mobile', 'mail'),
-                                ('participates', 'is_active', 'is_permanent'), 'comments']
+                                ('participates', 'is_active', 'is_permanent'), 'categories', 'comments']
                 })
             ]
         return [
             ( None, {
                 "fields": ['consultant','afm',('last_name', 'first_name'), ('father_name', 'specialty'), 'school', ('fek', 'appointment_date'), 
-                           ('mobile', 'mail'), ('participates', 'is_active', 'is_permanent'), 'comments']
+                           ('mobile', 'mail'), ('participates', 'is_active', 'is_permanent'), 'categories', 'comments']
             }) 
         ]
     
@@ -376,9 +377,23 @@ class EvaluationStepAdmin(ModelAdmin, ExportActionModelAdmin):
 #####################################
 @admin.register(TeacherAssignment)
 class TeacherAssignmentAdmin(ModelAdmin, ImportExportModelAdmin):
-    list_display = ('teacher_afm', 'teacher_last_name', 'consultant_afm', 'consultant_last_name', 'loaded')
+    list_display = ('teacher_afm', 'teacher_last_name', 'consultant_afm', 'consultant_last_name', 'category', 'loaded')
+    search_fields = ('teacher_afm', 'teacher_last_name', 'consultant_afm', 'consultant_last_name')
     actions = ['sync_teachers_and_consultants']
-    list_filter = ['loaded']
+    list_filter = ['loaded', 'category']
+    list_after_template = "admin/assignment_after.html"
+    list_per_page = 20
+
+    # add url for custom view
+    # see: https://unfoldadmin.com/docs/pages/
+    def get_urls(self):
+        return super().get_urls() + [
+            path(
+                "import-assignments",
+                AssignmentsImportView.as_view(model_admin=self),
+                name="import_assignments"
+            )
+        ]
 
     def sync_teachers_and_consultants(self, request, queryset):
         """
@@ -406,7 +421,9 @@ class TeacherAssignmentAdmin(ModelAdmin, ImportExportModelAdmin):
     sync_teachers_and_consultants.short_description = "Συγχρονισμός Εκπαιδευτικών και Συμβούλων (γενική ενέργεια)"
     sync_teachers_and_consultants.acts_on_all = True
 
-
+#####################################
+############# NewUser ###############
+#####################################
 class NewUserAdmin(ModelAdmin):
     list_display = ('username', 'last_name', 'first_name', 'auth_groups', 'show_impersonate_link')
     actions = ['assign_to_group']

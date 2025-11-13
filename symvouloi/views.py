@@ -214,8 +214,27 @@ def update_teacher_and_consultant(request):
 
     print(f'Teachers from assignment table: {len(nf_teachers)}.')
     print(f'List: {list(nf_teachers)}')
+    
+    # Update categories field for all teachers based on TeacherAssignment records
+    all_teachers = Teacher.objects.all()
+    updated_categories_count = 0
+    for teacher in all_teachers:
+        # Get all unique categories for this teacher from TeacherAssignment
+        categories = TeacherAssignment.objects.filter(
+            teacher_afm=teacher.afm,
+            category__isnull=False
+        ).exclude(category='').values_list('category', flat=True).distinct()
+        
+        if categories:
+            # Join categories with comma, sorted for consistency
+            categories_str = ','.join(sorted(set(categories)))
+            if teacher.categories != categories_str:
+                teacher.categories = categories_str
+                teacher.save()
+                updated_categories_count += 1
+    
     # return JsonResponse({"status": "Success", "message": "Teacher and consultant synchronization completed."})
-    return HttpResponse(f"Ο συγχρονισμός εκπ/κών ολοκληρώθηκε. Προστέθηκαν {added_consultants} σύμβουλοι & {added_teachers} εκπ/κοί.")
+    return HttpResponse(f"Ο συγχρονισμός εκπ/κών ολοκληρώθηκε. Προστέθηκαν {added_consultants} σύμβουλοι & {added_teachers} εκπ/κοί. Ενημερώθηκαν οι κατηγορίες για {updated_categories_count} εκπ/κούς.")
 
 
 # Update teachers from API
@@ -726,3 +745,125 @@ def import_evaluation_data(request):
             return redirect('admin:symvouloi_evaluationdata_changelist')
 
     return redirect('admin:symvouloi_evaluationdata_changelist')
+
+
+class AssignmentsImportView(UnfoldModelAdminViewMixin, TemplateView):
+    title = "Εισαγωγή αναθέσεων εκπαιδευτικών"
+    template_name = "admin/import_teacher_assignment.html"
+    permission_required = "symvouloi.view_teacherassignment"
+
+# Import TeacherAssignment from CSV with category selection
+@staff_member_required
+def import_teacher_assignment_csv(request):
+    if request.method == 'POST':
+        csv_file = request.FILES.get('csv_file')
+        category = request.POST.get('category')
+        
+        if not csv_file:
+            messages.error(request, 'Παρακαλώ επιλέξτε ένα αρχείο CSV.')
+            return render(request, 'admin/import_teacher_assignment.html', {
+                'site_header': 'Εισαγωγή αναθέσεων εκπαιδευτικών',
+                'site_title': 'Εισαγωγή αναθέσεων εκπαιδευτικών',
+            })
+        
+        if not category or category not in ['A1', 'A2', 'B']:
+            messages.error(request, 'Παρακαλώ επιλέξτε μια κατηγορία (A1, A2, ή B).')
+            return render(request, 'admin/import_teacher_assignment.html', {
+                'site_header': 'Εισαγωγή αναθέσεων εκπαιδευτικών',
+                'site_title': 'Εισαγωγή αναθέσεων εκπαιδευτικών',
+            })
+        
+        if not csv_file.name.endswith('.csv'):
+            messages.error(request, 'Παρακαλώ ανεβάστε ένα αρχείο CSV.')
+            return render(request, 'admin/import_teacher_assignment.html', {
+                'site_header': 'Εισαγωγή αναθέσεων εκπαιδευτικών',
+                'site_title': 'Εισαγωγή αναθέσεων εκπαιδευτικών',
+            })
+        
+        try:
+            csv_text = TextIOWrapper(csv_file.file, encoding='utf-8')
+            reader = csv.DictReader(csv_text, delimiter=';')
+            
+            created_count = 0
+            updated_count = 0
+            errors = []
+            row_nr = 0
+            
+            for row in reader:
+                row_nr += 1
+                try:
+                    # Map columns based on category
+                    if category == 'A1' or category == 'A2':
+                        # A1/A2 format: Αναγνωριστικό-Εκκρεμότητας;Αξιολογούμενος-Όνομα;Αξιολογούμενος-Επίθετο;Αξιολογούμενος-ΑΦΜ;Αξιολογητής-Όνομα;Αξιολογητής-Επίθετο;Αξιολογητής-ΑΦΜ
+                        teacher_afm = row.get('Αξιολογούμενος-ΑΦΜ', '').strip()
+                        teacher_first_name = row.get('Αξιολογούμενος-Όνομα', '').strip()
+                        teacher_last_name = row.get('Αξιολογούμενος-Επίθετο', '').strip()
+                        consultant_afm = row.get('Αξιολογητής-ΑΦΜ', '').strip()
+                        consultant_first_name = row.get('Αξιολογητής-Όνομα', '').strip()
+                        consultant_last_name = row.get('Αξιολογητής-Επίθετο', '').strip()
+                    elif category == 'B':
+                        # B format: Αναγνωριστικό-Εκκρεμότητας;Αξιολογούμενος-Όνομα;Αξιολογούμενος-Επίθετο;Αξιολογούμενος-ΑΦΜ;Αξιολογητής-1-Όνομα;Αξιολογητής-1-Επίθετο;Αξιολογητής-1-ΑΦΜ;Αξιολογητής-2-Όνομα;Αξιολογητής-2-Επίθετο;Αξιολογητής-2-ΑΦΜ
+                        teacher_afm = row.get('Αξιολογούμενος-ΑΦΜ', '').strip()
+                        teacher_first_name = row.get('Αξιολογούμενος-Όνομα', '').strip()
+                        teacher_last_name = row.get('Αξιολογούμενος-Επίθετο', '').strip()
+                        # For B format, we use the consultant (Αξιολογητής-2)
+                        consultant_afm = row.get('Αξιολογητής-2-ΑΦΜ', '').strip()
+                        consultant_first_name = row.get('Αξιολογητής-2-Όνομα', '').strip()
+                        consultant_last_name = row.get('Αξιολογητής-2-Επίθετο', '').strip()
+                    
+                    # Validate required fields
+                    if not teacher_afm or not consultant_afm:
+                        errors.append(f"Γραμμή {row_nr}: Λείπουν υποχρεωτικά πεδία (ΑΦΜ εκπαιδευτικού ή συμβούλου)")
+                        continue
+                    
+                    # Ensure AFM is 9 characters
+                    teacher_afm = teacher_afm.zfill(9) if len(teacher_afm) == 8 else teacher_afm
+                    consultant_afm = consultant_afm.zfill(9) if len(consultant_afm) == 8 else consultant_afm
+                    
+                    # Create or update TeacherAssignment
+                    # Use teacher_afm + consultant_afm + category as unique combination
+                    assignment, created = TeacherAssignment.objects.update_or_create(
+                        teacher_afm=teacher_afm,
+                        consultant_afm=consultant_afm,
+                        category=category,
+                        defaults={
+                            'teacher_first_name': teacher_first_name,
+                            'teacher_last_name': teacher_last_name,
+                            'consultant_first_name': consultant_first_name,
+                            'consultant_last_name': consultant_last_name,
+                            'loaded': False,  # Will be set to True when sync_teachers_and_consultants runs
+                        }
+                    )
+                    
+                    if created:
+                        created_count += 1
+                    else:
+                        updated_count += 1
+                        
+                except Exception as e:
+                    errors.append(f"Γραμμή {row_nr}: {str(e)}")
+                    continue
+            
+            if created_count > 0 or updated_count > 0:
+                messages.success(request, f'Επιτυχής εισαγωγή: {created_count} νέες αναθέσεις, {updated_count} ενημερώσεις.')
+            if errors:
+                messages.warning(request, f'Προέκυψαν {len(errors)} σφάλματα κατά την εισαγωγή.')
+                for error in errors[:10]:  # Show first 10 errors
+                    messages.error(request, error)
+                if len(errors) > 10:
+                    messages.info(request, f'... και {len(errors) - 10} ακόμη σφάλματα.')
+            
+            return redirect('admin:symvouloi_teacherassignment_changelist')
+            
+        except Exception as e:
+            messages.error(request, f'Σφάλμα κατά την επεξεργασία του αρχείου: {str(e)}')
+            return render(request, 'admin/import_teacher_assignment.html', {
+                'site_header': 'Εισαγωγή αναθέσεων εκπαιδευτικών',
+                'site_title': 'Εισαγωγή αναθέσεων εκπαιδευτικών',
+            })
+    
+    # GET request - show form
+    return render(request, 'admin/import_teacher_assignment.html', {
+        'site_header': 'Εισαγωγή αναθέσεων εκπαιδευτικών',
+        'site_title': 'Εισαγωγή αναθέσεων εκπαιδευτικών',
+    })

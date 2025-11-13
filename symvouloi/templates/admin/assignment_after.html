@@ -1,0 +1,10 @@
+{% load unfold i18n %}
+
+{% url "admin:import_assignments" as import_assignments_link %}
+{% trans "Εισαγωγή αναθέσεων" as button_title %}
+<br>
+<div class="module">
+    {% component "unfold/components/button.html" with href=import_assignments_link %}
+        {{ button_title }}
+    {% endcomponent %}
+</div>

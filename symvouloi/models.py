@@ -29,6 +29,7 @@ class Teacher(models.Model):
     comments = models.TextField(null=True, blank=True, default='', max_length=200, verbose_name='Σχόλια')
     is_active = models.BooleanField(default=True, verbose_name='Ενεργός εκπαιδευτικός')
     is_permanent = models.BooleanField(default=False, verbose_name='Μονιμοποίηση')
+    categories = models.CharField(null=True, blank=True, max_length=50, verbose_name='Κατηγορίες αξιολόγησης')
 
     def save(self, *args, **kwargs):
         # Ensure afm is 9 characters long
@@ -147,6 +148,7 @@ class TeacherAssignment(models.Model):
     consultant_first_name = models.CharField(null=True, blank=True, max_length=50, verbose_name='Όνομα συμβούλου')
     consultant_afm = models.CharField(null=False, blank=False, max_length=9, verbose_name='ΑΦΜ συμβούλου')
     loaded = models.BooleanField(default=False, verbose_name='Καταχωρήθηκε')
+    category = models.CharField(null=True, blank=True, max_length=10, choices=CATEGORY_CHOICES, verbose_name='Κατηγορία αξιολόγησης')
     comments = models.CharField(null=True, blank=True, max_length=300, verbose_name='Σχόλια')
 
     def save(self, *args, **kwargs):
