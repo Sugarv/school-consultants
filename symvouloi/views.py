@@ -821,16 +821,16 @@ def import_teacher_assignment_csv(request):
                     consultant_afm = consultant_afm.zfill(9) if len(consultant_afm) == 8 else consultant_afm
                     
                     # Create or update TeacherAssignment
-                    # Use teacher_afm + consultant_afm + category as unique combination
+                    # Use teacher_afm + category as unique combination (allows consultant reassignment)
                     assignment, created = TeacherAssignment.objects.update_or_create(
                         teacher_afm=teacher_afm,
-                        consultant_afm=consultant_afm,
                         category=category,
                         defaults={
                             'teacher_first_name': teacher_first_name,
                             'teacher_last_name': teacher_last_name,
                             'consultant_first_name': consultant_first_name,
                             'consultant_last_name': consultant_last_name,
+                            'consultant_afm': consultant_afm,  # Update consultant if changed
                             'loaded': False,  # Will be set to True when sync_teachers_and_consultants runs
                         }
                     )

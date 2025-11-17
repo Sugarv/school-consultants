@@ -162,6 +162,12 @@ class TeacherAssignment(models.Model):
     class Meta:
         verbose_name = "Ανάθεση εκπαιδευτικού"
         verbose_name_plural = "Αναθέσεις εκπαιδευτικών"
+        constraints = [
+            models.UniqueConstraint(
+                fields=['teacher_afm', 'category'],
+                name='unique_teacher_category_assignment'
+            )
+        ]
 
     def __str__(self):
         return f"{self.teacher_afm} <-> {self.consultant_afm}"
