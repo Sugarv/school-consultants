@@ -82,6 +82,7 @@ def update_teacher_and_consultant(request):
     nf_teachers = set()
     added_consultants = 0
     added_teachers = 0
+    updated_teachers = 0
     
     # First get all eidikothtes in a dict
     klados_dict = {}
@@ -152,59 +153,73 @@ def update_teacher_and_consultant(request):
             
             # Check if teacher with teacher_afm exists
             teacher = Teacher.objects.filter(afm=teacher_afm).first()
-            if not teacher:
-                # Fetch data from the API for the teacher
-                full_endpoint = f"{api_endpoint}/employee?filter=afm,eq,{teacher_afm}"
-                response = requests.get(full_endpoint, headers={"X-API-Key": api_key})
-                response.raise_for_status()
-                teacher_data = response.json().get("records", [])
-                if teacher_data:
-                    teacher_info = teacher_data[0]
-                    try:
-                        is_active = True if teacher_info.get("status", "") == 1 else False
-                        teacher = Teacher.objects.create(
-                            afm=teacher_info.get("afm", "").zfill(9),
-                            evaluation_year=settings.EVALUATION_YEAR,
-                            last_name=teacher_info.get("surname", ""),
-                            first_name=teacher_info.get("name", ""),
-                            father_name=teacher_info.get("patrwnymo", ""),
-                            specialty=klados_dict.get(teacher_info.get("klados", ""), "Unknown"),
-                            school=school_dict.get(teacher_info.get("sx_yphrethshs", ""), "Unknown"),
-                            fek=teacher_info.get('fek_dior', ''),
-                            appointment_date=teacher_info.get("hm_dior", None),
-                            mobile=teacher_info.get("tel", ""),
-                            mail=teacher_info.get("email", ""),
-                            participates=True,
-                            comments="",
-                            is_active=is_active,
-                            consultant=consultant
-                        )
-                        added_teachers += 1
-                        print(f'Added teacher {teacher_info["surname"]}')
-                        # Update assignment as well
-                        assignment.loaded = True
-                        assignment.save()
-                    except Exception as e:
-                        print(f"Error saving teacher {teacher_afm}: {e}")
-                        continue
-                else:
-                    print(f'Teacher {teacher_afm} not found in API. Adding from assignment')
-                    teacher = Teacher.objects.create(
-                        afm=assignment.teacher_afm,
-                        evaluation_year=settings.EVALUATION_YEAR,
-                        last_name=assignment.teacher_last_name,
-                        first_name=assignment.teacher_first_name,
-                        is_active=True,
-                        participates=True,
-                        consultant=consultant
+            
+            # Fetch data from the API for the teacher
+            full_endpoint = f"{api_endpoint}/employee?filter=afm,eq,{teacher_afm}"
+            response = requests.get(full_endpoint, headers={"X-API-Key": api_key})
+            response.raise_for_status()
+            teacher_data = response.json().get("records", [])
+            if teacher_data:
+                teacher_info = teacher_data[0]
+                try:
+                    is_active = True if teacher_info.get("status", "") == 1 else False
+                    teacher = Teacher.objects.update_or_create(
+                        afm=teacher_info.get("afm", "").zfill(9),
+                        defaults={
+                            'evaluation_year': settings.EVALUATION_YEAR,
+                            'last_name': teacher_info.get("surname", ""),
+                            'first_name': teacher_info.get("name", ""),
+                            'father_name': teacher_info.get("patrwnymo", ""),
+                            'specialty': klados_dict.get(teacher_info.get("klados", ""), "Unknown"),
+                            'school': school_dict.get(teacher_info.get("sx_yphrethshs", ""), "Unknown"),
+                            'fek': teacher_info.get('fek_dior', ''),
+                            'appointment_date': teacher_info.get("hm_dior", None),
+                            'mobile': teacher_info.get("tel", ""),
+                            'mail': teacher_info.get("email", ""),
+                            'participates': True,
+                            'comments': "",
+                            'is_active': is_active,
+                            'consultant': consultant
+                        }
                     )
+                    # print(teacher)
+                    # check if previous statament updated or created
+                    if teacher[1]:
+                        added_teachers += 1
+                        print(f'Teacher {teacher_info["surname"]} added')
+                    else:
+                        updated_teachers += 1
+                        print(f'Teacher {teacher_info["surname"]} updated')
+                    # Update assignment as well
+                    assignment.loaded = True
+                    assignment.save()
+                except Exception as e:
+                    print(f"Error saving teacher {teacher_afm}: {e}")
+                    continue
+            else:
+                print(f'Teacher {teacher_afm} not found in API. Adding from assignment')
+                teacher = Teacher.objects.update_or_create(
+                    afm=assignment.teacher_afm,
+                    defaults={
+                        'evaluation_year': settings.EVALUATION_YEAR,
+                        'last_name': assignment.teacher_last_name,
+                        'first_name': assignment.teacher_first_name,
+                        'is_active': True,
+                        'participates': True,
+                        'consultant': consultant
+                    }
+                )
+                if teacher[1]:
                     added_teachers += 1
                     print(f'Teacher {teacher_afm} added from assignment')
                     nf_teachers.add(teacher_afm)
-                    assignment.loaded = True
-                    assignment.comments = 'Δε βρέθηκε στον Πρωτέα. Προστέθηκε από τον πίνακα αναθέσεων'
-                    assignment.save()
-                    continue
+                else:
+                    updated_teachers += 1
+                    print(f'Teacher {teacher_afm} updated from assignment')
+                assignment.loaded = True
+                assignment.comments = 'Δε βρέθηκε στον Πρωτέα. Προστέθηκε από τον πίνακα αναθέσεων'
+                assignment.save()
+                continue
         except requests.RequestException as e:
             print(f"API call failed for AFM {consultant_afm} or {teacher_afm}: {e}")
             continue
@@ -233,8 +248,9 @@ def update_teacher_and_consultant(request):
                 teacher.save()
                 updated_categories_count += 1
     
-    # return JsonResponse({"status": "Success", "message": "Teacher and consultant synchronization completed."})
-    return HttpResponse(f"Ο συγχρονισμός εκπ/κών ολοκληρώθηκε. Προστέθηκαν {added_consultants} σύμβουλοι & {added_teachers} εκπ/κοί. Ενημερώθηκαν οι κατηγορίες για {updated_categories_count} εκπ/κούς.")
+    return HttpResponse(f"Ο συγχρονισμός εκπ/κών ολοκληρώθηκε. Προστέθηκαν {added_consultants} σύμβουλοι & \
+       {added_teachers} εκπ/κοί. Ενημερώθηκαν οι κατηγορίες για {updated_categories_count} εκπ/κούς. \
+        Ενημερώθηκαν {updated_teachers} εκπ/κοί.")
 
 
 # Update teachers from API

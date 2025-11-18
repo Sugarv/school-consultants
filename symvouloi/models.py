@@ -94,7 +94,7 @@ def custom_documents_directory_path(instance, filename):
     return f'documents/{instance.teacher.evaluation_year}/{slugify(str(instance.teacher))}/{slugify(str(instance.es_type))}.{file_extension}'
 
 CATEGORY_CHOICES = [
-    ('A','A'), ('A1','A1'), ('A2','A2'), ('B','B')
+    ('A1','A1'), ('A2','A2'), ('B','B')
 ]
 
 class EvaluationStep(models.Model):
@@ -170,7 +170,7 @@ class TeacherAssignment(models.Model):
         ]
 
     def __str__(self):
-        return f"{self.teacher_afm} <-> {self.consultant_afm}"
+        return f"{self.teacher_last_name} <- {self.consultant_last_name}"
 
 # Override user display_name
 # https://stackoverflow.com/questions/34214320/django-customize-the-user-models-return-field
