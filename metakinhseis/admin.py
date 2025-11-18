@@ -67,10 +67,10 @@ class MetakinhshAdmin(ModelAdmin, ExportActionModelAdmin):
 
     def get_list_filter(self, request):
         if is_member(request.user,'Σύμβουλοι'):
-            return (("date_from", MyRangeDateFilter),'pragmat', 'egkrish', 'school_year')
+            return (("date_from", MyRangeDateFilter),'pragmat', 'egkrish', 'school_year', 'dyee')
         return (
                 ("date_from", MyRangeDateFilter),#("km", RangeNumericFilter),
-                ('consultant', RelatedDropdownFilter), 'pragmat', 'egkrish', 'handler', 'school_year'
+                ('consultant', RelatedDropdownFilter), 'pragmat', 'egkrish', 'handler', 'school_year', 'dyee', 'is_evaluation'
             )
 
     def get_list_display(self, request):
@@ -84,15 +84,15 @@ class MetakinhshAdmin(ModelAdmin, ExportActionModelAdmin):
         is_consultant = is_member(request.user,'Σύμβουλοι')
         
         if obj and is_supervisor:
-            return ('consultant','pragmat')
+            return ('consultant','pragmat','updated_at')
         elif is_consultant:
             # allow consultant to set pragmat only if egkrish is set
             if obj and obj.egkrish:
-                return ('consultant', 'egkrish')
+                return ('consultant', 'egkrish','dyee', 'updated_at')
             else:
-                return ('consultant', 'egkrish', 'pragmat')
+                return ('consultant', 'egkrish', 'pragmat', 'dyee', 'updated_at')
         elif is_member(request.user,'Οικονομικό'):
-            return ('consultant','egkrish','aitiologia')
+            return ('consultant','egkrish','aitiologia', 'updated_at')
         else:
             return super(MetakinhshAdmin, self).get_readonly_fields(request, obj=obj)
         
@@ -134,14 +134,14 @@ class MetakinhshAdmin(ModelAdmin, ExportActionModelAdmin):
         if is_member(request.user, 'Σύμβουλοι'):
             return [
                 ( None, {
-                    "fields" : [('metak_from', 'metak_to'),('date_from', 'date_to'), 'km', 'egkrish', 'pragmat','aitiologia','file']
+                    "fields" : [('metak_from', 'metak_to'),('date_from', 'date_to'), 'km', 'egkrish', 'pragmat','aitiologia','file', ('dyee', 'updated_at')]
                 })
             ]
         elif is_member(request.user, 'Οικονομικό'):
             return [
                 ( None, {
                     "fields" : [('metak_from', 'metak_to'),('date_from', 'date_to'), 'km', 'egkrish', 'pragmat','aitiologia', 
-                                ('to_pay', 'amount1'), ('away', 'amount2'), 'is_evaluation'
+                                ('to_pay', 'amount1'), ('away', 'amount2'), 'is_evaluation', 'dyee','updated_at'
                                 # ('tickets', 'amount3'), ('stay', 'amount4'), 'special'
                                 ]
                 })

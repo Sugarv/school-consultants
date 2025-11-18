@@ -32,7 +32,7 @@ class Metakinhsh(models.Model):
   km = models.FloatField('Χιλιόμετρα', help_text="Παρακαλώ εισάγετε την απόσταση από το Α στο Β, όχι όλης της διαδρομής")
   egkrish = models.BooleanField('Έγκριση', default=False)
   pragmat = models.BooleanField('Πραγματοποιήθηκε', default=False)
-  aitiologia = models.TextField('Αιτιολογία')
+  aitiologia = models.TextField('Αιτιολογία', max_length=150)
   handler = models.CharField('Χειριστής',max_length=80,default=None,blank=True,null=True,choices=(
       ('Επόπτης', 'Επόπτης'),('Οικονομικό', 'Οικονομικό')))
   to_pay = models.BooleanField(default=False, verbose_name='Για πληρωμή (>50 χλμ)')
@@ -47,7 +47,9 @@ class Metakinhsh(models.Model):
   uploaded_at = models.DateTimeField(null=True, blank=True, verbose_name='ΧΣΜ')
   special = models.BooleanField(default=False, verbose_name='Ειδική περίπτωση')
   is_evaluation = models.BooleanField(default=False, verbose_name='Μετακ.αξιολόγησης')
+  dyee = models.BooleanField(default=False, verbose_name='Προωθήθηκε στη ΔΥΕΕ')
   school_year = models.CharField('Σχολικό έτος', max_length=20, null=True, blank=True)
+  updated_at = models.DateTimeField(auto_now=True, verbose_name='Τελευταία ενημέρωση')
   
   class Meta:
     verbose_name = 'Μετακίνηση'

@@ -19,7 +19,7 @@ jQuery(document).ready(function ($) {
   if ($('#id_pragmat').is(':checked')) {
     // check if km > 50
     if ($('#id_km').val() > 50 || $('#id_is_evaluation').prop('checked') == true){
-      const amount_calc = ($('#id_km').val() * amount_per_km * 2).toPrecision(2);
+      const amount_calc = (parseFloat($('#id_km').val()) * amount_per_km * 2).toFixed(2);
       $('#id_to_pay').prop('checked', true);
       $('#id_to_pay').prop('disabled', false);
       $('#id_amount1').val(amount_calc);
@@ -45,7 +45,7 @@ jQuery(document).ready(function ($) {
         $('#id_to_pay').prop('checked', true);
         $('#id_away').prop('checked', true);
         $('#id_away').prop('disabled', false);
-        const amount_calc = ($('#id_km').val() * amount_per_km * 2).toPrecision(2);
+        const amount_calc = (parseFloat($('#id_km').val()) * amount_per_km * 2).toFixed(2);
         $('#id_amount1').val(amount_calc);
         $('#id_amount2').val(amount_away_per_day);
       }
@@ -67,13 +67,18 @@ jQuery(document).ready(function ($) {
   // when km changes
   $('#id_km').change(() => {
     if ($('#id_km').val() > 50 || $('#id_is_evaluation').prop('checked') == true){
-      const amount1 = ($('#id_km').val() * amount_per_km * 2).toPrecision(2);
+      const amount1 = (parseFloat($('#id_km').val()) * amount_per_km * 2).toFixed(2);
       $('#id_to_pay').prop('checked', true);
       $('#id_to_pay').prop('disabled', false);
       $('#id_amount1').val(amount1);
-      $('#id_away').prop('checked', true);
-      $('#id_away').prop('disabled', false);
-      $('#id_amount2').val(amount_away_per_day);
+      if ($('#id_km').val() > 50){
+        $('#id_away').prop('checked', true);
+        $('#id_away').prop('disabled', false);
+        $('#id_amount2').val(amount_away_per_day);
+      } else {
+        $('#id_away').prop('checked', false);
+        $('#id_amount2').val(0.0);
+      }
     } else {
       $('#id_amount1').val(0);
       $('#id_to_pay').prop('checked', false);
@@ -104,15 +109,15 @@ jQuery(document).ready(function ($) {
     if ($('#id_is_evaluation').prop('checked') == false && $('#id_km').val() < 50){
       $('#id_to_pay').prop('checked', false);
       $('#id_amount1').val(0.0);
-      $('#id_away').prop('checked', false);
+      // $('#id_away').prop('checked', false);
       $('#id_amount2').val(0.0);
       // $('#id_amount1').prop('disabled', true);
     } else {
       $('#id_to_pay').prop('checked', true);
-      const amount1 = ($('#id_km').val() * amount_per_km * 2).toPrecision(2);
+      const amount1 = (parseFloat($('#id_km').val()) * amount_per_km * 2).toFixed(2);
       $('#id_amount1').val(amount1);
-      $('#id_away').prop('checked', true);
-      $('#id_amount2').val(amount_away_per_day);
+      // $('#id_away').prop('checked', true);
+      // $('#id_amount2').val(amount_away_per_day);
     }
   });
 
