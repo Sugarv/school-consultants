@@ -88,7 +88,7 @@ class MetakinhshAdmin(ModelAdmin, ExportActionModelAdmin):
         elif is_consultant:
             # allow consultant to set pragmat only if egkrish is set
             if obj and obj.egkrish:
-                return ('consultant', 'egkrish','dyee', 'updated_at')
+                return ('consultant', 'egkrish', 'dyee', 'updated_at')
             else:
                 return ('consultant', 'egkrish', 'pragmat', 'dyee', 'updated_at')
         elif is_member(request.user,'Οικονομικό'):
@@ -148,7 +148,7 @@ class MetakinhshAdmin(ModelAdmin, ExportActionModelAdmin):
             ]
         return [
             ( None, {
-                 "fields" : ['consultant', ('metak_from', 'metak_to'),('date_from', 'date_to'), 'km', 'egkrish', 'pragmat','aitiologia','is_evaluation']
+                 "fields" : ['consultant', ('metak_from', 'metak_to'),('date_from', 'date_to'), 'km', 'egkrish', 'pragmat','aitiologia','is_evaluation',('dyee', 'updated_at')]
             }) 
         ]
     
