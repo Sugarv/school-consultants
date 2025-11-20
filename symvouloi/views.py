@@ -664,7 +664,7 @@ def import_evaluation_data(request):
                     continue
 
                 try:
-                    teacher = Teacher.objects.get(afm=row['ΑΦΜ'])
+                    teacher = Teacher.objects.filter(afm=row['ΑΦΜ']).first()
 
                     consultant_a1 = None
                     consultant_a2 = None
