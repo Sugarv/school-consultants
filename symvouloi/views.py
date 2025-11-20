@@ -116,7 +116,8 @@ def update_teacher_and_consultant(request):
         try:
             # Check if user with consultant_afm exists
             consultant = User.objects.filter(username=consultant_afm).first()
-            if not consultant:
+            # Ensure assignment is not A2
+            if not consultant and assignment.category != 'A2':
                 # Fetch data from the API for the consultant. If not found, create without extra data
                 try:
                     consultant_full_endpoint = f"{api_endpoint}/employee?filter=afm,eq,{consultant_afm}"
@@ -154,6 +155,26 @@ def update_teacher_and_consultant(request):
             # Check if teacher with teacher_afm exists
             teacher = Teacher.objects.filter(afm=teacher_afm).first()
             
+            # Build categories string: get all categories for this teacher with the same consultant
+            # Find all TeacherAssignment records for this teacher_afm with the same consultant_afm
+            existing_assignments = TeacherAssignment.objects.filter(
+                teacher_afm=teacher_afm,
+                consultant_afm=consultant_afm
+            ).exclude(category__isnull=True).exclude(category='')
+            
+            # Collect all categories from existing assignments
+            categories_set = set()
+            for existing_assignment in existing_assignments:
+                if existing_assignment.category:
+                    categories_set.add(existing_assignment.category)
+            
+            # Add the current assignment's category
+            if assignment.category:
+                categories_set.add(assignment.category)
+            
+            # Join categories with comma, sorted for consistency
+            categories_str = ','.join(sorted(categories_set)) if categories_set else ''
+            
             # Fetch data from the API for the teacher
             full_endpoint = f"{api_endpoint}/employee?filter=afm,eq,{teacher_afm}"
             response = requests.get(full_endpoint, headers={"X-API-Key": api_key})
@@ -165,6 +186,7 @@ def update_teacher_and_consultant(request):
                     is_active = True if teacher_info.get("status", "") == 1 else False
                     teacher = Teacher.objects.update_or_create(
                         afm=teacher_info.get("afm", "").zfill(9),
+                        consultant=consultant,
                         defaults={
                             'evaluation_year': settings.EVALUATION_YEAR,
                             'last_name': teacher_info.get("surname", ""),
@@ -179,7 +201,7 @@ def update_teacher_and_consultant(request):
                             'participates': True,
                             'comments': "",
                             'is_active': is_active,
-                            'consultant': consultant
+                            'categories': categories_str
                         }
                     )
                     # print(teacher)
@@ -206,7 +228,8 @@ def update_teacher_and_consultant(request):
                         'first_name': assignment.teacher_first_name,
                         'is_active': True,
                         'participates': True,
-                        'consultant': consultant
+                        'consultant': consultant,
+                        'categories': categories_str
                     }
                 )
                 if teacher[1]:
@@ -230,27 +253,8 @@ def update_teacher_and_consultant(request):
     print(f'Teachers from assignment table: {len(nf_teachers)}.')
     print(f'List: {list(nf_teachers)}')
     
-    # Update categories field for all teachers based on TeacherAssignment records
-    all_teachers = Teacher.objects.all()
-    updated_categories_count = 0
-    for teacher in all_teachers:
-        # Get all unique categories for this teacher from TeacherAssignment
-        categories = TeacherAssignment.objects.filter(
-            teacher_afm=teacher.afm,
-            category__isnull=False
-        ).exclude(category='').values_list('category', flat=True).distinct()
-        
-        if categories:
-            # Join categories with comma, sorted for consistency
-            categories_str = ','.join(sorted(set(categories)))
-            if teacher.categories != categories_str:
-                teacher.categories = categories_str
-                teacher.save()
-                updated_categories_count += 1
-    
     return HttpResponse(f"Ο συγχρονισμός εκπ/κών ολοκληρώθηκε. Προστέθηκαν {added_consultants} σύμβουλοι & \
-       {added_teachers} εκπ/κοί. Ενημερώθηκαν οι κατηγορίες για {updated_categories_count} εκπ/κούς. \
-        Ενημερώθηκαν {updated_teachers} εκπ/κοί.")
+       {added_teachers} εκπ/κοί. Ενημερώθηκαν {updated_teachers} εκπ/κοί.")
 
 
 # Update teachers from API
