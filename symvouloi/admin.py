@@ -11,6 +11,7 @@ from django.contrib.auth import views as auth_views
 from django.contrib.admin.models import LogEntry
 from unfold.admin import ModelAdmin
 from django.contrib.auth.admin import GroupAdmin as BaseGroupAdmin
+from import_export import resources
 from import_export.admin import ImportExportModelAdmin, ExportActionModelAdmin
 from unfold.admin import StackedInline
 from django.urls import reverse, path
@@ -90,6 +91,16 @@ class EvaluationDataInline(StackedInline):
 ###########################
 ######### Teacher #########
 ###########################
+class TeacherAdminResource(resources.ModelResource):
+    class Meta:
+        model = Teacher
+
+    def dehydrate_consultant(self, instance):
+        consultant = getattr(instance, 'consultant', None)
+        if consultant:
+            return f"{consultant.last_name} {consultant.first_name}".strip()
+        return ''
+    
 @admin.register(Teacher)
 class TeacherAdmin(ModelAdmin, ImportExportModelAdmin):
     ordering = ('id',)
@@ -101,6 +112,7 @@ class TeacherAdmin(ModelAdmin, ImportExportModelAdmin):
     import_form_class = ImportForm
     actions = ['update_teachers']
     list_per_page = 50
+    resource_class = TeacherAdminResource
 
     def formfield_for_foreignkey(self, db_field, request, **kwargs):
         if db_field.name == "consultant":
@@ -235,6 +247,34 @@ class EvaluationStepTypeAdmin(ModelAdmin):
     list_display_links = ('id', 'title')
     ordering = ('id',)
 
+
+class EvaluationStepResource(resources.ModelResource):
+    """
+    Custom resource for EvaluationStep export to display readable values
+    for consultant, teacher, and es_type instead of primary keys.
+    """
+    class Meta:
+        model = EvaluationStep
+
+    def dehydrate_consultant(self, instance):
+        consultant = getattr(instance, 'consultant', None)
+        if consultant:
+            return f"{consultant.last_name} {consultant.first_name}".strip()
+        return ''
+
+    def dehydrate_teacher(self, instance):
+        teacher = getattr(instance, 'teacher', None)
+        if teacher:
+            return f"{teacher.afm} {teacher.last_name} {teacher.first_name}".strip()
+        return ''
+
+    def dehydrate_es_type(self, instance):
+        es_type = getattr(instance, 'es_type', None)
+        if es_type:
+            return str(es_type.title)
+        return ''
+
+
 @admin.register(EvaluationStep)
 class EvaluationStepAdmin(ModelAdmin, ExportActionModelAdmin):
     ordering = ('consultant__last_name', 'teacher', 'es_type')
@@ -252,6 +292,7 @@ class EvaluationStepAdmin(ModelAdmin, ExportActionModelAdmin):
     export_form_class = ExportForm
     actions = ['mass_confirmation']
     list_per_page = 30
+    resource_class = EvaluationStepResource
 
     def get_queryset(self, request):
         # Get the default queryset
@@ -376,7 +417,7 @@ class EvaluationStepAdmin(ModelAdmin, ExportActionModelAdmin):
 ######### TeacherAssignment #########
 #####################################
 @admin.register(TeacherAssignment)
-class TeacherAssignmentAdmin(ModelAdmin, ImportExportModelAdmin):
+class TeacherAssignmentAdmin(ModelAdmin, ExportActionModelAdmin):
     list_display = ('teacher_afm', 'teacher_last_name', 'consultant_afm', 'consultant_last_name', 'category', 'loaded')
     search_fields = ('teacher_afm', 'teacher_last_name', 'consultant_afm', 'consultant_last_name')
     actions = ['sync_teachers_and_consultants']
