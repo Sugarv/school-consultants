@@ -17,7 +17,7 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 from symvouloi.views import update_teacher_and_consultant, assign_users_to_group, \
-    evaluation_steps_json, add_metakinhsh, serve_document, update_teachers, import_teacher_assignment_csv
+    evaluation_steps_json, add_metakinhsh, serve_document, update_teachers, import_teacher_assignment_csv, email_test
 from metakinhseis.views import metakinhsh_json, apofasi_metakinhshs_preview, katastash_plhrwmhs, import_metakinhseis
 from symvouloi.admin import UnfoldPasswordResetView, UnfoldPasswordResetDoneView, UnfoldPasswordResetConfirmView, UnfoldPasswordResetCompleteView
 
@@ -40,5 +40,6 @@ urlpatterns = [
     path('admin/password_reset/done/', UnfoldPasswordResetDoneView.as_view(), name='password_reset_done'),
     path('reset/<uidb64>/<token>/', UnfoldPasswordResetConfirmView.as_view(), name='password_reset_confirm'),
     path('reset/done/', UnfoldPasswordResetCompleteView.as_view(), name='password_reset_complete'),
+    path('email-test', email_test, name='email-test'),
     path('', admin.site.urls),
 ]

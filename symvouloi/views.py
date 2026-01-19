@@ -38,6 +38,7 @@ from django.contrib.admin import site
 from django.conf import settings
 from django.http import HttpResponseNotFound
 from app.utils import is_member
+from django.core.mail import send_mail
 
 
 def dashboard_callback(request, context):
@@ -887,3 +888,32 @@ def import_teacher_assignment_csv(request):
         'site_header': 'Εισαγωγή αναθέσεων εκπαιδευτικών',
         'site_title': 'Εισαγωγή αναθέσεων εκπαιδευτικών',
     })
+
+
+@staff_member_required
+def email_test(request):
+    result = None
+    if request.method == 'POST':
+        recipient_email = request.POST.get('email')
+        if recipient_email:
+            subject = 'Δοκιμαστικό Email από την εφαρμογή συμβούλων εκπαίδευσης'
+            message = 'Αυτό είναι ένα δοκιμαστικό Email από την εφαρμογή συμβούλων εκπαίδευσης. Παρακαλώ αγνοήστε το.'
+            email_from = settings.DEFAULT_FROM_EMAIL
+            try:
+                send_mail(subject, message, email_from, [recipient_email])
+                messages.success(request, f'Επιτυχής αποστολή δοκιμαστικού email στο {recipient_email}.')
+                result = {'success': True, 'message': f'Επιτυχής αποστολή δοκιμαστικού email στο {recipient_email}.'}
+            except Exception as e:
+                messages.error(request, f'Αποτυχία αποστολής δοκιμαστικού email στο {recipient_email}: {e}')
+                result = {'success': False, 'message': f'Αποτυχία αποστολής δοκιμαστικού email στο {recipient_email}: {e}'}
+        else:
+            messages.error(request, 'Δεν δώσατε email παραλήπτη.')
+            result = {'success': False, 'message': 'Δεν δώσατε email παραλήπτη.'}
+
+    context = {
+        'site_header': 'Δοκιμαστικό Email',
+        'site_title': 'Δοκιμαστικό Email',
+        'result': result,
+    }
+    context.update(site.each_context(request))
+    return render(request, 'admin/email_test.html', context)
