@@ -201,7 +201,14 @@ def apofasi_metakinhshs_preview(request):
         if len(set(consultants)) > 1:
             messages.error(request, "Σφάλμα: Οι επιλεγμένες μετακινήσεις δεν αφορούν μόνο σε έναν σύμβουλο.")
             return redirect(reverse('admin:metakinhseis_metakinhsh_changelist'))  # Redirect back to user list
-        try:    
+        try:
+            # Set apofasi = True for selected transfers after all validations pass
+            Metakinhsh.objects.filter(id__in=metakinhsh_ids).update(apofasi=True)
+        except Exception as e:
+            messages.error(request, f"Σφάλμα ενημέρωσης μετακίνησης: {str(e)}")
+            return redirect(reverse('admin:metakinhseis_metakinhsh_changelist'))  # Redirect back to user list
+
+        try:
             context = {
                 'surname': met.consultant.last_name,
                 'name': met.consultant.first_name,
@@ -209,8 +216,8 @@ def apofasi_metakinhshs_preview(request):
                 'enothta': met.consultant.consultant.enothta,
                 'table_data': results
             }
-        except:
-            messages.error(request, "Σφάλμα: Δεν έχουν εισαχθεί τα επιπλέον στοιχεία (κλάδος, ενότητα) για την/ην σύμβουλο.")
+        except Exception as e:
+            messages.error(request, f"Σφάλμα: Δεν έχουν εισαχθεί τα επιπλέον στοιχεία (κλάδος, ενότητα) για την/ην σύμβουλο. {str(e)}")
             return redirect(reverse('admin:metakinhseis_metakinhsh_changelist'))  # Redirect back to user list
         if is_oikon:
             context.update({

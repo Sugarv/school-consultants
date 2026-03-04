@@ -55,6 +55,7 @@ class MetakinhshAdmin(ModelAdmin, ExportActionModelAdmin):
     ordering = ['-date_from']
     date_hierarchy = ('date_from')
     export_form_class = ExportForm
+    readonly_fields = ('updated_at',)
 
     class Media:
         js = ('js/script_metak.js',) 
@@ -68,7 +69,14 @@ class MetakinhshAdmin(ModelAdmin, ExportActionModelAdmin):
     def get_list_filter(self, request):
         if is_member(request.user,'Σύμβουλοι'):
             return (("date_from", MyRangeDateFilter),'pragmat', 'egkrish', 'school_year', 'dyee')
-        return (
+        # add apofasi field to grammateia
+        elif is_member(request.user,'Γραμματεία'):
+            return (
+                ("date_from", MyRangeDateFilter),#("km", RangeNumericFilter),
+                ('consultant', RelatedDropdownFilter), 'pragmat', 'egkrish', 'apofasi', 'handler', 'school_year', 'dyee', 'is_evaluation'
+            )
+        else:
+            return (
                 ("date_from", MyRangeDateFilter),#("km", RangeNumericFilter),
                 ('consultant', RelatedDropdownFilter), 'pragmat', 'egkrish', 'handler', 'school_year', 'dyee', 'is_evaluation'
             )
@@ -76,6 +84,9 @@ class MetakinhshAdmin(ModelAdmin, ExportActionModelAdmin):
     def get_list_display(self, request):
         if is_member(request.user,'Σύμβουλοι'):
             return ('id', 'metak_to', 'date_from', 'approved_display','complete_display','km','handler','is_evaluation', 'school_year')
+        # add apofasi field to grammateia
+        elif is_member(request.user,'Γραμματεία'):
+            return ('id', 'get_user', 'metak_to', 'date_from', 'approved_display','complete_display','km','handler','is_evaluation', 'apofasi', 'school_year')
         else:
             return ('id', 'get_user', 'metak_to', 'date_from', 'approved_display','complete_display','km','handler','is_evaluation', 'school_year')
 
@@ -83,8 +94,11 @@ class MetakinhshAdmin(ModelAdmin, ExportActionModelAdmin):
         is_supervisor = is_member_of_many(request.user, 'Επόπτες,Γραμματεία') or request.user.is_superuser
         is_consultant = is_member(request.user,'Σύμβουλοι')
         
-        if obj and is_supervisor:
+        # Only 'director' user can approve transfers
+        if obj and is_supervisor and (request.user.username == 'director' or request.user.is_superuser):
             return ('consultant','pragmat','updated_at')
+        elif obj and is_supervisor:
+            return ('consultant','pragmat','egkrish','updated_at')
         elif is_consultant:
             # allow consultant to set pragmat only if egkrish is set
             if obj and obj.egkrish:
@@ -185,8 +199,8 @@ class MetakinhshAdmin(ModelAdmin, ExportActionModelAdmin):
             del actions['apofasi_metakinhshs_oikon']
             del actions['katastash_plhrwmhs']
 
-        # Hide mass_confirmation from FinDep, Consultants
-        if is_member_of_many(request.user, 'Οικονομικό,Σύμβουλοι'):
+        # Hide mass_confirmation from all except 'director' user
+        if not request.user.username == 'director':
             del actions['mass_confirmation']        
 
         return actions

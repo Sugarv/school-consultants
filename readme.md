@@ -14,7 +14,7 @@ A web app to track & monitor consultant transfers & produce related documents: t
 The app features 4 discreet user roles with different capabilities each:
 - **Secretariat (Γραμματεία)**: Can view/change all consultants' transfers & evaluation steps & produce transfer decisions
 - **Financial department (Οικονομικό)**: Can view/change all consultants' transfers & evaluation steps & produce payment transfer decisions
-- **Supervisor (Επόπτης)**: Can view/change all consultants' transfers & evaluation steps
+- **Supervisor (Επόπτης)**: Can view/change all consultants' transfers & evaluation steps. Only 'director' user can approve transfers.
 - **Consultant (Σύμβουλος)**: Can add/view/change/delete their transfers & evaluation steps
 
 ### Run with Docker compose ###

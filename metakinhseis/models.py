@@ -48,6 +48,7 @@ class Metakinhsh(models.Model):
   special = models.BooleanField(default=False, verbose_name='Ειδική περίπτωση')
   is_evaluation = models.BooleanField(default=False, verbose_name='Μετακ.αξιολόγησης')
   dyee = models.BooleanField(default=False, verbose_name='Προωθήθηκε στη ΔΥΕΕ')
+  apofasi = models.BooleanField(default=False, verbose_name='Εκδόθηκε απόφαση')
   school_year = models.CharField('Σχολικό έτος', max_length=20, null=True, blank=True)
   updated_at = models.DateTimeField(auto_now=True, verbose_name='Τελευταία ενημέρωση')
   
